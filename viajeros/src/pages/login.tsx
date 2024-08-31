@@ -1,9 +1,12 @@
 'use client'
 
 import { TextInput, PasswordInput, Paper, Title, Container, Button, Stack, Text, BackgroundImage, Center } from '@mantine/core'
+import { useRouter } from 'next/router';
 import { FaPlane, FaLock, FaEnvelope } from 'react-icons/fa'
 
 export default function LoginPage() {
+  const router = useRouter();
+
   return (
     <BackgroundImage
       src="https://images.unsplash.com/photo-1507525428034-b723cf961d3e?ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D&auto=format&fit=crop&w=2073&q=80"
@@ -19,7 +22,10 @@ export default function LoginPage() {
               </Title>
               <Text size="sm" c="dimmed">Sign in to your account</Text>
             </Stack>
-            <form onSubmit={(e) => e.preventDefault()}>
+            <form onSubmit={(e) => {
+              router.push("/viajes")
+              e.preventDefault()
+            }}>
               <Stack>
                 <TextInput
                   required
@@ -51,6 +57,6 @@ export default function LoginPage() {
           </Paper>
         </Container>
       </Center>
-    </BackgroundImage>
+    </BackgroundImage >
   )
 }
