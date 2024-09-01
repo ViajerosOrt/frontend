@@ -5,7 +5,7 @@ import '@mantine/core/styles.css';
 import type { AppProps } from 'next/app';
 import { createTheme, MantineProvider } from '@mantine/core';
 import { useRouter } from 'next/router';
-import { AppContainer } from '@/components/AppContainer./AppContainer';
+import { AppContainer } from '@/components/AppContainer/AppContainer';
 
 const theme = createTheme({
   /** Put your mantine theme override here */
