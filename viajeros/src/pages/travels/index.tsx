@@ -11,17 +11,8 @@ import {
 } from '@mantine/core';
 import { IoIosAirplane } from 'react-icons/io';
 
-const EXAMPLE_QUERY = gql`
-query ExampleQuery {
-  countries {
-    code
-    name
-  }
-}
-`
 
 export default function viajes() {
-  const { data, loading } = useQuery(EXAMPLE_QUERY)
 
   return (
     <Container size="xl" mt="xl">
