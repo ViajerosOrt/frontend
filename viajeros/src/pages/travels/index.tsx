@@ -1,3 +1,4 @@
+import { gql, useApolloClient, useQuery } from '@apollo/client';
 import {
   Button,
   Card,
@@ -10,7 +11,9 @@ import {
 } from '@mantine/core';
 import { IoIosAirplane } from 'react-icons/io';
 
+
 export default function viajes() {
+
   return (
     <Container size="xl" mt="xl">
       <Title order={2} mb="md">Viajes!</Title>

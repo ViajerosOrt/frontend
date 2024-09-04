@@ -1,21 +1,23 @@
 import { AppShell, Stack, NavLink } from "@mantine/core"
 import { IoIosAirplane, IoMdSettings } from "react-icons/io"
 import { MdCardTravel } from "react-icons/md"
+import Link from 'next/link'
+import { URL } from "url"
 
 export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
   const primaryLinks: Array<any> = [
     {
-      to: '/viajes',
+      to: '/travels',
       label: 'Viajes',
       leftSection: <IoIosAirplane />
     },
     {
-      to: '/misViajes',
+      to: '/myTravels',
       label: 'Mis viajes',
       leftSection: <MdCardTravel />
     },
     {
-      to: '/configuracion',
+      to: '/settings',
       label: 'Configuracion',
       leftSection: <IoMdSettings />
     }
@@ -27,7 +29,7 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
         {primaryLinks.map((link, index) => (
           <ViajerosNavLink
             key={`${link.label}-${index}`}
-            to={link.to}
+            to={link.to as URL}
             label={link.label}
             leftSection={link.leftSection}
             onClick={() => {
@@ -42,7 +44,7 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
 }
 
 type navLink = {
-  to?: string
+  to: URL
   label: string
   leftSection: React.ReactNode
   onClick?: () => void
@@ -57,6 +59,7 @@ function ViajerosNavLink({
   return (
     <NavLink
       href={to}
+      component={Link}
       label={label}
       leftSection={leftSection}
       onClick={() => onClick?.()}

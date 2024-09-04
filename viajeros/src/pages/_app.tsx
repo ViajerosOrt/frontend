@@ -2,10 +2,12 @@
 // All packages except `@mantine/hooks` require styles imports
 import '@mantine/core/styles.css';
 
+import client from "@/api/apollo-client";
 import type { AppProps } from 'next/app';
 import { createTheme, MantineProvider } from '@mantine/core';
 import { useRouter } from 'next/router';
 import { AppContainer } from '@/components/AppContainer/AppContainer';
+import { ApolloProvider } from '@apollo/client';
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -26,10 +28,14 @@ export default function App({ Component, pageProps }: AppProps) {
   return (
     <MantineProvider theme={theme}>
       {isNoLayoutPage ? (
-        <Component {...pageProps} />
+        <ApolloProvider client={client}>
+          <Component {...pageProps} />
+        </ApolloProvider>
       ) : (
         <AppContainer>
-          <Component {...pageProps} />
+          <ApolloProvider client={client}>
+            <Component {...pageProps} />
+          </ApolloProvider>
         </AppContainer>
       )}
     </MantineProvider>
