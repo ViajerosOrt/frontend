@@ -10,6 +10,7 @@
   },
   "dependencies": {
     "@apollo/client": "^3.11.5",
+    "@eslint/object-schema": "^2.1.4",
     "@mantine/core": "^7.12.2",
     "@mantine/dates": "^7.12.2",
     "@mantine/form": "^7.12.2",
