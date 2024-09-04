@@ -1,3 +1,4 @@
+import { gql, useApolloClient, useQuery } from '@apollo/client';
 import {
   Button,
   Card,
@@ -10,7 +11,18 @@ import {
 } from '@mantine/core';
 import { IoIosAirplane } from 'react-icons/io';
 
+const EXAMPLE_QUERY = gql`
+query ExampleQuery {
+  countries {
+    code
+    name
+  }
+}
+`
+
 export default function viajes() {
+  const { data, loading } = useQuery(EXAMPLE_QUERY)
+
   return (
     <Container size="xl" mt="xl">
       <Title order={2} mb="md">Viajes!</Title>
