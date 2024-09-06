@@ -6,41 +6,46 @@ import {
   Grid,
   Group,
   Image,
+  Loader,
   Text,
   Title,
 } from '@mantine/core';
 import { IoIosAirplane } from 'react-icons/io';
 
 
-export default function viajes() {
+// TODO: Borrar
+const ACTIVITIES_EXAMPLE_QUERY = gql`
+{
+  activites {
+    activiteName
+  } 
+}
+`
+
+export default function travels() {
+  const { data, loading, error } = useQuery(ACTIVITIES_EXAMPLE_QUERY)
 
   return (
     <Container size="xl" mt="xl">
-      <Title order={2} mb="md">Viajes!</Title>
-      <Grid>
-        {['La pedrera', 'Buenos Aires', 'Piriapolis'].map((city) => (
-          <Grid.Col span={4} key={city}>
-            <Card shadow="sm" p="lg" radius="md" withBorder>
-              <Card.Section>
-                <Image
-                  src={`/placeholder.svg?height=160&width=300`}
-                  height={160}
-                  alt={city}
-                />
-              </Card.Section>
-              <Group mt="md" mb="xs">
-                <Text>{city}</Text>
-                <Button variant="light" color="blue" radius="md" leftSection={<IoIosAirplane />}>
-                  Reservar
+      <Title order={2} mb="md">Activities!</Title>
+      {loading ? (
+        <Loader />
+      ) : error ? (
+        <Text>Error loading activities: {error.message}</Text>
+      ) : (
+        <Grid>
+          {data?.activites.map((activity, index) => (
+            <Grid.Col span={4} key={index}>
+              <Card shadow="sm" p="lg" radius="md" withBorder>
+                <Text>{activity.activiteName}</Text>
+                <Button variant="light" color="green" fullWidth mt="md" radius="md">
+                  View Details
                 </Button>
-              </Group>
-              <Text size="sm">
-                Descubre la magia de {city} en tu próximo viaje.
-              </Text>
-            </Card>
-          </Grid.Col>
-        ))}
-      </Grid>
+              </Card>
+            </Grid.Col>
+          ))}
+        </Grid>
+      )}
     </Container>
   );
 }

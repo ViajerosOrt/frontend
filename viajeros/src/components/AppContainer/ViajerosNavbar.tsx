@@ -8,17 +8,17 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
   const primaryLinks: Array<any> = [
     {
       to: '/travels',
-      label: 'Viajes',
+      label: 'travels',
       leftSection: <IoIosAirplane />
     },
     {
       to: '/myTravels',
-      label: 'Mis viajes',
+      label: 'My travels',
       leftSection: <MdCardTravel />
     },
     {
       to: '/settings',
-      label: 'Configuracion',
+      label: 'Settings',
       leftSection: <IoMdSettings />
     }
   ]
