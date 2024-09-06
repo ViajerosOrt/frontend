@@ -63,13 +63,13 @@ export default function LoginPage() {
                       />
                     </Stack>
 
-                    <Center mt="md"> 
+                    <Center mt="md">
                       <Button type="submit" color="blue">Register</Button>
                     </Center>
                   </form>
                   <Text ta="center" mt="md" size="sm">
-                    Ya tienes una cuenta? 
-                    <Text component="a" href="#" c="blue" onClick={() => setShowSignUp(false)}> 
+                    Ya tienes una cuenta?
+                    <Text component="a" href="#" c="blue" onClick={() => setShowSignUp(false)}>
                       Login
                     </Text>
                   </Text>
@@ -112,6 +112,38 @@ export default function LoginPage() {
                 </>
               )}
             </Stack>
+            <form onSubmit={(e) => {
+              router.push("/travels")
+              e.preventDefault()
+            }}>
+              <Stack>
+                <TextInput
+                  required
+                  label="Email"
+                  placeholder="your@email.com"
+                  rightSection={<FaEnvelope size="1rem" />}
+                  radius="md"
+                />
+
+                <PasswordInput
+                  required
+                  label="Password"
+                  placeholder="Your password"
+                  rightSection={<FaLock size="1rem" />}
+                  radius="md"
+                />
+              </Stack>
+
+              <Button type="submit" fullWidth mt="xl" color="blue">
+                Sign in
+              </Button>
+            </form>
+            <Text ta="center" mt="md" size="sm">
+              Don&apos;t have an account?{' '}
+              <Text component="a" href="#" c="blue">
+                Sign up
+              </Text>
+            </Text>
           </Paper>
         </Container>
       </Center>
