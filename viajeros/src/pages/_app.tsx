@@ -8,6 +8,7 @@ import { createTheme, MantineProvider } from '@mantine/core';
 import { useRouter } from 'next/router';
 import { AppContainer } from '@/components/AppContainer/AppContainer';
 import { ApolloProvider } from '@apollo/client';
+import '../styles/globals.css';
 
 const theme = createTheme({
   /** Put your mantine theme override here */
