@@ -7,14 +7,14 @@ import { FaPlane, FaLock, FaEnvelope, FaUser } from 'react-icons/fa';
 import { ApolloError, gql, useMutation } from '@apollo/client';
 import { Loader } from '@mantine/core';
 
-const CREATE_USER_MUTATION = gql`
-  mutation CreateUser($createUserInput: CreateUserInput!) {
-    createUser(createUserInput: $createUserInput) {
+
+const SIGNUP_USER_MUTATION = gql`
+  mutation signup($signupUserInput: SignupUserInput!) {
+    signup(signupUserInput: $signupUserInput) {
       id
-      userName
+      name
       email
-      password
-      birth_date
+      birthDate
     }
   }
 `;
@@ -30,7 +30,7 @@ export default function LoginPage() {
   const [password, setPassword] = useState('');
   const [birthDate, setBirthDate] = useState('');
 
-  const [createUser, { loading, error }] = useMutation(CREATE_USER_MUTATION); // Usamos la mutación de Apollo Client
+  const [createUser, { loading, error }] = useMutation(SIGNUP_USER_MUTATION); // Usamos la mutación de Apollo Client
 
   const handleRegisterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -59,22 +59,15 @@ export default function LoginPage() {
     try {
       const formattedDate = new Date(birthDate).toISOString().split('T')[0];
       const userData = {
-        userName,
+        name: userName,
         email,
         password,
-        birth_date: formattedDate,
+        birthDate: formattedDate,
       };
-
-      console.log("Datos:", userData);
 
       await createUser({
         variables: {
-          createUserInput: {
-            userName,
-            email,
-            password,
-            birth_date: formattedDate,
-          },
+          signupUserInput: userData,
         },
       });
       setShowSignUp(false);
