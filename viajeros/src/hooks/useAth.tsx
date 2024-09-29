@@ -4,14 +4,12 @@ import { notifications } from '@mantine/notifications';
 import { useShallow } from 'zustand/shallow';
 
 export const useAuth = () => {
-  const { currentUser, onLogin, onLogout, setLoading, isLoadingUser } = useAuthStore(
+  const { currentUser, onLogin, onLogout } = useAuthStore(
     useShallow(
       (state) => ({
         currentUser: state.currentUser,
         onLogin: state.onLogin,
         onLogout: state.onLogout,
-        setLoading: state.setLoading,
-        isLoadingUser: state.isLoadingUser
       }))
 
   )
@@ -45,7 +43,5 @@ export const useAuth = () => {
     currentUser,
     onLogin: handleLogin,
     onLogout: handleLogout,
-    setLoading,
-    isLoadingUser
   }
 }

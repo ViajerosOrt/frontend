@@ -10,14 +10,12 @@ export interface UserState {
 
 type AuthStoreState = {
   currentUser: UserState | null
-  isLoadingUser: boolean;
 
 }
 
 type AuthStoreActions = {
   onLogin: (newUser: UserState) => void
   onLogout: (userId: number) => void
-  setLoading: (loading: boolean) => void
 
 }
 
@@ -40,8 +38,7 @@ export const useAuthStore = create(
           return {
             currentUser: null,
           }
-        }),
-      setLoading: (loading) => set({ isLoadingUser: loading }),
+        })
     }),
     {
       name: 'viajeros-user',
