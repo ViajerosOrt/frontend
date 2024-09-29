@@ -4,26 +4,15 @@ import { FaPlane, FaLock, FaEnvelope, FaUser } from 'react-icons/fa';
 import { ApolloError, gql, useMutation } from '@apollo/client';
 import { useState } from 'react';
 import router from 'next/router';
-
-const CREATE_USER_MUTATION = gql`
-  mutation CreateUser($createUserInput: CreateUserInput!) {
-    createUser(createUserInput: $createUserInput) {
-      id
-      userName
-      email
-      password
-      birth_date
-    }
-  }
-`;
+import { useSignupMutation } from '@/graphql/__generated__/gql';
 
 interface SignupFormProps {
   switchToLogin: () => void;
 }
 
 export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
-  const [createUser, { loading, error }] = useMutation(CREATE_USER_MUTATION);
-
+  const [signup, { loading, error }] = useSignupMutation()
+  
   const form = useForm({
     initialValues: {
       userName: '',
@@ -31,14 +20,17 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
       password: '',
       birthDate: '',
     },
-    validate: { //isNotEmpty, isEmail, hasLength, isInRange, todas funciones de mantine 
+    validate: { //isNotEmpty, isEmail, hasLength, todas funciones de mantine 
       userName: isNotEmpty('Name is required'),
       email: isEmail('Invalid email'),
       password: hasLength({ min: 8 }, 'Password must be at least 8 characters long'),
-      birthDate: isInRange(
-        { min: new Date().getFullYear() - 100, max: new Date().getFullYear() - 18 },
-        'You must be at least 18 to register'
-      ),
+      birthDate: (value) => {
+        const birthDate = new Date(value);
+        const today = new Date();
+        const age = today.getFullYear() - birthDate.getFullYear();
+
+        return age < 18 ? 'You must be at least 18 yers old to register' : null;
+      },
     },
   });
 
@@ -47,18 +39,19 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
 
     try {
       const formattedDate = new Date(birthDate).toISOString().split('T')[0];
-      await createUser({
+      await signup({
         variables: {
-          createUserInput: {
-            userName,
+          input: {
+            name: userName,
             email,
             password,
-            birth_date: formattedDate,
+            birthDate: formattedDate,
           },
         },
       });
 
       form.reset();
+      switchToLogin();
     } catch (err) {
       console.error('Error:', err);
     }
@@ -76,11 +69,11 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
               rightSection={<FaUser size="1rem" />}
               {...form.getInputProps('userName')} //vincula campo con el estado 
               radius="md"
-              style={{ color: 'black', borderColor: 'var(--color-lightblue)' }}
+              style={{ color: 'black', borderColor: '#17a2b8' }}
               styles={{
                 input: {
-                  backgroundColor: 'var(--color-lightgreen)',
-                  borderColor: 'var(--color-lightblue)'
+                  backgroundColor: '#edf6ee',
+                  borderColor: '#17a2b8'
                 },
               }}
             />
@@ -92,13 +85,13 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
               rightSection={<FaEnvelope size="1rem" />}
               {...form.getInputProps('email')}
               radius="md"
-              style={{ color: 'black', borderColor: 'var(--color-lightblue)' }}
-                        styles={{
-                          input: {
-                            backgroundColor: 'var(--color-lightgreen)',
-                            borderColor: 'var(--color-lightblue)'
-                          },
-                        }}
+              style={{ color: 'black', borderColor: '#17a2b8' }}
+              styles={{
+                input: {
+                  backgroundColor: '#edf6ee',
+                  borderColor: '#17a2b8'
+                },
+              }}
             />
 
             <PasswordInput
@@ -108,11 +101,11 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
               rightSection={<FaLock size="1rem" />}
               {...form.getInputProps('password')}
               radius="md"
-              style={{ color: 'black', borderColor: 'var(--color-lightblue)' }}
+              style={{ color: 'black', borderColor: '#17a2b8' }}
               styles={{
                 input: {
-                  backgroundColor: 'var(--color-lightgreen)',
-                  borderColor: 'var(--color-lightblue)'
+                  backgroundColor: '#edf6ee',
+                  borderColor: '#17a2b8'
                 },
               }}
             />
@@ -123,11 +116,11 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
               type="date"
               {...form.getInputProps('birthDate')}
               radius="md"
-              style={{ color: 'black', borderColor: 'var(--color-lightblue)' }}
+              style={{ color: 'black', borderColor: '#17a2b8' }}
               styles={{
                 input: {
-                  backgroundColor: 'var(--color-lightgreen)',
-                  borderColor: 'var(--color-lightblue)'
+                  backgroundColor: '#edf6ee',
+                  borderColor: '#17a2b8'
                 },
               }}
             />
@@ -149,9 +142,9 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
           <Button
             onClick={switchToLogin}
             style={{
-              backgroundColor: 'var(--color-aqua)',
+              backgroundColor: '#76aaa4',
               color: 'black',
-              borderColor: 'var(--color-lightblue)',
+              borderColor: '#17a2b8',
             }}
           >Back to Login
           </Button>
