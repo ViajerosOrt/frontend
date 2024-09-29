@@ -1,11 +1,11 @@
-import { NextPageContext } from 'next';
+import { NextPageContext } from "next";
 
 function Error({ statusCode }: { statusCode: number }) {
   return (
     <p>
       {statusCode
         ? `An error ${statusCode} occurred on server`
-        : 'An error occurred on client'}
+        : "An error occurred on client"}
     </p>
   );
 }
