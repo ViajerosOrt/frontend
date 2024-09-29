@@ -7,8 +7,8 @@ import {
   Image,
   Text,
   Title,
-} from '@mantine/core';
-import { IoIosAirplane } from 'react-icons/io';
+} from "@mantine/core";
+import { IoIosAirplane } from "react-icons/io";
 
 export default function myTravels() {
   return (

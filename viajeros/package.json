@@ -4,13 +4,19 @@
   "private": true,
   "scripts": {
     "dev": "next dev",
-    "build": "next build",
+    "build": "npm run graphql:build && next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prettier": "prettier --write .",
+    "graphql:build": "npm run graphql:compile && npm run graphql:format",
+    "graphql:format": "prettier --write ./src/graphql",
+    "graphql:compile": "graphql-codegen && prettier --write ./src/graphql/__generated__"
   },
   "dependencies": {
     "@apollo/client": "^3.11.5",
     "@eslint/object-schema": "^2.1.4",
+    "@graphql-codegen/typescript-operations": "^4.2.3",
+    "@graphql-codegen/typescript-react-apollo": "^4.3.2",
     "@mantine/core": "^7.12.2",
     "@mantine/dates": "^7.12.2",
     "@mantine/form": "^7.12.2",
@@ -19,11 +25,15 @@
     "dayjs": "^1.11.13",
     "graphql": "^16.9.0",
     "next": "14.2.7",
+    "prettier": "^3.3.3",
     "react": "^18",
     "react-dom": "^18",
-    "react-icons": "^5.3.0"
+    "react-icons": "^5.3.0",
+    "zod": "^3.23.8",
+    "zustand": "^5.0.0-rc.2"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "^5.0.2",
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -33,6 +43,6 @@
     "postcss-preset-mantine": "^1.17.0",
     "postcss-simple-vars": "^7.0.1",
     "tailwindcss": "^3.4.1",
-    "typescript": "^5"
+    "typescript": "^5.6.2"
   }
 }
