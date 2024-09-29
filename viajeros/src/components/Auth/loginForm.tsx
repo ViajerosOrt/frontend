@@ -48,7 +48,6 @@ export const LoginForm = () => {
       }
       try {
         const { data } = await login({ variables: { input: { email, password } } })
-
         if (!data?.login.user || !data?.login.user?.id) {
           throw new Error('No user returned')
         }
@@ -68,7 +67,6 @@ export const LoginForm = () => {
               accessToken: accessToken
             }
           })
-          form.reset()
           router.push("/viajes");
         } else {
           form.setErrors({

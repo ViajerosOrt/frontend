@@ -27,9 +27,24 @@ export const useAuth = () => {
     [onLogin]
   )
 
+  const handleLogout = useCallback(
+    (userId: number | undefined) => {
+
+      if (!!userId) {
+        onLogout(userId)
+        notifications.show({
+          message: `Signed out`,
+          autoClose: 2000,
+        })
+      }
+    },
+    [onLogout]
+  )
+
   return {
     currentUser,
     onLogin: handleLogin,
+    onLogout: handleLogout,
     setLoading,
     isLoadingUser
   }
