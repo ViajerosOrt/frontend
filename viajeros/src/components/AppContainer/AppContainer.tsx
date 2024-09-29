@@ -1,22 +1,21 @@
-import { AppShell, Box, Burger, Group, Stack } from "@mantine/core"
+import { AppShell, Box, Burger, Group, Stack } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ViajerosNavbar } from "./ViajerosNavbar";
 import { useCallback } from "react";
 
 export const AppContainer = ({ children }: { children: React.ReactNode }) => {
-
   const [opened, { toggle, close }] = useDisclosure();
 
   const closeSidebar = useCallback(() => {
-    close()
-  }, [close])
+    close();
+  }, [close]);
 
   return (
     <AppShell
       header={{ height: 60 }}
       navbar={{
         width: 225,
-        breakpoint: 'md',
+        breakpoint: "md",
         collapsed: { mobile: !opened },
       }}
       padding="md"
@@ -29,11 +28,9 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
               onClick={toggle}
               hiddenFrom="md"
               size="md"
-              color={'white'}
+              color={"white"}
             />
-            <Box visibleFrom="md">
-              Viajero logo!
-            </Box>
+            <Box visibleFrom="md">Viajero logo!</Box>
           </Group>
         </Stack>
       </AppShell.Header>
@@ -44,5 +41,5 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
 
       <AppShell.Main>{children}</AppShell.Main>
     </AppShell>
-  )
-}
+  );
+};

@@ -6,18 +6,14 @@ import { useEffect } from "react";
 export default function Home() {
   const router = useRouter();
 
-  // TODO: Add token authentication
-  // If the user has no token, redirect to login.
   useEffect(() => {
-    if (true) {
-      router.replace({
-        pathname: `/login`
-      });
-    }
+    router.replace({
+      pathname: `/login`,
+    });
   }, []);
 
   return (
-    <Center style={{ height: '100vh' }}>
+    <Center style={{ height: "100vh" }}>
       <Loader />
     </Center>
   );
