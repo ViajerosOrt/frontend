@@ -6,6 +6,12 @@
   --foreground-rgb: 0, 0, 0;
   --background-start-rgb: 214, 219, 220;
   --background-end-rgb: 255, 255, 255;
+  --color-green: #28a745;
+  --color-blue: #007bff;
+  --color-lightblue: #17a2b8;
+  --color-background: rgba(255, 255, 255, 0.9);
+  --color-aqua: #76aaa4;
+  --color-lightgreen: #edf6ee;
 }
 
 @media (prefers-color-scheme: dark) {
@@ -13,6 +19,10 @@
     --foreground-rgb: 255, 255, 255;
     --background-start-rgb: 0, 0, 0;
     --background-end-rgb: 0, 0, 0;
+    --color-green: #28a745;
+    --color-blue: #007bff;
+    --color-lightblue: #17a2b8;
+    --color-background: rgba(255, 255, 255, 0.9);
   }
 }
 

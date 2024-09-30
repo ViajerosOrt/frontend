@@ -100,12 +100,26 @@ export const LoginForm = () => {
           rightSection={<FaEnvelope size="1rem" />}
           radius="md"
           {...form.getInputProps('email')}
+          style={{ color: 'black', borderColor: '#17a2b8' }}
+              styles={{
+                input: {
+                  backgroundColor: '#edf6ee',
+                  borderColor: '#17a2b8'
+                },
+              }}
         />
         <PasswordInput
           required
           label="Password"
           placeholder="Enter password"
           radius="md"
+          style={{ color: 'black', borderColor: '#17a2b8' }}
+              styles={{
+                input: {
+                  backgroundColor: '#edf6ee',
+                  borderColor: '#17a2b8'
+                },
+              }}
           visibilityToggleIcon={({ reveal }) =>
             reveal ? (
               <FaEyeSlash className="h-4 w-4" />
@@ -114,6 +128,7 @@ export const LoginForm = () => {
             )
           }
           {...form.getInputProps('password')}
+          
         />
 
         <Button id="submit" type="submit" fullWidth mt="md" color="blue">

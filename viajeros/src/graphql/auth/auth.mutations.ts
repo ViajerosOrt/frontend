@@ -14,3 +14,12 @@ mutation login($input: LoginUserInput!){
     }
   }
 }`);
+
+export const SIGNUP_USER_MUTATION = gql`
+  mutation signup($input: SignupUserInput!) {
+    signup(signupUserInput: $input) {
+      email
+      password
+    }
+  }
+`;
