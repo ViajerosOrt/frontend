@@ -1,6 +1,7 @@
 import { Center, Loader } from "@mantine/core";
 import { useRouter } from "next/router";
 import { PropsWithChildren, useEffect, useState } from "react";
+import { ViajeroLoader } from "../ViajeroLoader/ViajeroLoader";
 
 const UnauthenticatedRoutes = ({ children }: PropsWithChildren) => {
   const router = useRouter();
@@ -14,7 +15,7 @@ const UnauthenticatedRoutes = ({ children }: PropsWithChildren) => {
       const store = storage ? JSON.parse(storage) : null;
       // If no user authenticated, redirect to login
       if (!!store?.state?.currentUser) {
-        router.push('/viajes'); // Redirect to the login page if no user is found
+        router.push('/travels'); // Redirect to the login page if no user is found
       } else {
         setLoading(false)
       }
@@ -25,10 +26,7 @@ const UnauthenticatedRoutes = ({ children }: PropsWithChildren) => {
   }, [router]);
 
   if (loading) {
-    return (<Center style={{ height: "100vh" }}>
-      <Loader />
-    </Center>
-    )
+    return <ViajeroLoader />
   }
 
   return <>{children}</>;

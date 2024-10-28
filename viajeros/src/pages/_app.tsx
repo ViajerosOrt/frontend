@@ -1,6 +1,7 @@
 // Import styles of packages that you've installed.
 // All packages except `@mantine/hooks` require styles imports
 import "@mantine/core/styles.css";
+import '@mantine/notifications/styles.css';
 
 import client from "@/api/apollo-client";
 import type { AppProps } from "next/app";
@@ -13,6 +14,7 @@ import { useEffect } from "react";
 import useAuthStore from "@/stores/useAuthStore";
 import UnauthenticatedRoutes from "@/components/AuthenticationRoutes/UnauthenticatedRoutes";
 import AuthenticatedRoutes from "@/components/AuthenticationRoutes/AuthenticatedRoutes";
+import { Notifications } from "@mantine/notifications";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -30,6 +32,7 @@ export default function App({ Component, pageProps }: AppProps) {
 
   return (
     <MantineProvider theme={theme}>
+      <Notifications position="bottom-right" />
       {isPublicPage ? (
         <ApolloProvider client={client}>
           <UnauthenticatedRoutes>
@@ -37,13 +40,15 @@ export default function App({ Component, pageProps }: AppProps) {
           </UnauthenticatedRoutes>
         </ApolloProvider>
       ) : (
-        <AuthenticatedRoutes>
-          <AppContainer>
-            <ApolloProvider client={client}>
-              <Component {...pageProps} />
-            </ApolloProvider>
-          </AppContainer>
-        </AuthenticatedRoutes>
+        <>
+          <AuthenticatedRoutes>
+            <AppContainer>
+              <ApolloProvider client={client}>
+                <Component {...pageProps} />
+              </ApolloProvider>
+            </AppContainer>
+          </AuthenticatedRoutes>
+        </>
       )}
     </MantineProvider>
   );

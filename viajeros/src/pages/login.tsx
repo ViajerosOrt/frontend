@@ -13,10 +13,12 @@ import {
   BackgroundImage,
   Center,
   Group,
+  Box,
 } from "@mantine/core";
 import { FaPlane, FaLock, FaEnvelope, FaUser } from "react-icons/fa";
 import { LoginForm } from "@/components/Auth/loginForm";
 import { SignupForm } from "@/components/Auth/signupForm";
+import { ViajeroLogo } from "@/components/ViajeroLogo/viajeroLogo";
 
 export default function LoginPage() {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -36,33 +38,29 @@ export default function LoginPage() {
           bg="rgba(255, 255, 255, 0.8)"
         >
           <Stack align="center" mb={20}>
-            <FaPlane size={48} color="#228be6" />
-            <Title order={2} ta="center" fw={600} c="blue">
+            <Title order={2} ta="center" fw={600} c="#65a773">
               Viajeros
             </Title>
+            <ViajeroLogo height={100} width={100} />
+
             {showSignUp ? (
               <SignupForm switchToLogin={switchToLogin} />
             ) : (
               <>
-                <Text size="sm" c="dimmed">
-                  Sign in to your account
-                </Text>
                 <LoginForm />
                 <Text ta="center" mt="md" size="sm" c="dimmed">
                   Dont have an account?{" "}
                 </Text>
-                <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-                    <Button
-                      onClick={() => setShowSignUp(true)}
-                      style={{
-                        backgroundColor: '#76aaa4',
-                        color: 'black',
-                        borderColor: '#17a2b8',
-                      }}
-                    >
-                      Register!
-                    </Button>
-                  </div>
+                <Box>
+                  <Button
+                    onClick={() => setShowSignUp(true)}
+                    style={{
+                      backgroundColor: '#65a773',
+                    }}
+                  >
+                    Register!
+                  </Button>
+                </Box>
               </>
             )}
           </Stack>

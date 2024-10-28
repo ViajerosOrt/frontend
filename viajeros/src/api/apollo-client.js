@@ -10,8 +10,7 @@ const authLink = setContext((_, { headers }) => {
   const storage = localStorage.getItem("viajeros-user");
   const store = storage ? JSON.parse(storage) : null;
 
-  const token = !store?.state?.currentUser?.accessToken?.value;
-
+  const token = store?.state?.currentUser?.accessToken?.value;
   // return the headers to the context so httpLink can read them
   return {
     headers: {

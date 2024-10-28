@@ -18,7 +18,8 @@ export const useAuth = () => {
     ({ newUser }: { newUser: UserState }) => {
       onLogin(newUser)
       notifications.show({
-        message: `Signed in with ${newUser.email}`,
+        message: `Signed as as ${newUser.email}`,
+        color: "green",
         autoClose: 2000,
       })
     },
@@ -26,14 +27,10 @@ export const useAuth = () => {
   )
 
   const handleLogout = useCallback(
-    (userId: number | undefined) => {
+    (userId: string | undefined) => {
 
       if (!!userId) {
         onLogout(userId)
-        notifications.show({
-          message: `Signed out`,
-          autoClose: 2000,
-        })
       }
     },
     [onLogout]
