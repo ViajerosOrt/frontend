@@ -7,6 +7,7 @@ import router from 'next/router';
 import { useSignupMutation } from '@/graphql/__generated__/gql';
 import { ViajeroLoader } from '../ViajeroLoader/ViajeroLoader';
 import { Calendar } from '@mantine/dates';
+import { VIAJERO_GREEN } from '@/consts';
 interface SignupFormProps {
   switchToLogin: () => void;
 }
@@ -133,7 +134,7 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
         </Stack>
 
         <Center mt={20}>
-          <Button type="submit" disabled={loading} color='#65a773'>
+          <Button type="submit" disabled={loading} color={VIAJERO_GREEN}>
             {loading ? <ViajeroLoader /> : 'Register'}
           </Button>
         </Center>
@@ -147,7 +148,7 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
         <Button
           onClick={switchToLogin}
           style={{
-            backgroundColor: '#65a773',
+            backgroundColor: VIAJERO_GREEN,
           }}
         >Back to Login
         </Button>

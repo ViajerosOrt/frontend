@@ -5,6 +5,7 @@ import Link from "next/link";
 import { URL } from "url";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
+import { VIAJERO_GREEN } from "@/consts";
 
 export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
   const router = useRouter();
@@ -68,7 +69,7 @@ type navLink = {
 function ViajerosNavLink({ to, label, leftSection, onClick, isActive }: navLink) {
   return (
     <NavLink
-      bg={isActive ? '#4e8e5a' : '#65a773'}
+      bg={isActive ? '#4e8e5a' : VIAJERO_GREEN}
       href={to}
       component={Link}
       label={label}

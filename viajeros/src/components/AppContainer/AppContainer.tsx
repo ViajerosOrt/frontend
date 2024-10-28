@@ -8,6 +8,7 @@ import { IoMdExit } from "react-icons/io";
 import { showNotification } from '@mantine/notifications';
 import { CgProfile } from "react-icons/cg";
 import { ViajeroLogo } from "../ViajeroLogo/viajeroLogo";
+import { VIAJERO_GREEN } from "@/consts";
 
 export const AppContainer = ({ children }: { children: React.ReactNode }) => {
   const [opened, { toggle, close }] = useDisclosure();
@@ -56,7 +57,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
           </Group>
         </AppShell.Header>
 
-        <AppShell.Navbar p="md" bg="#65a773">
+        <AppShell.Navbar p="md" bg={VIAJERO_GREEN}>
           <ViajerosNavbar closeSidebar={closeSidebar} />
           <Box mt="auto" mr="auto">
             <Button

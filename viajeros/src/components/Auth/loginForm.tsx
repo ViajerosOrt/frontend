@@ -6,6 +6,7 @@ import { FaEnvelope, FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
 import { useAuth } from "@/hooks/useAth";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
+import { VIAJERO_GREEN } from "@/consts";
 2
 const loginFormValidation = z.object({
   email: z.string().min(1).max(40).refine((val) => val.includes('@'), {
@@ -127,7 +128,7 @@ export const LoginForm = () => {
 
         />
 
-        <Button id="submit" type="submit" fullWidth mt="md" color="#65a773">
+        <Button id="submit" type="submit" fullWidth mt="md" color={VIAJERO_GREEN}>
           Login
         </Button>
       </Stack>

@@ -19,6 +19,7 @@ import { FaPlane, FaLock, FaEnvelope, FaUser } from "react-icons/fa";
 import { LoginForm } from "@/components/Auth/loginForm";
 import { SignupForm } from "@/components/Auth/signupForm";
 import { ViajeroLogo } from "@/components/ViajeroLogo/viajeroLogo";
+import { VIAJERO_GREEN } from "@/consts";
 
 export default function LoginPage() {
   const [showSignUp, setShowSignUp] = useState(false);
@@ -38,7 +39,7 @@ export default function LoginPage() {
           bg="rgba(255, 255, 255, 0.8)"
         >
           <Stack align="center" mb={20}>
-            <Title order={2} ta="center" fw={600} c="#65a773">
+            <Title order={2} ta="center" fw={600} c={VIAJERO_GREEN}>
               Viajeros
             </Title>
             <ViajeroLogo height={100} width={100} />
@@ -55,7 +56,7 @@ export default function LoginPage() {
                   <Button
                     onClick={() => setShowSignUp(true)}
                     style={{
-                      backgroundColor: '#65a773',
+                      backgroundColor: VIAJERO_GREEN,
                     }}
                   >
                     Register!
