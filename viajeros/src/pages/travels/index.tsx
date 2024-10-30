@@ -1,28 +1,43 @@
-import { gql, useApolloClient, useQuery } from "@apollo/client";
+import { TravelList } from "@/components/Travel/TravelList/TravelList";
+import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
+import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
+import { useTravelsQuery } from "@/graphql/__generated__/gql";
 import {
-  Button,
-  Card,
   Container,
   Grid,
-  Group,
-  Image,
-  Loader,
-  Text,
   Title,
 } from "@mantine/core";
-import { IoIosAirplane } from "react-icons/io";
+
 
 
 export default function travels() {
 
+  const { data, loading } = useTravelsQuery({
+    fetchPolicy: 'cache-and-network'
+  })
+
+  const travels = data?.travels
+
+  if (loading) {
+    return (
+      <ViajeroLoader />
+    )
+  }
+
+  if (!travels) {
+    return <ViajeroEmptyMessage message="No travels where found" />
+  }
+
   return (
     <Container size="xl" mt="xl">
-      <Title order={2} mb="md">
-        Activities!
+      <Title order={2} mb={20} size={24} ta="center">
+        Choose your next travel
       </Title>
       <Grid>
-        {/*TODO: SHOW TRAVELS */}
+        <TravelList travels={travels} />
       </Grid>
     </Container>
   );
 }
+
+

@@ -6,6 +6,7 @@ import { FaEnvelope, FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
 import { useAuth } from "@/hooks/useAth";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
+import { VIAJERO_GREEN } from "@/consts";
 2
 const loginFormValidation = z.object({
   email: z.string().min(1).max(40).refine((val) => val.includes('@'), {
@@ -67,7 +68,7 @@ export const LoginForm = () => {
               accessToken: accessToken
             }
           })
-          router.push("/viajes");
+          router.push("/travels");
         } else {
           form.setErrors({
             email: ' ',
@@ -100,26 +101,22 @@ export const LoginForm = () => {
           rightSection={<FaEnvelope size="1rem" />}
           radius="md"
           {...form.getInputProps('email')}
-          style={{ color: 'black', borderColor: '#17a2b8' }}
-              styles={{
-                input: {
-                  backgroundColor: '#edf6ee',
-                  borderColor: '#17a2b8'
-                },
-              }}
+          styles={{
+            input: {
+              backgroundColor: '#edf6ee',
+            },
+          }}
         />
         <PasswordInput
           required
           label="Password"
           placeholder="Enter password"
           radius="md"
-          style={{ color: 'black', borderColor: '#17a2b8' }}
-              styles={{
-                input: {
-                  backgroundColor: '#edf6ee',
-                  borderColor: '#17a2b8'
-                },
-              }}
+          styles={{
+            input: {
+              backgroundColor: '#edf6ee',
+            },
+          }}
           visibilityToggleIcon={({ reveal }) =>
             reveal ? (
               <FaEyeSlash className="h-4 w-4" />
@@ -128,10 +125,10 @@ export const LoginForm = () => {
             )
           }
           {...form.getInputProps('password')}
-          
+
         />
 
-        <Button id="submit" type="submit" fullWidth mt="md" color="blue">
+        <Button id="submit" type="submit" fullWidth mt="md" color={VIAJERO_GREEN}>
           Login
         </Button>
       </Stack>

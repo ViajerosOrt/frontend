@@ -1,0 +1,1 @@
+export const VIAJERO_GREEN = "#65a773"

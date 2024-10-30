@@ -3,7 +3,7 @@ import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
 export interface UserState {
-  id: number
+  id: string
   accessToken: AccessToken | undefined | null
   email: string
 }
@@ -15,7 +15,7 @@ type AuthStoreState = {
 
 type AuthStoreActions = {
   onLogin: (newUser: UserState) => void
-  onLogout: (userId: number) => void
+  onLogout: (userId: string) => void
 
 }
 
@@ -33,7 +33,7 @@ export const useAuthStore = create(
             currentUser: newUser
           }
         }),
-      onLogout: (userId: number) =>
+      onLogout: (userId: string) =>
         set((state: AuthStoreState) => {
           return {
             currentUser: null,

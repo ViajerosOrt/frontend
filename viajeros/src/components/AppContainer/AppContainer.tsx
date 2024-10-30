@@ -1,10 +1,14 @@
-import { AppShell, Box, Burger, Button, Center, Group, Modal, Stack, Text, Title } from "@mantine/core";
+import { AppShell, Box, Burger, Button, Center, Group, Image, Modal, Stack, Text, ThemeIcon, Title } from "@mantine/core";
 import { useDisclosure } from "@mantine/hooks";
 import { ViajerosNavbar } from "./ViajerosNavbar";
 import { useCallback } from "react";
 import { useAuth } from "@/hooks/useAth";
 import { useRouter } from "next/router";
-import { LogoutModal } from "./LogoutModal";
+import { IoMdExit } from "react-icons/io";
+import { showNotification } from '@mantine/notifications';
+import { CgProfile } from "react-icons/cg";
+import { ViajeroLogo } from "../ViajeroLogo/viajeroLogo";
+import { VIAJERO_GREEN } from "@/consts";
 
 export const AppContainer = ({ children }: { children: React.ReactNode }) => {
   const [opened, { toggle, close }] = useDisclosure();
@@ -17,11 +21,14 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
 
   const handleLogout = () => {
     onLogout(currentUser?.id)
+    showNotification({
+      title: 'Signed out',
+      message: 'Your user was signed out',
+      color: "green",
+      zIndex: 2077
+    })
     router.push("/");
   }
-
-  const [logoutModalOpened, { close: closeLogoutModal, open: openLogoutModal }] = useDisclosure(false);
-
 
   return (
     <>
@@ -35,42 +42,42 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
         padding="md"
       >
         <AppShell.Header>
-          <Stack gap={0}>
-            <Group justify="space-between" px="md" py={8}>
-              <Burger
-                opened={opened}
-                onClick={toggle}
-                hiddenFrom="md"
-                size="md"
-                color={"white"}
-              />
-              <Box visibleFrom="md">Viajero logo!</Box>
+          <Group justify="space-between" px="md" py={8} align="center" h="100%">
+            <Burger
+              opened={opened}
+              onClick={toggle}
+              hiddenFrom="md"
+              size="md"
+            />
+            <ViajeroLogo />
+            <Group align="center" justify="center">
+              <CgProfile />
+              <Text> {currentUser?.email}</Text>
             </Group>
-          </Stack>
+          </Group>
         </AppShell.Header>
 
-        <AppShell.Navbar p="md">
+        <AppShell.Navbar p="md" bg={VIAJERO_GREEN}>
           <ViajerosNavbar closeSidebar={closeSidebar} />
-          <Button
-            fullWidth
-            color="red"
-            variant="outline"
-            onClick={() => openLogoutModal()}
-            mt="auto"
-            mb={30}
-          >
-            Logout
-          </Button>
+          <Box mt="auto" mr="auto">
+            <Button
+              fullWidth
+              color="black"
+              variant="transparent"
+              onClick={handleLogout}
+              mt="auto"
+              mb={30}
+              leftSection={
+                <IoMdExit size="" />
+              }
+            >
+              Logout
+            </Button>
+          </Box>
         </AppShell.Navbar>
 
         <AppShell.Main>{children}</AppShell.Main>
-      </AppShell>
-
-      <LogoutModal handleLogout={handleLogout}
-        logoutModalOpened={logoutModalOpened}
-        closeLogoutModal={closeLogoutModal}
-        openLogoutModal={openLogoutModal}
-      />
+      </AppShell >
     </>
 
   );

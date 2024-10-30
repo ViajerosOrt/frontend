@@ -1,18 +1,20 @@
 import { hasLength, isEmail, isInRange, isNotEmpty, useForm } from '@mantine/form';
 import { TextInput, PasswordInput, Paper, Title, Container, Button, Stack, Text, Center, Loader } from '@mantine/core';
-import { FaPlane, FaLock, FaEnvelope, FaUser } from 'react-icons/fa';
+import { FaPlane, FaLock, FaEnvelope, FaUser, FaEyeSlash, FaEye } from 'react-icons/fa';
 import { ApolloError, gql, useMutation } from '@apollo/client';
 import { useState } from 'react';
 import router from 'next/router';
 import { useSignupMutation } from '@/graphql/__generated__/gql';
-
+import { ViajeroLoader } from '../ViajeroLoader/ViajeroLoader';
+import { Calendar } from '@mantine/dates';
+import { VIAJERO_GREEN } from '@/consts';
 interface SignupFormProps {
   switchToLogin: () => void;
 }
 
 export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
   const [signup, { loading, error }] = useSignupMutation()
-  
+
   const form = useForm({
     initialValues: {
       userName: '',
@@ -58,98 +60,99 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
   };
 
   return (
-    <Paper withBorder shadow="md" p={30} radius="md" bg="rgba(255, 255, 255, 0.8)" style={{ backgroundColor: '#e1e7f9' }}>
-      <Stack align="center" mb={20}>
-        <form onSubmit={form.onSubmit(handleRegisterSubmit)}>
-          <Stack>
-            <TextInput
-              required
-              label="Name"
-              placeholder="Name"
-              rightSection={<FaUser size="1rem" />}
-              {...form.getInputProps('userName')} //vincula campo con el estado 
-              radius="md"
-              style={{ color: 'black', borderColor: '#17a2b8' }}
-              styles={{
-                input: {
-                  backgroundColor: '#edf6ee',
-                  borderColor: '#17a2b8'
-                },
-              }}
-            />
-
-            <TextInput
-              required
-              label="Email"
-              placeholder="your@email.com"
-              rightSection={<FaEnvelope size="1rem" />}
-              {...form.getInputProps('email')}
-              radius="md"
-              style={{ color: 'black', borderColor: '#17a2b8' }}
-              styles={{
-                input: {
-                  backgroundColor: '#edf6ee',
-                  borderColor: '#17a2b8'
-                },
-              }}
-            />
-
-            <PasswordInput
-              required
-              label="Password"
-              placeholder="Password"
-              rightSection={<FaLock size="1rem" />}
-              {...form.getInputProps('password')}
-              radius="md"
-              style={{ color: 'black', borderColor: '#17a2b8' }}
-              styles={{
-                input: {
-                  backgroundColor: '#edf6ee',
-                  borderColor: '#17a2b8'
-                },
-              }}
-            />
-
-            <TextInput
-              required
-              label="Date of Birth"
-              type="date"
-              {...form.getInputProps('birthDate')}
-              radius="md"
-              style={{ color: 'black', borderColor: '#17a2b8' }}
-              styles={{
-                input: {
-                  backgroundColor: '#edf6ee',
-                  borderColor: '#17a2b8'
-                },
-              }}
-            />
-
-          </Stack>
-
-          <Center mt="md">
-            <Button type="submit" disabled={loading}>
-              {loading ? <Loader size="sm" /> : 'Register'}
-            </Button>
-          </Center>
-
-          {error && <Text color="red">{error.message}</Text>}
-        </form>
-        <Stack align="center" mt="md">
-          <Text size="sm" c="dimmed">
-            Already have an account?
-          </Text>
-          <Button
-            onClick={switchToLogin}
-            style={{
-              backgroundColor: '#76aaa4',
-              color: 'black',
-              borderColor: '#17a2b8',
+    <Stack px={30} bg="rgba(255, 255, 255, 0.8)" style={{ backgroundColor: '#e1e7f9' }} align="center" mb={20}>
+      <form onSubmit={form.onSubmit(handleRegisterSubmit)}>
+        <Stack>
+          <TextInput
+            required
+            label="Name"
+            placeholder="Name"
+            rightSection={<FaUser size="1rem" />}
+            {...form.getInputProps('userName')} //vincula campo con el estado 
+            radius="md"
+            style={{ color: 'black', borderColor: '#17a2b8' }}
+            styles={{
+              input: {
+                backgroundColor: '#edf6ee',
+                borderColor: '#17a2b8'
+              },
             }}
-          >Back to Login
-          </Button>
+          />
+
+          <TextInput
+            required
+            label="Email"
+            placeholder="your@email.com"
+            rightSection={<FaEnvelope size="1rem" />}
+            {...form.getInputProps('email')}
+            radius="md"
+            style={{ color: 'black', borderColor: '#17a2b8' }}
+            styles={{
+              input: {
+                backgroundColor: '#edf6ee',
+                borderColor: '#17a2b8'
+              },
+            }}
+          />
+
+          <PasswordInput
+            required
+            label="Password"
+            placeholder="Enter password"
+            radius="md"
+            styles={{
+              input: {
+                backgroundColor: '#edf6ee',
+              },
+            }}
+            visibilityToggleIcon={({ reveal }) =>
+              reveal ? (
+                <FaEyeSlash className="h-4 w-4" />
+              ) : (
+                <FaEye className="h-4 w-4" />
+              )
+            }
+            {...form.getInputProps('password')}
+
+          />
+
+          <TextInput
+            required
+            label="Date of Birth"
+            type="date"
+            {...form.getInputProps('birthDate')}
+            radius="md"
+            style={{ color: 'black', borderColor: '#17a2b8' }}
+            styles={{
+              input: {
+                backgroundColor: '#edf6ee',
+                borderColor: '#17a2b8'
+              },
+            }}
+          />
+
         </Stack>
+
+        <Center mt={20}>
+          <Button type="submit" disabled={loading} color={VIAJERO_GREEN}>
+            {loading ? <ViajeroLoader /> : 'Register'}
+          </Button>
+        </Center>
+
+        {error && <Text color="red">{error.message}</Text>}
+      </form>
+      <Stack align="center" mt="md">
+        <Text size="sm" c="dimmed">
+          Already have an account?
+        </Text>
+        <Button
+          onClick={switchToLogin}
+          style={{
+            backgroundColor: VIAJERO_GREEN,
+          }}
+        >Back to Login
+        </Button>
       </Stack>
-    </Paper>
+    </Stack>
   );
 };

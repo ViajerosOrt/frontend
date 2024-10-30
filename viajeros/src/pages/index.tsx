@@ -1,3 +1,4 @@
+import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { Center, Loader } from "@mantine/core";
 import { Inter } from "next/font/google";
 import { useRouter } from "next/router";
@@ -13,8 +14,6 @@ export default function Home() {
   }, []);
 
   return (
-    <Center style={{ height: "100vh" }}>
-      <Loader />
-    </Center>
+    <ViajeroLoader />
   );
 }

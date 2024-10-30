@@ -1,14 +1,6 @@
 import {
-  Button,
-  Card,
   Container,
-  Grid,
-  Group,
-  Image,
-  Text,
-  Title,
 } from "@mantine/core";
-import { IoIosAirplane } from "react-icons/io";
 
 export default function myTravels() {
   return (
