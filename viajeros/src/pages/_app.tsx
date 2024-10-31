@@ -15,6 +15,7 @@ import useAuthStore from "@/stores/useAuthStore";
 import UnauthenticatedRoutes from "@/components/AuthenticationRoutes/UnauthenticatedRoutes";
 import AuthenticatedRoutes from "@/components/AuthenticationRoutes/AuthenticatedRoutes";
 import { Notifications } from "@mantine/notifications";
+import '@mantine/dates/styles.css';
 
 const theme = createTheme({
   /** Put your mantine theme override here */
