@@ -63,7 +63,7 @@ export const LoginForm = () => {
           // If we have an access token, we store the user and JWT info in the store
           onLogin({
             newUser: {
-              id: user.id,
+              id:user.id,
               email: user.email,
               accessToken: accessToken
             }
