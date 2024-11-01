@@ -1,7 +1,7 @@
 import { TravelList } from "@/components/Travel/TravelList/TravelList";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { useTravelsQuery } from "@/graphql/__generated__/gql";
+import { Travel, useTravelsQuery } from "@/graphql/__generated__/gql";
 import {
   Container,
   Grid,
@@ -34,7 +34,7 @@ export default function travels() {
         Choose your next travel
       </Title>
       <Grid>
-        <TravelList travels={travels} />
+        <TravelList travels={travels as Travel[]} />
       </Grid>
     </Container>
   );

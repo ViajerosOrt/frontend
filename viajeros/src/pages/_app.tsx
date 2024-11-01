@@ -3,7 +3,7 @@
 import "@mantine/core/styles.css";
 import '@mantine/notifications/styles.css';
 
-import client from "@/api/apollo-client";
+import { useViajeroApolloClient } from "@/api/apollo-client";
 import type { AppProps } from "next/app";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { useRouter } from "next/router";
@@ -29,6 +29,8 @@ export default function App({ Component, pageProps }: AppProps) {
 
   // Public pages does not have the App Layout.
   const isPublicPage = publicPages.includes(router.pathname);
+
+  const client = useViajeroApolloClient()
 
   return (
     <MantineProvider theme={theme}>
