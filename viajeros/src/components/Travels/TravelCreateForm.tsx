@@ -11,6 +11,8 @@ import { useEffect, useState } from 'react';
 const TravelCreateForm = () => {
   const [createTravel] = useMutation(CREATE_TRAVEL_MUTATION);
   const { data, loading, error } = useQuery(GET_ALL_ACTIVITIES);
+  
+
   const currentUser = useAuthStore((state) => state.currentUser);
 
   const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
@@ -18,11 +20,8 @@ const TravelCreateForm = () => {
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
 
   const activities = data?.activities || [];
-  console.log("Datos de actividades:", data);
-  console.log(data);
-  console.log(activities);
 
-  const form = useForm({
+  const form = useForm<travelValues>({
     initialValues: {
       title: '',
       description: '',
@@ -34,15 +33,15 @@ const TravelCreateForm = () => {
       },
     },
     validate: {
-      title: (value) => (value.length < 5 ? 'Title must contain at least 5 characters' : null),
       maxCap: (value) => (value < 1 ? 'Max Capacity must be more than 1' : null),
-      startDate: (value) => (!value ? 'Start date is required' : null),
-      finishDate: (value, values) =>
-        value <= values.startDate ? 'Finish date cannot be greater than start date' : null,
     },
   });
 
-  const handleSubmit = async (values: { title: any; description: any; maxCap: any; location: { longLatPoint: any; }; }) => {
+  const handleCreateTravelSubmit = async (values:  travelValues) => {
+
+    console.log("Creando viaje con valores:", values);
+
+    
     try {
 
       if (!currentUser?.accessToken?.value) {
@@ -60,8 +59,8 @@ const TravelCreateForm = () => {
             maxCap: values.maxCap,
             isEndable: false,
           },
-          createUserId: currentUser.accessToken.value,
-          activitiesId: [],
+          createUserId: currentUser.id,
+          activitiesId: selectedActivities,
           createLocationInput: {
             name: "Solymar",
             state: "Canelones",
@@ -74,30 +73,37 @@ const TravelCreateForm = () => {
       form.reset();
       setSelectedStartDate(null);
       setSelectedFinishDate(null);
+      setSelectedActivities([]);
     } catch (error) {
       showNotification({ message: 'Error creating the travel', color: 'red' });
       console.error(error);
     }
   };
 
+  const handleClick = () => {
+    console.log("click");
+    form.onSubmit(handleCreateTravelSubmit)();
+    console.log("ak");
+  };
+
   return (
     <Container mt="xl" style={{ textAlign: 'left', width: '100%' }}>
-      <form onSubmit={form.onSubmit(handleSubmit)}>
+      <form onSubmit={form.onSubmit(handleCreateTravelSubmit)}>
         <Stack style={{ width: '100%' }}>
 
-          <Text>Title</Text>
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title  </Text>
           <TextInput {...form.getInputProps('title')} required />
 
-          <Text>Description</Text>
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Description</Text>
           <Textarea {...form.getInputProps('description')} required />
 
-          <Text>Max Capacity</Text>
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
           <NumberInput {...form.getInputProps('maxCap')} min={1} required style={{ maxWidth: 80 }} />
 
           <div style={{ display: 'flex', justifyContent: 'space-between' }}>
 
             <div style={{ flex: 1, marginRight: '10px' }}>
-              <Text>Start Date</Text>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Start Date</Text>
               <DatePicker
                 value={selectedStartDate}
                 onChange={setSelectedStartDate}
@@ -105,7 +111,7 @@ const TravelCreateForm = () => {
             </div>
 
             <div style={{ flex: 1, marginLeft: '10px' }}>
-              <Text>End Date</Text>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>End Date</Text>
               <DatePicker
                 value={selectedFinishDate}
                 onChange={setSelectedFinishDate}
@@ -113,18 +119,20 @@ const TravelCreateForm = () => {
             </div>
           </div>
 
-          <Text>Activities</Text>
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Activities</Text>
           <MultiSelect
-            data={activities.map((activity: { id: any; activityName: any; }) => ({ value: activity.id, label: activity.activityName }))}
+             data={activities.map((activity: { id: any; activityName: any; }) => ({
+              value: activity.id,         
+              label: activity.activityName 
+            }))}
             placeholder="Select activites for your travel"
-            {...form.getInputProps('activities')}
+            onChange={setSelectedActivities}
           />
 
-          <Text>Coords(longLatPoint)</Text>
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Coords(longLatPoint)</Text>
           <TextInput {...form.getInputProps('location.longLatPoint')} required />
 
-          <Button type="submit" mt="md" style={{ maxWidth: 120 }}>Create Travel</Button>
-          
+          <Button type="submit" mt="md" style={{ maxWidth: 140 }}>Create Travel</Button>
         </Stack>
       </form>
     </Container>
@@ -132,3 +140,14 @@ const TravelCreateForm = () => {
 };
 
 export default TravelCreateForm;
+
+interface travelValues {
+  title: string;
+  description: string;
+  maxCap: number;
+  location: {
+    longLatPoint: string;
+  };
+  startDate: Date | null;
+  finishDate: Date | null;
+}

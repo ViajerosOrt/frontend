@@ -8,7 +8,7 @@ export const TravelList = ({ travels }: { travels: Partial<Travel>[] }) => {
     <>
       {
         travels.map((travel, index) => (
-          <TravelCard travel={travel} imageSrc={travelImages[index % travelImages.length]} />
+          <TravelCard key={travel.id || index} travel={travel} imageSrc={travelImages[index % travelImages.length]} />
         ))
       }
     </>
