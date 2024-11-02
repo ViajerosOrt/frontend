@@ -9,6 +9,25 @@ export const GET_TRAVELS = gql`
       startDate
       finishDate
       maxCap
+      isJoined
+      usersCount
+      checklist{
+      id
+      name
+      
+      items {
+       name
+       state
+       }
+      }
+      usersTravelers{
+       name
+       email
+      }
+      creatorUser {
+       name
+       email
+      }
       travelActivities {
         id
         activityName

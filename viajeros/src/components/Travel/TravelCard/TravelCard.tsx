@@ -11,10 +11,16 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
+import { Dispatch, SetStateAction } from "react";
 import { CgProfile } from "react-icons/cg";
 
+type TravelCardProps = {
+  travel: Travel,
+  imageSrc: string,
+  setSelectedTravel: Dispatch<SetStateAction<Travel | undefined>>
+}
 
-export const TravelCard = ({ travel, imageSrc }: { travel: Partial<Travel>, imageSrc: string }) => {
+export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardProps) => {
   const { hovered, ref } = useHover();
   const formattedStartDate = new Date(travel.startDate).toLocaleDateString('es-ES');
   const formattedEndDate = new Date(travel.finishDate).toLocaleDateString('es-ES');
@@ -48,15 +54,31 @@ export const TravelCard = ({ travel, imageSrc }: { travel: Partial<Travel>, imag
           {travel.travelDescription || "No description available."}
         </Text>
 
-        <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
-          View Details
-        </Button>
+        {travel.isJoined ?
+          (
+            <>
+              <Group wrap="nowrap">
+                <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravel(travel)}>
+                  View Details
+                </Button>
+                <Button variant={"filled"} color={"purple"} fullWidth mt="md" radius="md" onClick={() => null}>
+                  Open Chat
+                </Button>
+              </Group>
+            </>
+          )
+          :
+          <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravel(travel)}>
+            View Details
+          </Button>
+
+        }
 
         <Box pos="absolute">
-          <ThemeIcon color={VIAJERO_GREEN} miw={50}>
+          <ThemeIcon color={VIAJERO_GREEN} miw={70}>
             <CgProfile />
             <Text ml={4}>
-              {travel.maxCap}
+              {`${travel.usersCount} / ${travel.maxCap}`}
             </Text>
           </ThemeIcon>
         </Box>
