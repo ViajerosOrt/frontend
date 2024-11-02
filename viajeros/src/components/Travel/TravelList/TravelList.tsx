@@ -18,6 +18,7 @@ export const TravelList = ({ travels }: { travels: Travel[] }) => {
       {
         travels.map((travel, index) => (
           <TravelCard travel={travel}
+            key={travel.id}
             imageSrc={travelImages[index % travelImages.length]}
             setSelectedTravel={(travel) => {
               setSelectedTravel(travel);
@@ -85,7 +86,13 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
   return (
     <Modal
       opened={opened}
-      onClose={close}
+      onClose={() => {
+        close()
+        setTimeout(() => {
+          setSelectedTravel(undefined);
+        }, 200);
+      }
+      }
       withCloseButton={false}
       centered
       padding={0}
@@ -117,15 +124,13 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
           {selectedTravel?.travelDescription || "No description available."}
         </Text>
 
-        <Group gap="sm" justify="space-between" mt={40}>
-          <Group>
-            <ThemeIcon color={VIAJERO_GREEN} miw={50}>
-              <CgProfile />
-            </ThemeIcon>
-            <Text>{`Max Capacity: ${selectedTravel?.maxCap}`}</Text>
-          </Group>
-          <Text>{`Created by: ${selectedTravel?.creatorUser?.email}`}</Text>
-        </Group>
+        <ThemeIcon color={VIAJERO_GREEN} miw={70}>
+          <CgProfile />
+          <Text ml={4}>
+            {`${selectedTravel?.usersCount} / ${selectedTravel?.maxCap}`}
+          </Text>
+        </ThemeIcon>
+
 
         <Box mt={12}>
           <Text fw={600} mb="xs">Activities:</Text>
@@ -145,7 +150,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
               fullWidth mt="md"
               radius="md"
               onClick={handleJoinTravel}
-              disabled={selectedTravel?.isJoined}
+              disabled={!!selectedTravel?.isJoined}
             >
               Join
             </Button>

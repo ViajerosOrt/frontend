@@ -10,6 +10,7 @@ export const GET_TRAVELS = gql`
       finishDate
       maxCap
       isJoined
+      usersCount
       checklist{
       id
       name

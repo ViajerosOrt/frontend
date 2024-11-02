@@ -75,10 +75,10 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
         }
 
         <Box pos="absolute">
-          <ThemeIcon color={VIAJERO_GREEN} miw={50}>
+          <ThemeIcon color={VIAJERO_GREEN} miw={70}>
             <CgProfile />
             <Text ml={4}>
-              {travel.maxCap}
+              {`${travel.usersCount} / ${travel.maxCap}`}
             </Text>
           </ThemeIcon>
         </Box>
