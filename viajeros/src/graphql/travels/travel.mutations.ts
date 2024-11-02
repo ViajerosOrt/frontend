@@ -23,5 +23,3 @@ mutation createTravel(
     }
   }
 `);
-
-

@@ -17,14 +17,9 @@ export const TravelList = ({ travels }: { travels: Travel[] }) => {
     <>
       {
         travels.map((travel, index) => (
-          <TravelCard travel={travel}
-            key={travel.id}
-            imageSrc={travelImages[index % travelImages.length]}
-            setSelectedTravel={(travel) => {
-              setSelectedTravel(travel);
-              setSelectedImageSrc(travelImages[index % travelImages.length]);
-            }}
-          />
+          <TravelCard key={travel.id || index} travel={travel} imageSrc={travelImages[index % travelImages.length]} setSelectedTravel={function (value: SetStateAction<Travel | undefined>): void {
+            throw new Error("Function not implemented.");
+          } } />
         ))
       }
 

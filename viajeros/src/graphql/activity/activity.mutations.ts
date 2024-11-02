@@ -8,5 +8,3 @@ export const GET_ALL_ACTIVITIES = gql`
     }
   }
 `;
-
-

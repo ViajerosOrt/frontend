@@ -16,7 +16,7 @@ import Link from "next/link";
 
 
 
-export default function travels() {
+export default function Travels() {
 
   const { data, loading } = useTravelsQuery({
     fetchPolicy: 'cache-and-network'
@@ -30,15 +30,9 @@ export default function travels() {
     )
   }
 
-  if (!travels) {
-    return <ViajeroEmptyMessage message="No travels where found" />
-  }
-
   return (
     <Container size="xl" mt="xl">
-      <Title order={2} mb={20} size={24} ta="center">
-        Choose your next travel
-      </Title>
+     
       <Button 
         component={Link} 
         href="/travels/travelCreate" 
@@ -46,9 +40,17 @@ export default function travels() {
       >
         Create new travel
       </Button>
-      <Grid>
-        <TravelList travels={travels as Travel[]} />
-      </Grid>
+
+      <Title order={2} mb={20} size={24} ta="center">
+        Choose your next travel
+      </Title>
+      {!travels || travels.length === 0 ? (
+        <ViajeroEmptyMessage message="No travels were found" />
+      ) : (
+        <Grid>
+           <TravelList travels={travels as Travel[]} />
+        </Grid>
+      )}
     </Container>
   );
 }
