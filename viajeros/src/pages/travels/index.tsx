@@ -51,6 +51,7 @@ export default function Travels() {
            <TravelList travels={travels as Travel[]} />
         </Grid>
       )}
+      
     </Container>
   );
 }

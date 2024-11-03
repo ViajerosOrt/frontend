@@ -17,11 +17,16 @@ export const TravelList = ({ travels }: { travels: Travel[] }) => {
     <>
       {
         travels.map((travel, index) => (
-          <TravelCard key={travel.id || index} travel={travel} imageSrc={travelImages[index % travelImages.length]} setSelectedTravel={function (value: SetStateAction<Travel | undefined>): void {
-            throw new Error("Function not implemented.");
-          } } />
-        ))
-      }
+          <TravelCard travel={travel}
+          key={travel.id}
+          imageSrc={travelImages[index % travelImages.length]}
+          setSelectedTravel={(travel) => {
+            setSelectedTravel(travel);
+            setSelectedImageSrc(travelImages[index % travelImages.length]);
+          }}
+        />
+      ))
+    }
 
       <TravelDetailsModal selectedTravel={selectedTravel} setSelectedTravel={setSelectedTravel} selectedImageSrc={selectedImageSrc} />
     </>

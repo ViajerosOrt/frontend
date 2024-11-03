@@ -1,25 +1,37 @@
 import { gql } from "@apollo/client";
 
 export const CREATE_TRAVEL_MUTATION = gql(`
-mutation createTravel(
+mutation CreateTravel(
+    $activityId: [String!]!,
+    $createLocationInput: CreateLocationInput!,
     $createTravelInput: CreateTravelInput!,
-    $createUserId: String!,
-    $activitiesId: [String!]!,
-    $createLocationInput: CreateLocationInput!
+    $items: [String!]!,
+    $userId: String!
+) {
+  createTravel(
+    activityId: $activityId,
+    createLocationInput: $createLocationInput,
+    createTravelInput: $createTravelInput,
+    items: $items,
+    userId: $userId
   ) {
-    createTravel(
-      createTravelInput: $createTravelInput,
-      createUserId: $createUserId,
-      activitiesId: $activitiesId,
-      createLocationInput: $createLocationInput
-    ) {
+    creatorUser {
       id
-      travelTitle
-      travelDescription
-      startDate
-      finishDate
-      maxCap
-      isEndable
     }
+    finishDate
+    id
+    isEndable
+    isJoined
+    maxCap
+    startDate
+    travelActivities {
+      id
+    }
+    travelDescription
+    travelLocation {
+      id
+    }
+    travelTitle
   }
+}
 `);
