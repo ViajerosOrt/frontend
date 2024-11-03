@@ -13,6 +13,8 @@ import {
 } from "@mantine/core";
 import { IoIosAirplane } from "react-icons/io";
 import Link from "next/link";
+import { VIAJERO_GREEN } from "@/consts";
+import { FaPlane } from "react-icons/fa";
 
 
 
@@ -33,12 +35,16 @@ export default function Travels() {
   return (
     <Container size="xl" mt="xl">
      
-      <Button 
+     <Button 
         component={Link} 
         href="/travels/travelCreate" 
         mt="md"
+        size="md"
+        radius="md"
+        color = {VIAJERO_GREEN}
+        rightSection={<FaPlane />}
       >
-        Create new travel
+        Create a new travel
       </Button>
 
       <Title order={2} mb={20} size={24} ta="center">

@@ -1,29 +1,33 @@
-import { CREATE_TRAVEL_MUTATION } from '@/graphql/travels/travel.mutations';
-import { GET_ALL_ACTIVITIES } from '@/graphql/activity/activity.mutations';
-import { ApolloError, useMutation, useQuery } from '@apollo/client';
+import { useCreateTravelMutation, useGetAllActivitiesQuery } from "@/graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
-import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Modal, Group, MultiSelect, List, ActionIcon, Flex, Box } from '@mantine/core';
-import { Calendar, DatePicker } from '@mantine/dates';
-import { showNotification } from '@mantine/notifications';
-import useAuthStore from '@/stores/useAuthStore';
-import { useEffect, useState } from 'react';
-import { string, z } from 'zod';
+import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Modal, Group, MultiSelect, List, ActionIcon, Flex, Box, Title } from '@mantine/core';
+import { DatePicker } from '@mantine/dates';
+import { notifications, showNotification } from '@mantine/notifications';
+import { useState } from 'react';
+import { z } from 'zod';
+import { useAuth } from "@/hooks/useAth";
+import Router from "next/router";
+import { VIAJERO_GREEN } from "@/consts";
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
+import { FaCheck } from "react-icons/fa";
 
 const TravelCreateForm = () => {
 
   //Mutations and Querys
-  const [createTravel] = useMutation(CREATE_TRAVEL_MUTATION);
-  const { data, loading, error } = useQuery(GET_ALL_ACTIVITIES);
+  const [createTravel] = useCreateTravelMutation({
+    refetchQueries: ["travels"]
+  });
+
+  const { data } = useGetAllActivitiesQuery();
 
   //We obtain the current user
-  const currentUser = useAuthStore((state) => state.currentUser);
+  const { currentUser } = useAuth()
 
-  const [selectedStartDate, setSelectedStartDate] = useState<Date | null>(null);
-  const [selectedFinishDate, setSelectedFinishDate] = useState<Date | null>(null);
+  const [selectedDates, setSelectedDates] = useState<[Date | null, Date | null]>([null, null]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
 
   //Items isnt done yet 2/11 FS
-  const [selectedItems, setSelectedItems] = useState<string[]>([]);
   const [item, setItem] = useState('');
   const [items, setItems] = useState<string[]>([]);
 
@@ -46,13 +50,15 @@ const TravelCreateForm = () => {
     }
     //Validation to see if the item is already in the list, then dont add it
     if (items.includes(item)) {
-      showNotification({
-        message: 'Item already exists in the checklist!',
-        color: 'red',
+      notifications.show({
+        title: 'Warning!',
+        message: `You cant add the same item twice`,
+        color: 'yellow',
       });
+
       return;
     }
-  
+
     setItems((prevItems) => [...prevItems, item]);
     setItem('');
   };
@@ -64,38 +70,28 @@ const TravelCreateForm = () => {
     }
   };
 
+  const handleDateChange = (value: [Date | null, Date | null]) => {
+    setSelectedDates(value);
+  };
+
+
   //Principal function to send the travel to the data base
   const handleCreateTravelSubmit = async () => {
 
-    console.log("Entro");
     //We obtain the values from the form const that we defined earlier
     const values = form.values;
-
-    //Used to store the information of locations 2/11 FS we wont use it yet, but for the future
-    const locationData = {
-      name: "Solymar",
-      state: "Canelones",
-      address: "StewartVargasd",
-      longLatPoint: '',
-    };
 
     //We put all together in a constant for better use
     const travelData = {
       travelTitle: values.title,
       travelDescription: values.description,
-      startDate: selectedStartDate?.toISOString(),
-      finishDate: selectedFinishDate?.toISOString(),
+      startDate: selectedDates[0]?.toISOString(),
+      finishDate: selectedDates[1]?.toISOString(),
       maxCap: values.maxCap,
       isEndable: false,
     };
 
     try {
-
-      //Added because we will call currentUser (it cannot be null)
-      if (!currentUser?.accessToken?.value) {
-        console.error("No user logged in");
-        return;
-      }
 
       //We call the mutation to create the travel
       await createTravel({
@@ -103,7 +99,7 @@ const TravelCreateForm = () => {
           createTravelInput: travelData,
           activityId: selectedActivities.length > 0 ? selectedActivities : [],
           items: items.length > 0 ? items : [],
-          userId: currentUser.id,
+          userId: currentUser!.id,
           createLocationInput: {
             name: "Solymar",
             state: "Canelones",
@@ -116,25 +112,33 @@ const TravelCreateForm = () => {
       showNotification({ message: 'Travel created sucesfully', color: 'green' });
       form.reset();
 
-      setSelectedStartDate(null);
-      setSelectedFinishDate(null);
+      setSelectedDates([null, null]);
       setSelectedActivities([]);
 
     } catch (error) {
-      if (error instanceof ApolloError) {
-        error.graphQLErrors.forEach(({ message }) => {
-          console.error(message);
-        });
-      }
       showNotification({ message: 'Error creating the travel', color: 'red' });
-      console.error("Error de", error);
     }
   };
 
   return (
+
     <Container mt="xl" style={{ textAlign: 'left', width: '100%' }}>
       <form onSubmit={form.onSubmit(handleCreateTravelSubmit)}>
-        <Stack style={{ width: '100%' }}>
+
+        <Stack style={{ width: '100%' }} >
+          <Button
+            variant="filled"
+            color={VIAJERO_GREEN}
+            onClick={Router.back}
+            c={VIAJERO_GREEN}
+            px="sm"
+            w="fit-content"
+            radius="md"
+            leftSection={<FontAwesomeIcon icon={faChevronLeft} color="black" />}
+          />
+          <Title mb="lg">
+            Create a Travel
+          </Title>
 
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title  </Text>
           <TextInput {...form.getInputProps('title')} required />
@@ -145,24 +149,14 @@ const TravelCreateForm = () => {
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
           <NumberInput {...form.getInputProps('maxCap')} min={1} required style={{ maxWidth: 80 }} />
 
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-
-            <div style={{ flex: 1, marginRight: '10px' }}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Start Date</Text>
-              <DatePicker
-                value={selectedStartDate}
-                onChange={setSelectedStartDate}
-              />
-            </div>
-
-            <div style={{ flex: 1, marginLeft: '10px' }}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>End Date</Text>
-              <DatePicker
-                value={selectedFinishDate}
-                onChange={setSelectedFinishDate}
-              />
-            </div>
-          </div>
+          <Box>
+            <DatePicker
+              type="range"
+              value={selectedDates}
+              onChange={handleDateChange}
+              allowSingleDateInRange
+           />
+          </Box>
 
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Activities</Text>
           <MultiSelect
@@ -197,7 +191,18 @@ const TravelCreateForm = () => {
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Coords(longLatPoint)</Text>
           <TextInput {...form.getInputProps('location.longLatPoint')} required />
 
-          <Button type="submit" mt="md" style={{ maxWidth: 140 }}>Create Travel</Button>
+          <Button 
+            type="submit" 
+            mt="md" 
+            px="sm" 
+            radius="md" 
+            color={VIAJERO_GREEN} 
+            w="fit-content"
+            style={{ fontWeight: 600, fontSize: '1rem'}}
+            rightSection={<FaCheck />}
+            >Create Travel
+          </Button>
+
         </Stack>
       </form>
     </Container>
@@ -216,16 +221,3 @@ const travelValuesSchema = z.object({
     longLatPoint: z.string().min(1, 'Coordinates are required'),
   }),
 });
-
-interface travelValues {
-  title: string;
-  description: string;
-  maxCap: number;
-  location: {
-    longLatPoint: string;
-  };
-  startDate: Date | null;
-  finishDate: Date | null;
-  items: string[];
-  activities: string[];
-}
