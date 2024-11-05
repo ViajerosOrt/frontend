@@ -70,11 +70,6 @@ const TravelCreateForm = () => {
     }
   };
 
-  const handleDateChange = (value: [Date | null, Date | null]) => {
-    setSelectedDates(value);
-  };
-
-
   //Principal function to send the travel to the data base
   const handleCreateTravelSubmit = async () => {
 
@@ -99,7 +94,6 @@ const TravelCreateForm = () => {
           createTravelInput: travelData,
           activityId: selectedActivities.length > 0 ? selectedActivities : [],
           items: items.length > 0 ? items : [],
-          userId: currentUser!.id,
           createLocationInput: {
             name: "Solymar",
             state: "Canelones",
@@ -130,7 +124,6 @@ const TravelCreateForm = () => {
             variant="filled"
             color={VIAJERO_GREEN}
             onClick={Router.back}
-            c={VIAJERO_GREEN}
             px="sm"
             w="fit-content"
             radius="md"
@@ -153,7 +146,7 @@ const TravelCreateForm = () => {
             <DatePicker
               type="range"
               value={selectedDates}
-              onChange={handleDateChange}
+              onChange={setSelectedDates}
               allowSingleDateInRange
            />
           </Box>
