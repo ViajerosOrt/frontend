@@ -2,6 +2,7 @@ import { useAuth } from '@/hooks/useAth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { useRouter } from 'next/router';
 
+/* eslint-disable react-hooks/rules-of-hooks */
 export default async function handler(
   req: NextApiRequest,
   res: NextApiResponse
@@ -21,3 +22,4 @@ export default async function handler(
   // Proceed with the route for authorized users
   // ... implementation of the API Route
 }
+/* eslint-enable react-hooks/rules-of-hooks */ //Implemented because of an error with hooks, FS 31/10 

@@ -11,22 +11,22 @@ export const GET_TRAVELS = gql`
       maxCap
       isJoined
       usersCount
-      checklist{
-      id
-      name
-      
-      items {
-       name
-       state
-       }
+      checklist {
+        id
+        name
+
+        items {
+          name
+          state
+        }
       }
-      usersTravelers{
-       name
-       email
+      usersTravelers {
+        name
+        email
       }
       creatorUser {
-       name
-       email
+        name
+        email
       }
       travelActivities {
         id

@@ -18,15 +18,15 @@ export const TravelList = ({ travels }: { travels: Travel[] }) => {
       {
         travels.map((travel, index) => (
           <TravelCard travel={travel}
-            key={travel.id}
-            imageSrc={travelImages[index % travelImages.length]}
-            setSelectedTravel={(travel) => {
-              setSelectedTravel(travel);
-              setSelectedImageSrc(travelImages[index % travelImages.length]);
-            }}
-          />
-        ))
-      }
+          key={travel.id}
+          imageSrc={travelImages[index % travelImages.length]}
+          setSelectedTravel={(travel) => {
+            setSelectedTravel(travel);
+            setSelectedImageSrc(travelImages[index % travelImages.length]);
+          }}
+        />
+      ))
+    }
 
       <TravelDetailsModal selectedTravel={selectedTravel} setSelectedTravel={setSelectedTravel} selectedImageSrc={selectedImageSrc} />
     </>
