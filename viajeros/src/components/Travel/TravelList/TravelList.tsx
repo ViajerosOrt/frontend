@@ -1,4 +1,5 @@
-import { Activity, Travel, useJoinToTravelMutation } from "@/graphql/__generated__/gql";
+import { Activity,useJoinToTravelMutation, TravelDto } from "@/graphql/__generated__/gql";
+
 import { TravelCard } from "../TravelCard/TravelCard";
 import { Box, Button, Group, Image, Modal, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -9,8 +10,8 @@ import { notifications } from "@mantine/notifications";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
 
-export const TravelList = ({ travels }: { travels: Travel[] }) => {
-  const [selectedTravel, setSelectedTravel] = useState<Travel | undefined>(undefined)
+export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
+  const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
 
   return (
@@ -35,8 +36,8 @@ export const TravelList = ({ travels }: { travels: Travel[] }) => {
 
 
 type TravelDetailsModalProps = {
-  selectedTravel: Travel | undefined,
-  setSelectedTravel: Dispatch<SetStateAction<Travel | undefined>>
+  selectedTravel: TravelDto  | undefined,
+  setSelectedTravel: Dispatch<SetStateAction<TravelDto  | undefined>>
   selectedImageSrc: string
 }
 

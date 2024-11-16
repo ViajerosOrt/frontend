@@ -1,7 +1,7 @@
 import { TravelList } from "@/components/Travel/TravelList/TravelList";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { Travel, useTravelsQuery } from "@/graphql/__generated__/gql";
+import { TravelDto, useTravelsQuery } from "@/graphql/__generated__/gql";
 import TravelCreateForm from "@/components/Travels/TravelCreateForm";
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
@@ -54,7 +54,7 @@ export default function Travels() {
         <ViajeroEmptyMessage message="No travels were found" />
       ) : (
         <Grid>
-           <TravelList travels={travels as Travel[]} />
+           <TravelList travels={travels as TravelDto[]} />
         </Grid>
       )}
       

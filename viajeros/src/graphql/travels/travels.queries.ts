@@ -35,3 +35,20 @@ export const GET_TRAVELS = gql`
     }
   }
 `;
+
+export const GET_TRAVELS_BY_USER = gql`
+  query FindAllTravelByUser {
+    findAllTravelByUser {
+      id
+      travelTitle
+      travelDescription
+      maxCap
+      usersCount
+      finishDate
+      startDate
+      travelActivities {
+        activityName
+      }
+    }
+  }
+`;
