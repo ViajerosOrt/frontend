@@ -7,6 +7,7 @@ import {
   Grid,
   Group,
   Image,
+  Stack,
   Text,
   ThemeIcon,
 } from "@mantine/core";
@@ -45,12 +46,12 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
           />
         </Card.Section>
 
-        <Group m={12} justify="space-between">
+        <Stack m={12} justify="space-between">
           <Text fw={700}>{travel.travelTitle}</Text>
           <Text size="sm">{formattedStartDate} - {formattedEndDate}</Text>
-        </Group>
+        </Stack>
 
-        <Text m={12}>
+        <Text m={12} truncate lineClamp={2} mih={60}>
           {travel.travelDescription || "No description available."}
         </Text>
 
@@ -83,8 +84,6 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
           </ThemeIcon>
         </Box>
       </Card>
-
-
     </Grid.Col >
   )
 };

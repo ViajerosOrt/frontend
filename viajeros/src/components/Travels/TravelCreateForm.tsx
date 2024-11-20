@@ -5,24 +5,21 @@ import { DatePicker } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useState } from 'react';
 import { z } from 'zod';
-import { useAuth } from "@/hooks/useAth";
-import Router from "next/router";
 import { VIAJERO_GREEN } from "@/consts";
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faChevronLeft } from '@fortawesome/free-solid-svg-icons';
 import { FaCheck } from "react-icons/fa";
+import { BackButton } from "../BackButton/BackButton";
+import { TRAVEL_MAX_DESCRIPTION_LENGTH, TRAVEL_MAX_TITLE_LENGTH } from "@/consts/validators";
+import { useRouter } from "next/router";
 
 const TravelCreateForm = () => {
-
   //Mutations and Querys
   const [createTravel] = useCreateTravelMutation({
     refetchQueries: ["travels"]
   });
 
-  const { data } = useGetAllActivitiesQuery();
+  const router = useRouter()
 
-  //We obtain the current user
-  const { currentUser } = useAuth()
+  const { data } = useGetAllActivitiesQuery();
 
   const [selectedDates, setSelectedDates] = useState<[Date | null, Date | null]>([null, null]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
@@ -43,7 +40,7 @@ const TravelCreateForm = () => {
     validate: zodResolver(travelValuesSchema),
   });
 
-  //Add an item to the list (called by handleKeyDown)
+  // Add an item to the list (called by handleKeyDown)
   const handleAddItem = () => {
     if (item.trim() === '') {
       return;
@@ -61,13 +58,6 @@ const TravelCreateForm = () => {
 
     setItems((prevItems) => [...prevItems, item]);
     setItem('');
-  };
-
-  //Event to add an item when the user presses Enter
-  const handleKeyDown = (event: React.KeyboardEvent<HTMLInputElement>) => {
-    if (event.key === 'Enter') {
-      handleAddItem();
-    }
   };
 
   //Principal function to send the travel to the data base
@@ -108,6 +98,7 @@ const TravelCreateForm = () => {
 
       setSelectedDates([null, null]);
       setSelectedActivities([]);
+      router.back
 
     } catch (error) {
       showNotification({ message: 'Error creating the travel', color: 'red' });
@@ -118,26 +109,52 @@ const TravelCreateForm = () => {
 
     <Container mt="xl" style={{ textAlign: 'left', width: '100%' }}>
       <form onSubmit={form.onSubmit(handleCreateTravelSubmit)}>
-
         <Stack style={{ width: '100%' }} >
-          <Button
-            variant="filled"
-            color={VIAJERO_GREEN}
-            onClick={Router.back}
-            px="sm"
-            w="fit-content"
-            radius="md"
-            leftSection={<FontAwesomeIcon icon={faChevronLeft} color="black" />}
-          />
+          <BackButton />
           <Title mb="lg">
             Create a Travel
           </Title>
 
-          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title  </Text>
-          <TextInput {...form.getInputProps('title')} required />
-
-          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Description</Text>
-          <Textarea {...form.getInputProps('description')} required />
+          <Stack gap={4}>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title  </Text>
+            <TextInput {...form.getInputProps('title')} required />
+            <Group justify="space-between">
+              <Text
+                size="xs"
+                c={
+                  (form.values.title?.length || 0) >
+                    TRAVEL_MAX_TITLE_LENGTH
+                    ? 'red'
+                    : 'gray'
+                }
+                ta="start"
+                w="100%"
+              >
+                {form.values.title?.length || 0} /{' '}
+                {TRAVEL_MAX_TITLE_LENGTH}
+              </Text>
+            </Group>
+          </Stack>
+          <Stack gap={4}>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Description</Text>
+            <Textarea {...form.getInputProps('description')} required />
+            <Group justify="space-between">
+              <Text
+                size="xs"
+                c={
+                  (form.values.description?.length || 0) >
+                    TRAVEL_MAX_DESCRIPTION_LENGTH
+                    ? 'red'
+                    : 'gray'
+                }
+                ta="start"
+                w="100%"
+              >
+                {form.values.description?.length || 0} /{' '}
+                {TRAVEL_MAX_DESCRIPTION_LENGTH}
+              </Text>
+            </Group>
+          </Stack>
 
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
           <NumberInput {...form.getInputProps('maxCap')} min={1} required style={{ maxWidth: 80 }} />
@@ -148,7 +165,7 @@ const TravelCreateForm = () => {
               value={selectedDates}
               onChange={setSelectedDates}
               allowSingleDateInRange
-           />
+            />
           </Box>
 
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Activities</Text>
@@ -160,17 +177,24 @@ const TravelCreateForm = () => {
               }))}
             placeholder="Select activites for your travel"
             onChange={setSelectedActivities}
-            style={{ fontWeight: 700, fontSize: '1.5rem', width: '30%' }}
+            w="60%"
+            style={{ fontWeight: 700, fontSize: '1.5rem' }}
           />
 
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>CheckList</Text>
-          <TextInput
-            style={{ fontWeight: 700, fontSize: '1.5rem', width: '30%' }}
-            value={item}
-            onChange={(e) => setItem(e.currentTarget.value)}
-            onKeyDown={handleKeyDown}
-            placeholder="Add an item to your checklist!"
-          />
+          <Group>
+            <TextInput
+              style={{ fontWeight: 700, fontSize: '1.5rem', width: '30%' }}
+              value={item}
+              onChange={(e) => setItem(e.currentTarget.value)}
+              placeholder="Add an item to your checklist"
+            />
+            <Button variant="outline" color={VIAJERO_GREEN} onClick={handleAddItem}>
+              +
+            </Button>
+
+          </Group>
+
 
           <MultiSelect
             data={items.map((i) => ({ value: i, label: i }))}
@@ -184,16 +208,16 @@ const TravelCreateForm = () => {
           <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Coords(longLatPoint)</Text>
           <TextInput {...form.getInputProps('location.longLatPoint')} required />
 
-          <Button 
-            type="submit" 
-            mt="md" 
-            px="sm" 
-            radius="md" 
-            color={VIAJERO_GREEN} 
+          <Button
+            type="submit"
+            mt="md"
+            px="sm"
+            radius="md"
+            color={VIAJERO_GREEN}
             w="fit-content"
-            style={{ fontWeight: 600, fontSize: '1rem'}}
+            style={{ fontWeight: 600, fontSize: '1rem' }}
             rightSection={<FaCheck />}
-            >Create Travel
+          >Create Travel
           </Button>
 
         </Stack>
@@ -205,8 +229,8 @@ const TravelCreateForm = () => {
 export default TravelCreateForm;
 
 const travelValuesSchema = z.object({
-  title: z.string().min(1, 'Title is required'),
-  description: z.string().min(1, 'Description is required'),
+  title: z.string().min(1, 'Title is required').max(50),
+  description: z.string().min(1, 'Description is required').max(200),
   maxCap: z.number().min(1, 'Max Capacity must be more than 1'),
   items: z.array(z.string()).optional(),
   activities: z.array(z.string()).optional(),
