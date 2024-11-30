@@ -1,3 +1,4 @@
+import React from 'react';
 import TravelCreateForm from '../../components/Travels/TravelCreateForm';
 import { Container } from "@mantine/core";
 

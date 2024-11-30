@@ -2,6 +2,7 @@ import { Center, Loader } from "@mantine/core";
 import { useRouter } from "next/router";
 import { PropsWithChildren, useEffect, useState } from "react";
 import { ViajeroLoader } from "../ViajeroLoader/ViajeroLoader";
+import React from "react";
 
 const UnauthenticatedRoutes = ({ children }: PropsWithChildren) => {
   const router = useRouter();

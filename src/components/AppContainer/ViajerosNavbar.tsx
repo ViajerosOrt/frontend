@@ -5,7 +5,8 @@ import Link from "next/link";
 import { URL } from "url";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
-import { VIAJERO_GREEN } from "@/consts";
+import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from "../../consts/consts";
+import React from "react";
 
 export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
   const router = useRouter();
@@ -14,7 +15,7 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
   const primaryLinks: Array<any> = [
     {
       to: "/travels",
-      label: "travels",
+      label: "Travels",
       leftSection: <IoIosAirplane />,
     },
     {
@@ -69,14 +70,31 @@ type navLink = {
 function ViajerosNavLink({ to, label, leftSection, onClick, isActive }: navLink) {
   return (
     <NavLink
-      bg={isActive ? '#4e8e5a' : VIAJERO_GREEN}
+      bg={isActive ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
       href={to}
       component={Link}
       label={label}
       active={isActive}
       variant="filled"
       leftSection={leftSection}
-      style={{ borderRadius: 10 }}
+      style={{ 
+        borderRadius: 10,
+        fontSize: "1.7rem",
+        fontWeight: 700,
+        transition: "all 0.3s ease-in-out",
+        padding: "15px 25px",
+        alignItems: "center",
+        marginBottom: "10px",
+      }}
+      
+      onMouseEnter={(e) => {
+        const target = e.target as HTMLElement;
+        target.style.transform = "scale(1.17)";
+      }}
+      onMouseLeave={(e) => {
+        const target = e.target as HTMLElement;
+        target.style.transform = "scale(1)";
+      }}
 
       onClick={() => onClick?.()}
     />

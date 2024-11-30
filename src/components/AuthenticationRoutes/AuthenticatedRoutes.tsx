@@ -1,5 +1,6 @@
 import { Center, Loader } from "@mantine/core";
 import { useRouter } from "next/router";
+import React from "react";
 import { PropsWithChildren, useEffect, useState } from "react";
 
 const AuthenticatedRoutes = ({ children }: PropsWithChildren) => {

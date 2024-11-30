@@ -4,10 +4,11 @@ import { FaPlane, FaLock, FaEnvelope, FaUser, FaEyeSlash, FaEye } from 'react-ic
 import { ApolloError, gql, useMutation } from '@apollo/client';
 import { useState } from 'react';
 import router from 'next/router';
-import { useSignupMutation } from '@/graphql/__generated__/gql';
+import { useSignupMutation } from '../../graphql/__generated__/gql';
 import { ViajeroLoader } from '../ViajeroLoader/ViajeroLoader';
 import { Calendar } from '@mantine/dates';
-import { VIAJERO_GREEN } from '@/consts';
+import { VIAJERO_GREEN } from '../../consts/consts';
+import React from 'react';
 interface SignupFormProps {
   switchToLogin: () => void;
 }

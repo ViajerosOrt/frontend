@@ -1,4 +1,5 @@
 import { NextPageContext } from "next";
+import React from "react";
 
 function Error({ statusCode }: { statusCode: number }) {
   return (

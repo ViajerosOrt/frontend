@@ -3,19 +3,21 @@
 import "@mantine/core/styles.css";
 import '@mantine/notifications/styles.css';
 
-import { useViajeroApolloClient } from "@/api/apollo-client";
+import { useViajeroApolloClient } from "..//api/apollo-client";
 import type { AppProps } from "next/app";
 import { createTheme, MantineProvider } from "@mantine/core";
 import { useRouter } from "next/router";
-import { AppContainer } from "@/components/AppContainer/AppContainer";
+import { AppContainer } from "..//components/AppContainer/AppContainer";
 import { ApolloProvider } from "@apollo/client";
-import { useAuth } from "@/hooks/useAth";
+import { useAuth } from "..//hooks/useAth";
 import { useEffect } from "react";
-import useAuthStore from "@/stores/useAuthStore";
-import UnauthenticatedRoutes from "@/components/AuthenticationRoutes/UnauthenticatedRoutes";
-import AuthenticatedRoutes from "@/components/AuthenticationRoutes/AuthenticatedRoutes";
+import useAuthStore from "../stores/useAuthStore";
+import UnauthenticatedRoutes from "../components/AuthenticationRoutes/UnauthenticatedRoutes";
+import AuthenticatedRoutes from "../components/AuthenticationRoutes/AuthenticatedRoutes";
 import { Notifications } from "@mantine/notifications";
 import '@mantine/dates/styles.css';
+import React from "react";
+import '../styles/styles.css';
 
 const theme = createTheme({
   /** Put your mantine theme override here */
