@@ -1,4 +1,4 @@
-import { Activity, Travel, useJoinToTravelMutation } from "@/graphql/__generated__/gql";
+import { Activity, Travel, TravelDto, useJoinToTravelMutation } from "@/graphql/__generated__/gql";
 import { TravelCard } from "../TravelCard/TravelCard";
 import { Box, Button, Group, Image, Modal, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
@@ -9,42 +9,42 @@ import { notifications } from "@mantine/notifications";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
 
-export const TravelList = ({ travels }: { travels: Travel[] }) => {
-  const [selectedTravel, setSelectedTravel] = useState<Travel | undefined>(undefined)
+export const TravelList = ({ travelsDtos }: { travelsDtos: TravelDto[] }) => {
+  const [selectedTravelDtO, setSelectedTravelDto] = useState<TravelDto | undefined>(undefined)
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
 
   return (
     <>
       {
-        travels.map((travel, index) => (
-          <TravelCard travel={travel}
-          key={travel.id}
-          imageSrc={travelImages[index % travelImages.length]}
-          setSelectedTravel={(travel) => {
-            setSelectedTravel(travel);
-            setSelectedImageSrc(travelImages[index % travelImages.length]);
-          }}
-        />
-      ))
-    }
+        travelsDtos.map((travelsDto, index) => (
+          <TravelCard travelDto={travelsDto}
+            key={travelsDto.id}
+            imageSrc={travelImages[index % travelImages.length]}
+            setSelectedTravelDto={(travelDto) => {
+              setSelectedTravelDto(travelDto);
+              setSelectedImageSrc(travelImages[index % travelImages.length]);
+            }}
+          />
+        ))
+      }
 
-      <TravelDetailsModal selectedTravel={selectedTravel} setSelectedTravel={setSelectedTravel} selectedImageSrc={selectedImageSrc} />
+      <TravelDetailsModal selectedTravelDto={selectedTravelDtO} setSelectedTravelDto={setSelectedTravelDto} selectedImageSrc={selectedImageSrc} />
     </>
   )
 }
 
 
 type TravelDetailsModalProps = {
-  selectedTravel: Travel | undefined,
-  setSelectedTravel: Dispatch<SetStateAction<Travel | undefined>>
+  selectedTravelDto: TravelDto | undefined,
+  setSelectedTravelDto: Dispatch<SetStateAction<TravelDto | undefined>>
   selectedImageSrc: string
 }
 
-export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selectedImageSrc }: TravelDetailsModalProps) => {
+export const TravelDetailsModal = ({ selectedTravelDto, setSelectedTravelDto, selectedImageSrc }: TravelDetailsModalProps) => {
   const [opened, { open, close }] = useDisclosure(false);
 
-  const formattedStartDate = new Date(selectedTravel?.startDate).toLocaleDateString('es-ES');
-  const formattedEndDate = new Date(selectedTravel?.finishDate).toLocaleDateString('es-ES');
+  const formattedStartDate = new Date(selectedTravelDto?.startDate).toLocaleDateString('es-ES');
+  const formattedEndDate = new Date(selectedTravelDto?.finishDate).toLocaleDateString('es-ES');
 
   const [joinToTravel] = useJoinToTravelMutation({
     refetchQueries: ["travels"]
@@ -53,16 +53,16 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
   const handleJoinTravel = () => {
     joinToTravel({
       variables: {
-        travelId: selectedTravel?.id || ''
+        travelId: selectedTravelDto?.id || ''
       },
       onCompleted(result) {
         if (result.joinToTravel.id) {
           notifications.show({
             title: 'You were joined to the travel successfully',
-            message: `You are now part of ${selectedTravel?.travelTitle}`,
+            message: `You are now part of ${selectedTravelDto?.travelTitle}`,
             color: 'Green',
           });
-          setSelectedTravel(undefined)
+          setSelectedTravelDto(undefined)
         }
       },
       onError(error) {
@@ -76,12 +76,12 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
   }
 
   useEffect(() => {
-    if (selectedTravel) {
+    if (selectedTravelDto) {
       open();
     } else {
       close();
     }
-  }, [selectedTravel, open, close]);
+  }, [selectedTravelDto, open, close]);
 
   return (
     <Modal
@@ -89,7 +89,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
       onClose={() => {
         close()
         setTimeout(() => {
-          setSelectedTravel(undefined);
+          setSelectedTravelDto(undefined);
         }, 200);
       }
       }
@@ -106,7 +106,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
     >
       <Image
         src={selectedImageSrc || "/default-travel.jpg"}
-        alt={selectedTravel?.travelTitle}
+        alt={selectedTravelDto?.travelTitle}
         fit="cover"
         height={200}
       />
@@ -114,20 +114,20 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
       <Box p={16}>
         <Group justify="space-between">
           <Text fw={700} >
-            {selectedTravel?.travelTitle}
+            {selectedTravelDto?.travelTitle}
           </Text>
           <Text>
             {formattedStartDate} - {formattedEndDate}
           </Text>
         </Group>
         <Text mb="sm" mt={12}>
-          {selectedTravel?.travelDescription || "No description available."}
+          {selectedTravelDto?.travelDescription || "No description available."}
         </Text>
 
         <ThemeIcon color={VIAJERO_GREEN} miw={70}>
           <CgProfile />
           <Text ml={4}>
-            {`${selectedTravel?.usersCount} / ${selectedTravel?.maxCap}`}
+            {`${selectedTravelDto?.usersCount} / ${selectedTravelDto?.maxCap}`}
           </Text>
         </ThemeIcon>
 
@@ -135,8 +135,8 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
         <Box mt={12}>
           <Text fw={600} mb="xs">Activities:</Text>
           <Box mb="sm">
-            {selectedTravel?.travelActivities?.length ? (
-              selectedTravel.travelActivities.map((activity: Activity) => (
+            {selectedTravelDto?.travelActivities?.length ? (
+              selectedTravelDto.travelActivities.map((activity: Activity) => (
                 <Text key={activity.id} color="dimmed">• {activity.activityName}</Text>
               ))
             ) : (
@@ -144,13 +144,13 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
             )}
           </Box>
         </Box>
-        <Tooltip.Floating label="You already belong to this travel!" disabled={!selectedTravel?.isJoined} color={VIAJERO_GREEN}>
+        <Tooltip.Floating label="You already belong to this travel!" disabled={!selectedTravelDto?.isJoined} color={VIAJERO_GREEN}>
           <Box bg="var(--mantine-color-blue-light)" style={{ cursor: 'default' }}>
             <Button variant="filled" color={VIAJERO_GREEN}
               fullWidth mt="md"
               radius="md"
               onClick={handleJoinTravel}
-              disabled={!!selectedTravel?.isJoined}
+              disabled={!!selectedTravelDto?.isJoined}
             >
               Join
             </Button>

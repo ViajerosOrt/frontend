@@ -1,11 +1,12 @@
 import { AppShell, Stack, NavLink } from "@mantine/core";
-import { IoIosAirplane, IoMdSettings } from "react-icons/io";
+import { IoIosAirplane } from "react-icons/io";
 import { MdCardTravel } from "react-icons/md";
 import Link from "next/link";
 import { URL } from "url";
 import { useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import { VIAJERO_GREEN } from "@/consts";
+import { CgProfile } from "react-icons/cg";
 
 export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
   const router = useRouter();
@@ -23,9 +24,9 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
       leftSection: <MdCardTravel />,
     },
     {
-      to: "/settings",
-      label: "Settings",
-      leftSection: <IoMdSettings />,
+      to: "/profile",
+      label: "Profile",
+      leftSection: <CgProfile />,
     },
   ];
 

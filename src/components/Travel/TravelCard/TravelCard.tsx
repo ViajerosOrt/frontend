@@ -1,5 +1,5 @@
 import { VIAJERO_GREEN } from "@/consts";
-import { Travel } from "@/graphql/__generated__/gql";
+import { Travel, TravelDto } from "@/graphql/__generated__/gql";
 import {
   Box,
   Button,
@@ -16,15 +16,15 @@ import { Dispatch, SetStateAction } from "react";
 import { CgProfile } from "react-icons/cg";
 
 type TravelCardProps = {
-  travel: Travel,
+  travelDto: TravelDto,
   imageSrc: string,
-  setSelectedTravel: Dispatch<SetStateAction<Travel | undefined>>
+  setSelectedTravelDto: Dispatch<SetStateAction<TravelDto | undefined>>
 }
 
-export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardProps) => {
+export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: TravelCardProps) => {
   const { hovered, ref } = useHover();
-  const formattedStartDate = new Date(travel.startDate).toLocaleDateString('es-ES');
-  const formattedEndDate = new Date(travel.finishDate).toLocaleDateString('es-ES');
+  const formattedStartDate = new Date(travelDto.startDate).toLocaleDateString('es-ES');
+  const formattedEndDate = new Date(travelDto.finishDate).toLocaleDateString('es-ES');
 
   return (
     <Grid.Col span={4}>
@@ -41,25 +41,25 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
         <Card.Section>
           <Image
             src={imageSrc || "/default-travel.jpg"}
-            alt={travel.travelTitle}
+            alt={travelDto.travelTitle}
             height={200}
           />
         </Card.Section>
 
         <Stack m={12} justify="space-between">
-          <Text fw={700}>{travel.travelTitle}</Text>
+          <Text fw={700}>{travelDto.travelTitle}</Text>
           <Text size="sm">{formattedStartDate} - {formattedEndDate}</Text>
         </Stack>
 
         <Text m={12} truncate lineClamp={2} mih={60}>
-          {travel.travelDescription || "No description available."}
+          {travelDto.travelDescription || "No description available."}
         </Text>
 
-        {travel.isJoined ?
+        {travelDto.isJoined ?
           (
             <>
               <Group wrap="nowrap">
-                <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravel(travel)}>
+                <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravelDto(travelDto)}>
                   View Details
                 </Button>
                 <Button variant={"filled"} color={"purple"} fullWidth mt="md" radius="md" onClick={() => null}>
@@ -69,7 +69,7 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
             </>
           )
           :
-          <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravel(travel)}>
+          <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravelDto(travelDto)}>
             View Details
           </Button>
 
@@ -79,7 +79,7 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
           <ThemeIcon color={VIAJERO_GREEN} miw={70}>
             <CgProfile />
             <Text ml={4}>
-              {`${travel.usersCount} / ${travel.maxCap}`}
+              {`${travelDto.usersCount} / ${travelDto.maxCap}`}
             </Text>
           </ThemeIcon>
         </Box>

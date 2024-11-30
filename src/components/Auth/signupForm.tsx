@@ -1,13 +1,10 @@
-import { hasLength, isEmail, isInRange, isNotEmpty, useForm } from '@mantine/form';
-import { TextInput, PasswordInput, Paper, Title, Container, Button, Stack, Text, Center, Loader } from '@mantine/core';
-import { FaPlane, FaLock, FaEnvelope, FaUser, FaEyeSlash, FaEye } from 'react-icons/fa';
-import { ApolloError, gql, useMutation } from '@apollo/client';
-import { useState } from 'react';
-import router from 'next/router';
+import { hasLength, isEmail, isNotEmpty, useForm } from '@mantine/form';
+import { TextInput, PasswordInput, Button, Stack, Text, Center, Loader } from '@mantine/core';
+import { FaEnvelope, FaUser, FaEyeSlash, FaEye } from 'react-icons/fa';
 import { useSignupMutation } from '@/graphql/__generated__/gql';
 import { ViajeroLoader } from '../ViajeroLoader/ViajeroLoader';
-import { Calendar } from '@mantine/dates';
 import { VIAJERO_GREEN } from '@/consts';
+import { DatePicker, DatePickerInput } from '@mantine/dates';
 interface SignupFormProps {
   switchToLogin: () => void;
 }
@@ -58,9 +55,9 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
       console.error('Error:', err);
     }
   };
-
+  console.log("aa")
   return (
-    <Stack px={30} bg="rgba(255, 255, 255, 0.8)" style={{ backgroundColor: '#e1e7f9' }} align="center" mb={20}>
+    <Stack px={30} bg="rgba(255, 255, 255, 0.8)" style={{ backgroundColor: '#e1e7f9' }} align="center" mb={20} >
       <form onSubmit={form.onSubmit(handleRegisterSubmit)}>
         <Stack>
           <TextInput
@@ -115,21 +112,8 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
             {...form.getInputProps('password')}
 
           />
-
-          <TextInput
-            required
-            label="Date of Birth"
-            type="date"
-            {...form.getInputProps('birthDate')}
-            radius="md"
-            style={{ color: 'black', borderColor: '#17a2b8' }}
-            styles={{
-              input: {
-                backgroundColor: '#edf6ee',
-                borderColor: '#17a2b8'
-              },
-            }}
-          />
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Birth date </Text>
+          <DatePickerInput  {...form.getInputProps('birthDate')} w="100%" />
 
         </Stack>
 
