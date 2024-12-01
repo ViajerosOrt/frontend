@@ -1,4 +1,4 @@
-import { AccessToken } from '@/graphql/__generated__/gql'
+import { AccessToken } from '../graphql/__generated__/gql'
 import { create } from 'zustand'
 import { createJSONStorage, persist } from 'zustand/middleware'
 
@@ -6,6 +6,7 @@ export interface UserState {
   id: string
   accessToken: AccessToken | undefined | null
   email: string
+  name: string
 }
 
 type AuthStoreState = {

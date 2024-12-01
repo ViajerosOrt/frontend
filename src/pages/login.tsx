@@ -16,10 +16,11 @@ import {
   Box,
 } from "@mantine/core";
 import { FaPlane, FaLock, FaEnvelope, FaUser } from "react-icons/fa";
-import { LoginForm } from "@/components/Auth/loginForm";
-import { SignupForm } from "@/components/Auth/signupForm";
-import { ViajeroLogo } from "@/components/ViajeroLogo/viajeroLogo";
-import { VIAJERO_GREEN } from "@/consts";
+import { LoginForm } from "../components/Auth/loginForm";
+import { SignupForm } from "../components/Auth/signupForm";
+import { ViajeroLogo } from "../components/ViajeroLogo/viajeroLogo";
+import { VIAJERO_GREEN } from "../consts/consts";
+import React from "react";
 
 export default function LoginPage() {
   const [showSignUp, setShowSignUp] = useState(false);

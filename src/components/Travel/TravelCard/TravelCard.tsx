@@ -1,7 +1,6 @@
-import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
-import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
-import { Travel, TravelDto } from "@/graphql/__generated__/gql";
 import { getTransportAvatar } from "@/utils";
+import { Consts, VIAJERO_GREEN, VIAJERO_RED, VIAJERO_YELLOW } from "../../../consts/consts";
+import { TravelDto } from "../../../graphql/__generated__/gql";
 import {
   Box,
   Button,
@@ -14,22 +13,26 @@ import {
   ThemeIcon,
 } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
+import React from "react";
 import { Dispatch, SetStateAction } from "react";
 import { CgProfile } from "react-icons/cg";
+import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
 
 type TravelCardProps = {
-  travelDto: TravelDto,
+  travel: TravelDto,
   imageSrc: string,
-  setSelectedTravelDto: Dispatch<SetStateAction<TravelDto | undefined>>
+  setSelectedTravel: Dispatch<SetStateAction<TravelDto | undefined>>
 }
 
-export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: TravelCardProps) => {
+export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardProps) => {
   const { hovered, ref } = useHover();
-  const formattedStartDate = new Date(travelDto.startDate).toLocaleDateString('es-ES');
-  const formattedEndDate = new Date(travelDto.finishDate).toLocaleDateString('es-ES');
+  const formattedStartDate = new Date(travel.startDate).toLocaleDateString('es-ES');
+  const formattedEndDate = new Date(travel.finishDate).toLocaleDateString('es-ES');
+
+  const userColor = Consts.getColorByPercentage(travel?.usersCount!, travel?.maxCap!);
 
   return (
-    <Grid.Col span={4}>
+    <Grid.Col span={4} style={{ display: 'flex', flexDirection: 'column', minHeight: "350px", }}>
       <Card
         ref={ref}
         shadow="md"
@@ -37,7 +40,13 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
         withBorder
         style={{
           transition: 'transform 0.2s ease',
-          transform: hovered ? 'scale(1.020)' : 'scale(1)'
+          transform: hovered ? 'scale(1.020)' : 'scale(1)',
+          minHeight: "350px",
+          display: "flex",
+          flexDirection: "column",
+          minWidth: '210px',
+          maxWidth: '100%',
+          flex: 1,
         }}
       >
         <Card.Section>
@@ -45,6 +54,7 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
             src={imageSrc || "/default-travel.jpg"}
             alt={travelDto.travelTitle}
             height={200}
+            style={{ objectFit: "cover", minHeight: '200px', height: '200px' }}
           />
         </Card.Section>
 
@@ -53,22 +63,27 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
           <Text size="sm">{formattedStartDate} - {formattedEndDate}</Text>
         </Stack>
 
-        <Text m={12} truncate lineClamp={2} mih={60}>
-          {travelDto.travelDescription || "No description available."}
+
+        <Text m={12} truncate lineClamp={2} mih={60} style={{
+          overflowX: 'auto',
+          maxWidth: '100%',
+          display: 'block',
+        }}>
+          {travel.travelDescription || "No description available."}
         </Text>
 
-        {travelDto.transport && (
+        {travel.transport && (
           <Group gap="sm" align="center">
-            {getTransportAvatar(travelDto.transport.name)}
-            <Text>{travelDto.transport.name}</Text>
+            {getTransportAvatar(travel.transport.name)}
+            <Text>{travel.transport.name}</Text>
           </Group>
         )}
 
-        {travelDto.isJoined ?
+        {travel.isJoined ?
           (
             <>
               <Group wrap="nowrap">
-                <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravelDto(travelDto)}>
+                <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravel(travel)}>
                   View Details
                 </Button>
                 <Button variant={"filled"} color={"purple"} fullWidth mt="md" radius="md" onClick={() => null}>
@@ -78,21 +93,21 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
             </>
           )
           :
-          <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravelDto(travelDto)}>
+          <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravel(travel)}>
             View Details
           </Button>
 
         }
 
-        <Box pos="absolute" right={20}>
-          <ThemeIcon color={VIAJERO_GREEN} miw={70}>
+        <Box pos="absolute">
+          <ThemeIcon color={userColor} miw={70}>
             <CgProfile />
             <Text ml={4}>
-              {`${travelDto.usersCount} / ${travelDto.maxCap}`}
+              {`${travel.usersCount} / ${travel.maxCap}`}
             </Text>
           </ThemeIcon>
         </Box>
-        <ActivitiesAvatarGroup activities={travelDto.travelActivities || []} avatarSize="md" />
+        <ActivitiesAvatarGroup activities={travel.travelActivities || []} avatarSize="md" />
       </Card>
     </Grid.Col >
   )

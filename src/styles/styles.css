@@ -1,0 +1,48 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@keyframes breathing {
+  0% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes moving {
+  0% {
+    transform: translateX(0);
+  }
+  50% {
+    transform: translateX(9px);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+@keyframes planeFly {
+  0% {
+    left: 0px;
+    top: 25px;
+  }
+  33% {
+    left: 25%;
+    top: 10px;
+  }
+  66% {
+    left: 50%;
+    top: 0px;
+  }
+  100% {
+    left: 100%;
+    top: 25px;
+  }
+}
+
+

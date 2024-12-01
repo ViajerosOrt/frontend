@@ -1,5 +1,6 @@
-import { VIAJERO_GREEN } from "@/consts"
+import { VIAJERO_GREEN } from "../../consts/consts"
 import { Center, Loader } from "@mantine/core"
+import React from "react"
 
 export const ViajeroLoader = () => {
   return (

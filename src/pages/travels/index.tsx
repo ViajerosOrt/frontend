@@ -1,7 +1,8 @@
-import { TravelList } from "@/components/Travel/TravelList/TravelList";
-import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
-import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { TravelDto, useTravelsQuery } from "@/graphql/__generated__/gql";
+import { TravelList } from "../../components/Travel/TravelList/TravelList";
+import { ViajeroEmptyMessage } from "../../components/ViajeroEmptyMessage/viajeroEmptyMessage";
+import { ViajeroLoader } from "../../components/ViajeroLoader/ViajeroLoader";
+import { TravelDto, useTravelsQuery } from "../../graphql/__generated__/gql";
+import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Button,
   Container,
@@ -9,8 +10,9 @@ import {
   Title,
 } from "@mantine/core";
 import Link from "next/link";
-import { VIAJERO_GREEN } from "@/consts";
+import { VIAJERO_GREEN } from "../../consts/consts";
 import { FaPlane } from "react-icons/fa";
+import React from "react";
 
 
 
@@ -50,11 +52,12 @@ export default function Travels() {
         <ViajeroEmptyMessage message="No travels were found" />
       ) : (
         <Grid>
-          <TravelList travelsDtos={travelsDtos as TravelDto[]} />
-        </Grid>
-      )}
+          <TravelList travels={travels as TravelDto[]} />
+        </Grid >
+      )
+      }
 
-    </Container>
+    </Container >
   );
 }
 

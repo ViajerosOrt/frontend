@@ -1,10 +1,11 @@
 import { hasLength, isEmail, isNotEmpty, useForm } from '@mantine/form';
-import { TextInput, PasswordInput, Button, Stack, Text, Center, Loader } from '@mantine/core';
+import { TextInput, PasswordInput, Button, Stack, Text, Center } from '@mantine/core';
 import { FaEnvelope, FaUser, FaEyeSlash, FaEye } from 'react-icons/fa';
-import { useSignupMutation } from '@/graphql/__generated__/gql';
+import { useSignupMutation } from '../../graphql/__generated__/gql';
 import { ViajeroLoader } from '../ViajeroLoader/ViajeroLoader';
-import { VIAJERO_GREEN } from '@/consts';
-import { DatePicker, DatePickerInput } from '@mantine/dates';
+import { DatePickerInput } from '@mantine/dates';
+import { VIAJERO_GREEN } from '../../consts/consts';
+import React from 'react';
 interface SignupFormProps {
   switchToLogin: () => void;
 }

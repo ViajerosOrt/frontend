@@ -1,16 +1,19 @@
-import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery } from "@/graphql/__generated__/gql";
+
+import { useCreateTravelMutation, useGetAllActivitiesQuery } from "../../graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
 import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useState } from 'react';
 import { z } from 'zod';
-import { VIAJERO_GREEN } from "@/consts";
+import { VIAJERO_GREEN } from "../../consts/consts";
+import { FaCheck } from "react-icons/fa";
 import { BackButton } from "../BackButton/BackButton";
-import { TRAVEL_MAX_DESCRIPTION_LENGTH, TRAVEL_MAX_TITLE_LENGTH } from "@/consts/validators";
+import { TRAVEL_MAX_DESCRIPTION_LENGTH, TRAVEL_MAX_TITLE_LENGTH } from "../../consts/validators";
 import { useRouter } from "next/router";
 import { FaMagento } from "react-icons/fa";
 import { getTransportAvatar } from "@/utils";
+import React from "react";
 
 const travelValuesSchema = z.object({
   title: z.string().min(1, 'Title is required').max(50),

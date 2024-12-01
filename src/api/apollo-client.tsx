@@ -1,4 +1,4 @@
-import { useAuth } from "@/hooks/useAth";
+import { useAuth } from "../hooks/useAth";
 import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from '@apollo/client/link/error'
