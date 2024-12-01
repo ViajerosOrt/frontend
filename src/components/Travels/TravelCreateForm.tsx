@@ -111,6 +111,7 @@ const TravelCreateForm = () => {
       router.back()
 
     } catch (error: any) {
+      console.log(error)
       showNotification({ message: error.message ? error.message : 'Error creating the travel', color: 'red' });
     }
   };
@@ -222,7 +223,7 @@ const TravelCreateForm = () => {
               searchable
             />
 
-            <Button variant="filled" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
+            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
               Create Travel
             </Button>
 

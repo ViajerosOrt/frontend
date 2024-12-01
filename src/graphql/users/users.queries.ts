@@ -26,6 +26,9 @@ query UserById($userByIdId: String!) {
       travelDescription
       startDate
       finishDate
+      travelActivities {
+        activityName
+      }
     }
   }
 }

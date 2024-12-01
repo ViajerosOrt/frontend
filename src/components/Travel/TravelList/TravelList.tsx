@@ -1,12 +1,12 @@
 import { Activity, Travel, TravelDto, useJoinToTravelMutation } from "@/graphql/__generated__/gql";
 import { TravelCard } from "../TravelCard/TravelCard";
-import { Box, Button, Group, Image, Modal, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { VIAJERO_GREEN } from "@/consts";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
-import { travelImages } from "@/utils";
+import { getActivityAvatar, travelImages } from "@/utils";
 
 
 
@@ -135,15 +135,18 @@ export const TravelDetailsModal = ({ selectedTravelDto, setSelectedTravelDto, se
 
         <Box mt={12}>
           <Text fw={600} mb="xs">Activities:</Text>
-          <Box mb="sm">
+          <Stack gap={12} mb="sm">
             {selectedTravelDto?.travelActivities?.length ? (
               selectedTravelDto.travelActivities.map((activity: Activity) => (
-                <Text key={activity.id} color="dimmed">• {activity.activityName}</Text>
+                <Group key={activity.activityName}>
+                  {getActivityAvatar(activity.activityName, 'md')}
+                  <Text>{activity.activityName}</Text>
+                </Group>
               ))
             ) : (
               <Text color="dimmed">No activities listed.</Text>
             )}
-          </Box>
+          </Stack>
         </Box>
         <Tooltip.Floating label="You already belong to this travel!" disabled={!selectedTravelDto?.isJoined} color={VIAJERO_GREEN}>
           <Box bg="var(--mantine-color-blue-light)" style={{ cursor: 'default' }}>

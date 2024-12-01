@@ -23,6 +23,7 @@ import Link from "next/link";
 import { getActivityAvatar, travelImages } from "@/utils";
 import { useHover } from "@mantine/hooks";
 import { useRouter } from "next/router";
+import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
 
 
 export default function Profile() {
@@ -34,7 +35,7 @@ export default function Profile() {
   })
 
   const user = data?.userById
-
+  console.log(user)
 
   if (loading) {
     return <ViajeroLoader />
@@ -96,7 +97,7 @@ export default function Profile() {
                 {user.userActivities.map((activity) => (
                   <Group key={activity.activityName}>
                     {getActivityAvatar(activity.activityName, 'lg')}
-                    <Text fw={500}>{activity.activityName}</Text>
+                    <Text>{activity.activityName}</Text>
                   </Group>
                 ))}
               </SimpleGrid>
@@ -160,6 +161,7 @@ const TravelCreatedCard = ({ travel, index }: { travel: Travel, index: number })
       <Text m={8} size="xs" truncate lineClamp={2} mih={10}>
         {travel.travelDescription || "No description available."}
       </Text>
+      <ActivitiesAvatarGroup activities={travel.travelActivities || []} />
     </Card>
   );
 }

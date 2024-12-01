@@ -1,3 +1,4 @@
+import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
 import { VIAJERO_GREEN } from "@/consts";
 import { Travel, TravelDto } from "@/graphql/__generated__/gql";
 import {
@@ -75,7 +76,7 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
 
         }
 
-        <Box pos="absolute">
+        <Box pos="absolute" right={20}>
           <ThemeIcon color={VIAJERO_GREEN} miw={70}>
             <CgProfile />
             <Text ml={4}>
@@ -83,6 +84,7 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
             </Text>
           </ThemeIcon>
         </Box>
+        <ActivitiesAvatarGroup activities={travelDto.travelActivities || []} avatarSize="md" />
       </Card>
     </Grid.Col >
   )

@@ -1,7 +1,7 @@
 import { useForm, zodResolver } from "@mantine/form";
 import { BackButton } from "@/components/BackButton/BackButton";
 import { BOLD, VIAJERO_GREEN } from "@/consts";
-import { Activity, useGetAllActivitiesQuery, User, useUpdateMutation } from "@/graphql/__generated__/gql";
+import { useGetAllActivitiesQuery, User, useUpdateMutation } from "@/graphql/__generated__/gql";
 import {
   Box,
   Button,
