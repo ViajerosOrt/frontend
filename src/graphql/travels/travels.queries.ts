@@ -11,10 +11,13 @@ export const GET_TRAVELS = gql`
       maxCap
       isJoined
       usersCount
+      transport {
+      name
+      id
+    }
       checklist {
         id
         name
-
         items {
           name
           state

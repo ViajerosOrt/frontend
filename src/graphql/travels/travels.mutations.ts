@@ -12,14 +12,16 @@ export const CREATE_TRAVEL_MUTATION = gql(`
   mutation CreateTravel(
       $createTravelInput: CreateTravelInput!,
       $activityId: [String!]!,
-      $createLocationInput: CreateLocationInput!
-      $items: [String!]!
+      $createLocationInput: CreateLocationInput!,
+      $items: [String!]!,
+      $transportId: String
     ) {
       createTravel(
         createTravelInput: $createTravelInput,
         activityId: $activityId,
         createLocationInput: $createLocationInput,
-        items: $items
+        items: $items,
+        transportId: $transportId
       ) {
         id
         travelTitle
@@ -31,4 +33,3 @@ export const CREATE_TRAVEL_MUTATION = gql(`
       }
     }
   `);
-  

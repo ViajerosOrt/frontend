@@ -3,8 +3,11 @@ import { getActivityAvatar } from "@/utils";
 import { Avatar } from "@mantine/core";
 import { useHover } from "@mantine/hooks";
 
-export function ActivitiesAvatarGroup({ activities, avatarSize = "sm" }: { activities: Activity[], avatarSize?: string }) {
+export function ActivitiesAvatarGroup({ activities, avatarSize = "sm", maxActivitiesToShow = 6 }: { activities: Activity[], avatarSize?: string, maxActivitiesToShow?: number }) {
   const { hovered, ref } = useHover()
+
+  const totalActivitiesCount = activities.length
+
   return (
     <Avatar.Group
       pos="absolute"
@@ -14,9 +17,14 @@ export function ActivitiesAvatarGroup({ activities, avatarSize = "sm" }: { activ
       ref={ref}
       className="z-10 transition-spacing duration-300"
     >
-      {activities.map((activity) => {
+      {activities.slice(0, maxActivitiesToShow).map((activity) => {
         return getActivityAvatar(activity.activityName, avatarSize)
       })}
+
+      {/* If we have more than maxNormalLimitsToShow activities, show a "+" avatar */}
+      {totalActivitiesCount > maxActivitiesToShow && (
+        <Avatar size={avatarSize}>+{totalActivitiesCount - maxActivitiesToShow}</Avatar>
+      )}
     </Avatar.Group>
   )
 }

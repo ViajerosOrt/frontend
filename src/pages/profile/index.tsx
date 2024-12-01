@@ -35,7 +35,6 @@ export default function Profile() {
   })
 
   const user = data?.userById
-  console.log(user)
 
   if (loading) {
     return <ViajeroLoader />

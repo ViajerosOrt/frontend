@@ -1,6 +1,6 @@
-import { useCreateTravelMutation, useGetAllActivitiesQuery } from "@/graphql/__generated__/gql";
+import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery } from "@/graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
-import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title } from '@mantine/core';
+import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useState } from 'react';
@@ -9,6 +9,8 @@ import { VIAJERO_GREEN } from "@/consts";
 import { BackButton } from "../BackButton/BackButton";
 import { TRAVEL_MAX_DESCRIPTION_LENGTH, TRAVEL_MAX_TITLE_LENGTH } from "@/consts/validators";
 import { useRouter } from "next/router";
+import { FaMagento } from "react-icons/fa";
+import { getTransportAvatar } from "@/utils";
 
 const travelValuesSchema = z.object({
   title: z.string().min(1, 'Title is required').max(50),
@@ -29,16 +31,23 @@ const TravelCreateForm = () => {
 
   const router = useRouter()
 
-  const { data } = useGetAllActivitiesQuery();
+  const { data: activitiesData } = useGetAllActivitiesQuery();
+  const activities = activitiesData?.activities || [];
+
+  const { data: transportData } = useTransportsQuery();
+  const transports = transportData?.transports || []
+  const parsedTransports = transports.map((transport) => {
+    return { label: transport.name, value: transport.id };
+  });
 
   const [selectedDates, setSelectedDates] = useState<[Date | null, Date | null]>([null, null]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
+  const [selectedTransportId, setSelectedTransportId] = useState<string | null>(null)
 
   //Items isnt done yet 2/11 FS
   const [item, setItem] = useState('');
   const [items, setItems] = useState<string[]>([]);
 
-  const activities = data?.activities || [];
 
   const form = useForm({
     initialValues: {
@@ -69,9 +78,15 @@ const TravelCreateForm = () => {
     setItems((prevItems) => [...prevItems, item]);
     setItem('');
   };
-
   //Principal function to send the travel to the data base
   const handleCreateTravelSubmit = async () => {
+    if (!selectedDates[0] || !selectedDates[1]) {
+      showNotification({
+        message: 'Please select both start and end dates for the travel.',
+        color: 'red',
+      });
+      return;
+    }
 
     //We obtain the values from the form const that we defined earlier
     const values = form.values;
@@ -83,6 +98,7 @@ const TravelCreateForm = () => {
       startDate: selectedDates[0]?.toISOString(),
       finishDate: selectedDates[1]?.toISOString(),
       maxCap: values.maxCap,
+      country: '',
       isEndable: false,
     };
 
@@ -93,6 +109,7 @@ const TravelCreateForm = () => {
         variables: {
           createTravelInput: travelData,
           activityId: selectedActivities.length > 0 ? selectedActivities : [],
+          transportId: selectedTransportId,
           items: items.length > 0 ? items : [],
           createLocationInput: {
             name: "Solymar",
@@ -111,13 +128,12 @@ const TravelCreateForm = () => {
       router.back()
 
     } catch (error: any) {
-      console.log(error)
+
       showNotification({ message: error.message ? error.message : 'Error creating the travel', color: 'red' });
     }
   };
 
   return (
-
     <Container mt="xl" ta="left" w="100%" >
       <Group align="center" w="100%">
         <BackButton />
@@ -186,6 +202,17 @@ const TravelCreateForm = () => {
               />
             </Box>
 
+            <Box>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Transport</Text>
+              <Text size="sm" c="gray">An optional transport for the travel.</Text>
+              <Select data={parsedTransports} placeholder="Choose one transport" w="30%" onChange={setSelectedTransportId}
+                rightSection={
+                  selectedTransportId
+                    ? getTransportAvatar(transports.find(t => t.id === selectedTransportId)?.name || '', "sm")
+                    : null
+                } />
+            </Box>
+
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Activities</Text>
             <Text size="sm" c="gray">A selection of activities included in the travel.</Text>
             <MultiSelect
@@ -198,6 +225,7 @@ const TravelCreateForm = () => {
               onChange={setSelectedActivities}
               w="60%"
               style={{ fontWeight: 700, fontSize: '1.5rem' }}
+              comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
             />
 
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>CheckList</Text>
@@ -221,6 +249,7 @@ const TravelCreateForm = () => {
               placeholder="Selected Items"
               clearable
               searchable
+              comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
             />
 
             <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">

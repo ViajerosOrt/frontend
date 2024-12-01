@@ -172,6 +172,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
                 placeholder="Select activites your favorite activities"
                 onChange={setSelectedActivitiesIds}
                 style={{ fontWeight: 700, fontSize: '1.5rem' }}
+                comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
               />
             </Box>
             <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">

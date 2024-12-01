@@ -1,6 +1,7 @@
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
-import { VIAJERO_GREEN } from "@/consts";
+import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
 import { Travel, TravelDto } from "@/graphql/__generated__/gql";
+import { getTransportAvatar } from "@/utils";
 import {
   Box,
   Button,
@@ -55,6 +56,13 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
         <Text m={12} truncate lineClamp={2} mih={60}>
           {travelDto.travelDescription || "No description available."}
         </Text>
+
+        {travelDto.transport && (
+          <Group gap="sm" align="center">
+            {getTransportAvatar(travelDto.transport.name)}
+            <Text>{travelDto.transport.name}</Text>
+          </Group>
+        )}
 
         {travelDto.isJoined ?
           (

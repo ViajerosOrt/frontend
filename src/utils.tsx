@@ -1,6 +1,9 @@
 import { Avatar } from '@mantine/core';
-import { FaWalking, FaRunning, FaSwimmer, FaDumbbell, FaHiking, FaBicycle, FaMountain, FaSkating, FaBalanceScale, FaMusic, FaHandHolding, FaPersonBooth, FaWater } from 'react-icons/fa';
-import { MdOutlineFitnessCenter, MdSportsGymnastics } from 'react-icons/md';
+import { FaWalking, FaRunning, FaSwimmer, FaDumbbell, FaHiking, FaBicycle, FaMountain, FaSkating, FaBalanceScale, FaMusic, FaHandHolding, FaPersonBooth, FaWater, FaPlane, FaShip, FaCar, FaMotorcycle, FaTrain } from 'react-icons/fa';
+import { MdOutlineDirectionsBus, MdOutlineFitnessCenter, MdSportsGymnastics } from 'react-icons/md';
+
+export const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
+
 
 const getActivityIcon = (activityName: string) => {
   const activityIcons: { [key: string]: React.ReactNode } = {
@@ -59,4 +62,44 @@ export const getActivityAvatar = (activityName: string, avatarSize: string | num
   );
 };
 
-export const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
+const getTransportIcon = (transportName: string): React.ReactNode => {
+  const transportIcons: { [key: string]: React.ReactNode } = {
+    Plane: <FaPlane />,
+    Ship: <FaShip />,
+    Car: <FaCar />,
+    Motorbike: <FaMotorcycle />,
+    Train: <FaTrain />,
+    Bus: <MdOutlineDirectionsBus />,
+  };
+
+  return transportIcons[transportName] || <FaCar />;
+};
+
+const getTransportColor = (transportName: string): string => {
+  const transportColors: { [key: string]: string } = {
+    Plane: 'blue',
+    Ship: 'teal',
+    Car: 'red',
+    Motorbike: 'orange',
+    Train: 'gray',
+    Bus: 'yellow',
+  };
+
+  return transportColors[transportName] || 'gray';
+};
+
+export const getTransportAvatar = (
+  transportName: string,
+  avatarSize: string | number = 'md'
+): JSX.Element => {
+  return (
+    <Avatar
+      color={getTransportColor(transportName)}
+      size={avatarSize}
+      radius="xl"
+      key={transportName}
+    >
+      {getTransportIcon(transportName)}
+    </Avatar>
+  );
+};
