@@ -2,16 +2,13 @@ import { TravelList } from "../../components/Travel/TravelList/TravelList";
 import { ViajeroEmptyMessage } from "../../components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "../../components/ViajeroLoader/ViajeroLoader";
 import { TravelDto, useTravelsQuery } from "../../graphql/__generated__/gql";
-import TravelCreateForm from "../../components/Travels/TravelCreateForm";
 import { gql, useApolloClient, useQuery } from "@apollo/client";
 import {
   Button,
-  Card,
   Container,
   Grid,
   Title,
 } from "@mantine/core";
-import { IoIosAirplane } from "react-icons/io";
 import Link from "next/link";
 import { VIAJERO_GREEN } from "../../consts/consts";
 import { FaPlane } from "react-icons/fa";
@@ -35,14 +32,14 @@ export default function Travels() {
 
   return (
     <Container size="xl" mt="xl">
-     
-     <Button 
-        component={Link} 
-        href="/travels/travelCreate" 
+
+      <Button
+        component={Link}
+        href="/travels/travelCreate"
         mt="md"
         size="md"
         radius="md"
-        color = {VIAJERO_GREEN}
+        color={VIAJERO_GREEN}
         rightSection={<FaPlane />}
       >
         Create a new travel
@@ -55,11 +52,12 @@ export default function Travels() {
         <ViajeroEmptyMessage message="No travels were found" />
       ) : (
         <Grid>
-           <TravelList travels={travels as TravelDto[]} />
-        </Grid>
-      )}
-      
-    </Container>
+          <TravelList travels={travels as TravelDto[]} />
+        </Grid >
+      )
+      }
+
+    </Container >
   );
 }
 

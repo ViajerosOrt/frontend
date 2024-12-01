@@ -1,15 +1,14 @@
-import { Activity,useJoinToTravelMutation, TravelDto } from "../../../graphql/__generated__/gql";
-
+import { Activity, useJoinToTravelMutation, TravelDto } from "../../../graphql/__generated__/gql";
 import { TravelCard } from "../TravelCard/TravelCard";
-import { Box, Button, Group, Image, Modal, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { Consts, VIAJERO_GREEN } from "../../../consts/consts";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import { getActivityAvatar, travelImages } from "@/utils";
 import React from "react";
 
-const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
 
 export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
   const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
@@ -20,15 +19,15 @@ export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
       {
         travels.map((travel, index) => (
           <TravelCard travel={travel}
-          key={travel.id}
-          imageSrc={travelImages[index % travelImages.length]}
-          setSelectedTravel={(travel) => {
-            setSelectedTravel(travel);
-            setSelectedImageSrc(travelImages[index % travelImages.length]);
-          }}
-        />
-      ))
-    }
+            key={travel.id}
+            imageSrc={travelImages[index % travelImages.length]}
+            setSelectedTravel={(travel) => {
+              setSelectedTravel(travel);
+              setSelectedImageSrc(travelImages[index % travelImages.length]);
+            }}
+          />
+        ))
+      }
 
       <TravelDetailsModal selectedTravel={selectedTravel} setSelectedTravel={setSelectedTravel} selectedImageSrc={selectedImageSrc} />
     </>
@@ -37,8 +36,8 @@ export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
 
 
 type TravelDetailsModalProps = {
-  selectedTravel: TravelDto  | undefined,
-  setSelectedTravel: Dispatch<SetStateAction<TravelDto  | undefined>>
+  selectedTravel: TravelDto | undefined,
+  setSelectedTravel: Dispatch<SetStateAction<TravelDto | undefined>>
   selectedImageSrc: string
 }
 
@@ -138,15 +137,18 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
 
         <Box mt={12}>
           <Text fw={600} mb="xs">Activities:</Text>
-          <Box mb="sm">
+          <Stack gap={12} mb="sm">
             {selectedTravel?.travelActivities?.length ? (
               selectedTravel.travelActivities.map((activity: Activity) => (
-                <Text key={activity.id} color="dimmed">• {activity.activityName}</Text>
+                <Group key={activity.activityName}>
+                  {getActivityAvatar(activity.activityName, 'md')}
+                  <Text>{activity.activityName}</Text>
+                </Group>
               ))
             ) : (
               <Text color="dimmed">No activities listed.</Text>
             )}
-          </Box>
+          </Stack>
         </Box>
         <Tooltip.Floating label="You already belong to this travel!" disabled={!selectedTravel?.isJoined} color={VIAJERO_GREEN}>
           <Box bg="var(--mantine-color-blue-light)" style={{ cursor: 'default' }}>

@@ -9,9 +9,6 @@ import { createTheme, MantineProvider } from "@mantine/core";
 import { useRouter } from "next/router";
 import { AppContainer } from "..//components/AppContainer/AppContainer";
 import { ApolloProvider } from "@apollo/client";
-import { useAuth } from "..//hooks/useAth";
-import { useEffect } from "react";
-import useAuthStore from "../stores/useAuthStore";
 import UnauthenticatedRoutes from "../components/AuthenticationRoutes/UnauthenticatedRoutes";
 import AuthenticatedRoutes from "../components/AuthenticationRoutes/AuthenticatedRoutes";
 import { Notifications } from "@mantine/notifications";
@@ -23,6 +20,8 @@ const theme = createTheme({
   /** Put your mantine theme override here */
   // We need to define what style we want for Viajeros!
 });
+
+
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();

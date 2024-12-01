@@ -38,6 +38,7 @@ export default function LoginPage() {
           p={30}
           radius="md"
           bg="rgba(255, 255, 255, 0.8)"
+          w={350}
         >
           <Stack align="center" mb={20}>
             <Title order={2} ta="center" fw={600} c={VIAJERO_GREEN}>

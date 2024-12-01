@@ -22,6 +22,11 @@ type AuthStoreActions = {
 
 type AuthStore = AuthStoreState & AuthStoreActions
 
+export const isUserAccessTokenValid = (user: UserState | null): boolean => {
+  const tokenExpiresAt = new Date(user?.accessToken?.validUntil || '').getTime()
+
+  return !!(user?.accessToken?.validForSeconds && tokenExpiresAt > Date.now())
+}
 
 export const useAuthStore = create(
   persist<AuthStore>(

@@ -1,14 +1,13 @@
-import { useLoginMutation } from "../../graphql/__generated__/gql";
+import { useLoginMutation } from "@/graphql/__generated__/gql";
 import { useForm, zodResolver } from "@mantine/form";
 import { Button, Checkbox, Group, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { z } from 'zod'
 import { FaEnvelope, FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
-import { useAuth } from "../../hooks/useAth";
+import { useAuth } from "@/hooks/useAth";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
-import { VIAJERO_GREEN } from"../../consts/consts";
-import React from "react";
-
+import { VIAJERO_GREEN } from "@/consts";
+2
 const loginFormValidation = z.object({
   email: z.string().min(1).max(40).refine((val) => val.includes('@'), {
     message: 'Invalid Email',
