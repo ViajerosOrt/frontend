@@ -1,5 +1,5 @@
 
-import { useCreateTravelMutation, useGetAllActivitiesQuery } from "../../graphql/__generated__/gql";
+import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery } from "../../graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
 import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';

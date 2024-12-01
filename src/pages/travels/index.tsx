@@ -22,7 +22,7 @@ export default function Travels() {
     fetchPolicy: 'cache-and-network'
   })
 
-  const travelsDtos = data?.travels
+  const travels = data?.travels
 
   if (loading) {
     return (
@@ -48,7 +48,7 @@ export default function Travels() {
       <Title order={2} mb={20} size={24} ta="center">
         Choose your next travel
       </Title>
-      {!travelsDtos || travelsDtos.length === 0 ? (
+      {!travels || travels.length === 0 ? (
         <ViajeroEmptyMessage message="No travels were found" />
       ) : (
         <Grid>

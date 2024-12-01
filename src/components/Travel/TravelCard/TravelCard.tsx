@@ -52,14 +52,14 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
         <Card.Section>
           <Image
             src={imageSrc || "/default-travel.jpg"}
-            alt={travelDto.travelTitle}
+            alt={travel.travelTitle}
             height={200}
             style={{ objectFit: "cover", minHeight: '200px', height: '200px' }}
           />
         </Card.Section>
 
         <Stack m={12} justify="space-between">
-          <Text fw={700}>{travelDto.travelTitle}</Text>
+          <Text fw={700}>{travel.travelTitle}</Text>
           <Text size="sm">{formattedStartDate} - {formattedEndDate}</Text>
         </Stack>
 
@@ -99,7 +99,7 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
 
         }
 
-        <Box pos="absolute">
+        <Box pos="absolute" right={10}>
           <ThemeIcon color={userColor} miw={70}>
             <CgProfile />
             <Text ml={4}>

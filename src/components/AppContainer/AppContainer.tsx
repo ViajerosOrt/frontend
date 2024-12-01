@@ -54,18 +54,18 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
               size="md"
             />
             <ViajeroLogo />
-            
+
             <Group align="center" justify="center" >
-            <PlaneAnimation/> 
-            <Avatar 
-              size={80} 
-              src={`https://robohash.org/${currentUser?.name}`} 
-              radius="xl" 
-              style={{ animation: ANIMATIONS.moving, verticalAlign: "middle", marginTop: -35, marginRight: 40}} 
+              <PlaneAnimation />
+              <Avatar
+                size={80}
+                src={`https://robohash.org/${currentUser?.name}`}
+                radius="xl"
+                style={{ animation: ANIMATIONS.moving, verticalAlign: "middle", marginTop: -35, marginRight: 40 }}
               />
-            <Text size="xl" fw={900} style={{ marginLeft: -60, marginTop: 25, animation: ANIMATIONS.breathing,}} > 
-              {currentUser?.name}
-            </Text>
+              <Text size="xl" fw={900} style={{ marginLeft: -60, marginTop: 25, animation: ANIMATIONS.breathing, }} >
+                {currentUser?.name}
+              </Text>
             </Group>
           </Group>
         </AppShell.Header>

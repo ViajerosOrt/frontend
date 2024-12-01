@@ -141,6 +141,7 @@ const TravelCreatedCard = ({ travel, index }: { travel: Travel, index: number })
       shadow="md"
       radius="md"
       withBorder
+      mah={300}
       style={{
         transition: 'transform 0.2s ease',
         transform: hovered ? 'scale(1.020)' : 'scale(1)',
@@ -148,9 +149,9 @@ const TravelCreatedCard = ({ travel, index }: { travel: Travel, index: number })
     >
       <Card.Section>
         <Image
+          h={180}
           src={travelImages[index % travelImages.length] || "/default-travel.jpg"}
           alt={travel.travelTitle}
-          height={120}
         />
       </Card.Section>
       <Stack m={8} gap={4}>
