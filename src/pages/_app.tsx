@@ -6,10 +6,9 @@ import '@mantine/notifications/styles.css';
 import { useViajeroApolloClient } from "@/api/apollo-client";
 import type { AppProps } from "next/app";
 import { createTheme, MantineProvider } from "@mantine/core";
-import { NextRouter, Router, useRouter } from "next/router";
+import { useRouter } from "next/router";
 import { AppContainer } from "@/components/AppContainer/AppContainer";
 import { ApolloProvider } from "@apollo/client";
-import { useEffect } from "react";
 import useAuthStore, { isUserAccessTokenValid, UserState } from "@/stores/useAuthStore";
 import UnauthenticatedRoutes from "@/components/AuthenticationRoutes/UnauthenticatedRoutes";
 import AuthenticatedRoutes from "@/components/AuthenticationRoutes/AuthenticatedRoutes";
@@ -33,26 +32,6 @@ export default function App({ Component, pageProps }: AppProps) {
   const isPublicPage = publicPages.includes(router.pathname);
 
   const client = useViajeroApolloClient()
-  const { currentUser, onLogout } = useAuthStore();
-
-  const startTokenValidation = () => {
-    setInterval(() => {
-      if (!currentUser) {
-        router.push('/login');
-        return;
-      }
-
-      if (!isUserAccessTokenValid(currentUser)) {
-        // Token is expired, we log out the user
-        onLogout(currentUser.id);
-        router.push('/login');
-      }
-    }, 60 * 1000);
-  };
-
-  // Every 60s we check if the token is valid
-  startTokenValidation();
-
 
   return (
     <MantineProvider theme={theme}>

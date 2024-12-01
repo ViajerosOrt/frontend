@@ -35,7 +35,7 @@ export const TravelCard = ({ travelDto, imageSrc, setSelectedTravelDto }: Travel
         withBorder
         style={{
           transition: 'transform 0.2s ease',
-          transform: hovered ? 'scale(1.020)' : 'scale(1)',
+          transform: hovered ? 'scale(1.020)' : 'scale(1)'
         }}
       >
         <Card.Section>

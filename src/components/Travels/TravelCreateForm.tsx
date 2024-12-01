@@ -1,16 +1,25 @@
 import { useCreateTravelMutation, useGetAllActivitiesQuery } from "@/graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
-import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Modal, Group, MultiSelect, List, ActionIcon, Flex, Paper, Box, Title } from '@mantine/core';
+import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useState } from 'react';
 import { z } from 'zod';
 import { VIAJERO_GREEN } from "@/consts";
-import { FaCheck } from "react-icons/fa";
 import { BackButton } from "../BackButton/BackButton";
 import { TRAVEL_MAX_DESCRIPTION_LENGTH, TRAVEL_MAX_TITLE_LENGTH } from "@/consts/validators";
 import { useRouter } from "next/router";
-import { GraphQLError } from "graphql";
+
+const travelValuesSchema = z.object({
+  title: z.string().min(1, 'Title is required').max(50),
+  description: z.string().min(1, 'Description is required').max(200),
+  maxCap: z.number().min(1, 'Max Capacity must be more than 1'),
+  items: z.array(z.string()).optional(),
+  activities: z.array(z.string()).optional(),
+  location: z.object({
+    longLatPoint: z.string().min(1, 'Coordinates are required'),
+  }),
+});
 
 const TravelCreateForm = () => {
   //Mutations and Querys
@@ -213,16 +222,8 @@ const TravelCreateForm = () => {
               searchable
             />
 
-            <Button
-              type="submit"
-              mt="md"
-              px="sm"
-              radius="md"
-              color={VIAJERO_GREEN}
-              w="fit-content"
-              style={{ fontWeight: 600, fontSize: '1rem' }}
-              rightSection={<FaCheck />}
-            >Create Travel
+            <Button variant="filled" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
+              Create Travel
             </Button>
 
           </Stack>
@@ -234,13 +235,3 @@ const TravelCreateForm = () => {
 
 export default TravelCreateForm;
 
-const travelValuesSchema = z.object({
-  title: z.string().min(1, 'Title is required').max(50),
-  description: z.string().min(1, 'Description is required').max(200),
-  maxCap: z.number().min(1, 'Max Capacity must be more than 1'),
-  items: z.array(z.string()).optional(),
-  activities: z.array(z.string()).optional(),
-  location: z.object({
-    longLatPoint: z.string().min(1, 'Coordinates are required'),
-  }),
-});

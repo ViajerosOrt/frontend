@@ -6,8 +6,9 @@ import { VIAJERO_GREEN } from "@/consts";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import { travelImages } from "@/utils";
 
-const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
+
 
 export const TravelList = ({ travelsDtos }: { travelsDtos: TravelDto[] }) => {
   const [selectedTravelDtO, setSelectedTravelDto] = useState<TravelDto | undefined>(undefined)

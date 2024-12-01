@@ -55,7 +55,7 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
       console.error('Error:', err);
     }
   };
-  console.log("aa")
+
   return (
     <Stack px={30} bg="rgba(255, 255, 255, 0.8)" style={{ backgroundColor: '#e1e7f9' }} align="center" mb={20} >
       <form onSubmit={form.onSubmit(handleRegisterSubmit)}>

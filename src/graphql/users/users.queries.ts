@@ -4,6 +4,7 @@ export const GET_USER = gql`
 query UserById($userByIdId: String!) {
   userById(id: $userByIdId) {
     birthDate
+    password
     description
     email
     name
@@ -16,6 +17,7 @@ query UserById($userByIdId: String!) {
       }
     }
     userActivities {
+    id
       activityName
     }
     travelsCreated {
