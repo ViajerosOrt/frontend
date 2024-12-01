@@ -76,16 +76,16 @@ function ViajerosNavLink({ to, label, leftSection, onClick, isActive }: navLink)
       label={label}
       active={isActive}
       variant="filled"
-      leftSection={<div style={{ marginTop: '10px' }}>
-      {leftSection} {}
+      leftSection={<div style={{ marginTop: '10px' }}> {leftSection} {}
     </div>}
+     px={15}
+     py={25}
+     fw={750}
+     mb={10}
       style={{ 
         borderRadius: 10,
         fontSize: "1.8rem",
-        fontWeight: 750,
         transition: "all 0.3s ease-in-out",
-        padding: "15px 5px",
-        marginBottom: "10px",
         gap: "5px",
       }}
       draggable="false"
