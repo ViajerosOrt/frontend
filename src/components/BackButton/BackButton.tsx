@@ -1,8 +1,9 @@
-import { VIAJERO_GREEN } from "@/consts"
+import { VIAJERO_GREEN } from "../../consts/consts"
 import { faChevronLeft } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { Button } from "@mantine/core"
 import Router from "next/router";
+import React from "react";
 
 export const BackButton = () => {
   return (

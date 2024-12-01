@@ -1,7 +1,8 @@
-import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
+import { ViajeroLoader } from "../components/ViajeroLoader/ViajeroLoader";
 import { Center, Loader } from "@mantine/core";
 import { Inter } from "next/font/google";
 import { useRouter } from "next/router";
+import React from "react";
 import { useEffect } from "react";
 
 export default function Home() {

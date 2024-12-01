@@ -1,13 +1,14 @@
-import { useLoginMutation } from "@/graphql/__generated__/gql";
+import { useLoginMutation } from "../../graphql/__generated__/gql";
 import { useForm, zodResolver } from "@mantine/form";
 import { Button, Checkbox, Group, PasswordInput, Stack, TextInput } from '@mantine/core';
 import { z } from 'zod'
 import { FaEnvelope, FaEye, FaEyeSlash, FaLock } from "react-icons/fa";
-import { useAuth } from "@/hooks/useAth";
+import { useAuth } from "../../hooks/useAth";
 import { useRouter } from "next/router";
 import { useCallback } from "react";
-import { VIAJERO_GREEN } from "@/consts";
-2
+import { VIAJERO_GREEN } from"../../consts/consts";
+import React from "react";
+
 const loginFormValidation = z.object({
   email: z.string().min(1).max(40).refine((val) => val.includes('@'), {
     message: 'Invalid Email',
@@ -63,9 +64,10 @@ export const LoginForm = () => {
           // If we have an access token, we store the user and JWT info in the store
           onLogin({
             newUser: {
-              id:user.id,
+              id: user.id,
               email: user.email,
-              accessToken: accessToken
+              accessToken: accessToken,
+              name: user.name
             }
           })
           router.push("/travels");

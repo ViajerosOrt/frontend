@@ -1,16 +1,18 @@
-import { Activity, Travel, useJoinToTravelMutation } from "@/graphql/__generated__/gql";
+import { Activity,useJoinToTravelMutation, TravelDto } from "../../../graphql/__generated__/gql";
+
 import { TravelCard } from "../TravelCard/TravelCard";
 import { Box, Button, Group, Image, Modal, Text, ThemeIcon, Tooltip } from "@mantine/core";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
-import { VIAJERO_GREEN } from "@/consts";
+import { Consts, VIAJERO_GREEN } from "../../../consts/consts";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
+import React from "react";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
 
-export const TravelList = ({ travels }: { travels: Travel[] }) => {
-  const [selectedTravel, setSelectedTravel] = useState<Travel | undefined>(undefined)
+export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
+  const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
 
   return (
@@ -35,8 +37,8 @@ export const TravelList = ({ travels }: { travels: Travel[] }) => {
 
 
 type TravelDetailsModalProps = {
-  selectedTravel: Travel | undefined,
-  setSelectedTravel: Dispatch<SetStateAction<Travel | undefined>>
+  selectedTravel: TravelDto  | undefined,
+  setSelectedTravel: Dispatch<SetStateAction<TravelDto  | undefined>>
   selectedImageSrc: string
 }
 
@@ -45,6 +47,8 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
 
   const formattedStartDate = new Date(selectedTravel?.startDate).toLocaleDateString('es-ES');
   const formattedEndDate = new Date(selectedTravel?.finishDate).toLocaleDateString('es-ES');
+
+  const userColor = Consts.getColorByPercentage(selectedTravel?.usersCount!, selectedTravel?.maxCap!);
 
   const [joinToTravel] = useJoinToTravelMutation({
     refetchQueries: ["travels"]
@@ -124,7 +128,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
           {selectedTravel?.travelDescription || "No description available."}
         </Text>
 
-        <ThemeIcon color={VIAJERO_GREEN} miw={70}>
+        <ThemeIcon color={userColor} miw={70}>
           <CgProfile />
           <Text ml={4}>
             {`${selectedTravel?.usersCount} / ${selectedTravel?.maxCap}`}

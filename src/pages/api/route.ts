@@ -1,4 +1,4 @@
-import { useAuth } from '@/hooks/useAth'
+import { useAuth } from '../../hooks/useAth'
 import { NextApiRequest, NextApiResponse } from 'next'
 import { useRouter } from 'next/router';
 
