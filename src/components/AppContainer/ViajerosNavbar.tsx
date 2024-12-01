@@ -77,14 +77,17 @@ function ViajerosNavLink({ to, label, leftSection, onClick, isActive }: navLink)
       active={isActive}
       variant="filled"
       leftSection={leftSection}
+...
+     px={15}
+     py={25}
+     align="center"
+     fw={700}
+     mb={10}
       style={{ 
         borderRadius: 10,
         fontSize: "1.7rem",
-        fontWeight: 700,
         transition: "all 0.3s ease-in-out",
-        padding: "15px 25px",
         alignItems: "center",
-        marginBottom: "10px",
       }}
       
       onMouseEnter={(e) => {
