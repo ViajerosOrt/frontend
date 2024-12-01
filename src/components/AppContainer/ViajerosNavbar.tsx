@@ -76,20 +76,22 @@ function ViajerosNavLink({ to, label, leftSection, onClick, isActive }: navLink)
       label={label}
       active={isActive}
       variant="filled"
-      leftSection={leftSection}
+      leftSection={<div style={{ marginTop: '10px' }}>
+      {leftSection} {}
+    </div>}
       style={{ 
         borderRadius: 10,
-        fontSize: "1.7rem",
-        fontWeight: 700,
+        fontSize: "1.8rem",
+        fontWeight: 750,
         transition: "all 0.3s ease-in-out",
-        padding: "15px 25px",
-        alignItems: "center",
+        padding: "15px 5px",
         marginBottom: "10px",
+        gap: "5px",
       }}
-      
+      draggable="false"
       onMouseEnter={(e) => {
         const target = e.target as HTMLElement;
-        target.style.transform = "scale(1.17)";
+        target.style.transform = "scale(1.13)";
       }}
       onMouseLeave={(e) => {
         const target = e.target as HTMLElement;
