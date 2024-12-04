@@ -12,9 +12,9 @@ export const GET_TRAVELS = gql`
       isJoined
       usersCount
       transport {
-      name
-      id
-    }
+        name
+        id
+      }
       checklist {
         id
         name

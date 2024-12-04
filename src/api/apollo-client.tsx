@@ -3,8 +3,10 @@ import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from "@apollo
 import { setContext } from "@apollo/client/link/context";
 import { onError } from '@apollo/client/link/error'
 
+const backendApi = process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? "http://localhost:4000/graphql"
+
 const httpLink = createHttpLink({
-  uri: "AppViajeros-env.eba-demjbuvb.us-east-1.elasticbeanstalk.com",
+  uri: backendApi,
 });
 
 export function useViajeroApolloClient() {
