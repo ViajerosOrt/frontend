@@ -112,7 +112,7 @@ export default function Profile() {
               <SimpleGrid cols={3} spacing="md">
                 {user.travelsCreated.map((travel, index) => {
                   return (
-                    <Box style={{ cursor: 'pointer' }} onClick={() => router.push("/myTravels")}>
+                    <Box key={travel.id} style={{ cursor: 'pointer' }} onClick={() => router.push("/myTravels")}>
                       <TravelCreatedCard travel={travel as Travel} index={index} />
                     </Box>
                   )
