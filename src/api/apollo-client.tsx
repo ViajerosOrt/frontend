@@ -4,7 +4,7 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from '@apollo/client/link/error'
 
 const httpLink = createHttpLink({
-  uri: "http://localhost:4000/graphql",
+  uri: "AppViajeros-env.eba-demjbuvb.us-east-1.elasticbeanstalk.com",
 });
 
 export function useViajeroApolloClient() {

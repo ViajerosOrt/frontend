@@ -2,7 +2,7 @@ import type { CodegenConfig } from "@graphql-codegen/cli";
 
 // TODO: Change schema when deploying the app with a diferent endpoint.
 const config: CodegenConfig = {
-  schema: "http://localhost:4000/graphql",
+  schema: "AppViajeros-env.eba-demjbuvb.us-east-1.elasticbeanstalk.com",
   documents: ["./src/graphql/**/*.ts"],
   generates: {
     "./src/graphql/__generated__/gql.ts": {
