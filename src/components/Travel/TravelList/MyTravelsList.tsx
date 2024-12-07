@@ -1,11 +1,16 @@
 import { TravelDto, Activity } from "../../../graphql/__generated__/gql";
-import { Grid, Text, Tabs, Box } from '@mantine/core';
+import { Grid, Text, Tabs, Box, Group, ActionIcon } from '@mantine/core';
 import { TravelCard } from "../TravelCard/TravelCard";
 import { useState } from 'react';
 import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from '../../../consts/consts';
 import React from 'react';
 import { TravelDetailsModal } from './TravelList';
-import { BOLD } from "@/consts";
+import { BOLD, SEMI_BOLD } from "@/consts";
+import { useTravelFilters } from "@/hooks/useTravelsFilters";
+import { useDisclosure } from "@mantine/hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { TravelFiltersDrawer } from "@/components/TravelFiltersDrawer/TravelsFilterDrawer";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"];
 
@@ -21,6 +26,9 @@ const travelsFiltered = (travels: TravelDto[]) => {
 };
 
 export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
+    const { filters, updateFilters, applyFilters, defaultFilters } = useTravelFilters();
+    const [opened, { open, close }] = useDisclosure(false)
+
     const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
     const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
 
@@ -29,6 +37,7 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
 
     return (
         <Box w="100%" mt={20}>
+
             <Tabs value={activeTab} onChange={setActiveTab} orientation="horizontal" variant="unstyled"  >
                 <Tabs.List
                     style={{
