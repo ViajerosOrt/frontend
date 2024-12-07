@@ -11,7 +11,6 @@ import { FaCheck } from "react-icons/fa";
 import { BackButton } from "../BackButton/BackButton";
 import { TRAVEL_MAX_DESCRIPTION_LENGTH, TRAVEL_MAX_TITLE_LENGTH } from "../../consts/validators";
 import { useRouter } from "next/router";
-import { FaMagento } from "react-icons/fa";
 import { getTransportAvatar } from "@/utils";
 import React from "react";
 
