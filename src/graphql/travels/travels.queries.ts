@@ -1,8 +1,8 @@
 import { gql } from "@apollo/client";
 
 export const GET_TRAVELS = gql`
-  query travels {
-    travels {
+  query Travels($transportId: String, $activityIds: [String!], $travelName: String, $endDate: DateTime, $startDate: DateTime,$countryName: String, $creatorId: String) {
+    travels(transportId: $transportId, activityIds: $activityIds, travelName: $travelName, endDate: $endDate, startDate: $startDate, countryName: $countryName, creatorId: $creatorId) {
       id
       travelTitle
       travelDescription
@@ -33,23 +33,6 @@ export const GET_TRAVELS = gql`
       }
       travelActivities {
         id
-        activityName
-      }
-    }
-  }
-`;
-
-export const GET_TRAVELS_BY_USER = gql`
-  query FindAllTravelByUser {
-    findAllTravelByUser {
-      id
-      travelTitle
-      travelDescription
-      maxCap
-      usersCount
-      finishDate
-      startDate
-      travelActivities {
         activityName
       }
     }

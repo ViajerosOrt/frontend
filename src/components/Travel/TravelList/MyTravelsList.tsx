@@ -1,14 +1,16 @@
-import { useQuery } from '@apollo/client';
 import { TravelDto, Activity } from "../../../graphql/__generated__/gql";
-import { Container, Grid, Text, Loader, Box, Modal, Group, ThemeIcon, Tooltip, Button, Image, Title, Tabs, Card } from '@mantine/core';
+import { Grid, Text, Tabs, Box, Group, ActionIcon } from '@mantine/core';
 import { TravelCard } from "../TravelCard/TravelCard";
-import { Dispatch, SetStateAction, useEffect, useState } from 'react';
-import { notifications } from '@mantine/notifications';
-import { useDisclosure } from '@mantine/hooks';
-import { CgProfile } from 'react-icons/cg';
-import { VIAJERO_GREEN, Consts, VIAJERO_GREEN_DARK } from '../../../consts/consts';
+import { useState } from 'react';
+import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from '../../../consts/consts';
 import React from 'react';
 import { TravelDetailsModal } from './TravelList';
+import { BOLD, SEMI_BOLD } from "@/consts";
+import { useTravelFilters } from "@/hooks/useTravelsFilters";
+import { useDisclosure } from "@mantine/hooks";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
+import { TravelFiltersDrawer } from "@/components/TravelFiltersDrawer/TravelsFilterDrawer";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"];
 
@@ -24,6 +26,9 @@ const travelsFiltered = (travels: TravelDto[]) => {
 };
 
 export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
+    const { filters, updateFilters, applyFilters, defaultFilters } = useTravelFilters();
+    const [opened, { open, close }] = useDisclosure(false)
+
     const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
     const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
 
@@ -31,10 +36,13 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
     const [activeTab, setActiveTab] = useState<string | null>('upcoming');
 
     return (
-        <>
-            <Tabs value={activeTab} onChange={setActiveTab} orientation="horizontal" variant="unstyled" >
+        <Box w="100%" mt={20}>
+
+            <Tabs value={activeTab} onChange={setActiveTab} orientation="horizontal" variant="unstyled"  >
                 <Tabs.List
                     style={{
+                        display: 'flex',
+                        justifyContent: 'space-between',
                         marginBottom: '10px',
                         marginLeft: '60px',
                         paddingBottom: '20px',
@@ -45,10 +53,11 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
                         mr={120}
                         px={15}
                         py={20}
-                        fw={700}
-                        bg={activeTab=== 'upcoming' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
+                        fw={BOLD}
+                        bg={activeTab === 'upcoming' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
                         style={{
-                            fontSize: '18px',
+                            flex: 1,
+                            fontSize: '14px',
                             borderRadius: 10,
                             color: 'white',
                             transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
@@ -57,11 +66,11 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
                         onMouseEnter={(e) => {
                             const target = e.target as HTMLElement;
                             target.style.transform = "scale(1.17)";
-                          }}
-                          onMouseLeave={(e) => {
+                        }}
+                        onMouseLeave={(e) => {
                             const target = e.target as HTMLElement;
                             target.style.transform = "scale(1)";
-                          }}
+                        }}
                     >About to start</Tabs.Tab>
 
                     <Tabs.Tab value="ongoing" mb="md"
@@ -69,15 +78,15 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
                         py={20}
                         ml={120}
                         mr={40}
-                        fw={700}
-                        bg={activeTab=== 'ongoing' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
+                        fw={BOLD}
+                        bg={activeTab === 'ongoing' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
                         style={{
-                            fontSize: '18px',
+                            flex: 1,
+                            fontSize: '14px',
                             borderRadius: 10,
                             color: 'white',
-                            justifyContent: 'center',
                             transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
-                            transform: activeTab === 'ongoing' ? 'scale(1.1)' : 'scale(1)',
+                            transform: activeTab === 'upcoming' ? 'scale(1.1)' : 'scale(1)',
                         }}
                         onMouseEnter={(e) => {
                             const target = e.target as HTMLElement;
@@ -93,15 +102,15 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
                         ml={240}
                         px={10}
                         py={20}
-                        fw={700}
-                        bg={activeTab=== 'finished' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
+                        fw={BOLD}
+                        bg={activeTab === 'finished' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
                         style={{
-                            fontSize: '18px',
+                            flex: 1,
+                            fontSize: '14px',
                             borderRadius: 10,
-                            justifyContent: 'center',
                             color: 'white',
                             transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
-                            transform: activeTab === 'finished' ? 'scale(1.1)' : 'scale(1)',
+                            transform: activeTab === 'upcoming' ? 'scale(1.1)' : 'scale(1)',
                         }}
                         onMouseEnter={(e) => {
                             const target = e.target as HTMLElement;
@@ -178,7 +187,7 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
                 setSelectedTravel={setSelectedTravel}
                 selectedImageSrc={selectedImageSrc}
             />
-        </>
+        </Box>
     )
 }
 
