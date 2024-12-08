@@ -4,12 +4,12 @@ import { ViajeroLoader } from "../../components/ViajeroLoader/ViajeroLoader";
 import { Container, Title, Grid } from "@mantine/core";
 import { MyTravelsList } from "../../components/Travel/TravelList/MyTravelsList";
 import React, { useEffect } from "react";
-import { useTravelFilters } from "@/hooks/useTravelsFilters";
 import { useAuth } from "@/hooks/useAth";
+import { useMyTravelFilters } from "@/hooks/useMyTravelsFilters";
 
 export default function Travels() {
   const { currentUser } = useAuth()
-  const { data, loading } = useTravelFilters();
+  const { filters, updateFilters, applyFilters, defaultFilters, data, loading } = useMyTravelFilters();
 
   const travels = data?.travels?.map((travel) => {
     const { ...rest } = travel;
@@ -18,20 +18,13 @@ export default function Travels() {
 
   const myTravels = travels.filter((travel) => travel.creatorUser.email == currentUser?.email)
 
-  if (loading) {
-    return (
-      <ViajeroLoader />
-    )
-  }
+
   return (
     <Container size="xl" mt="xl">
-      {!myTravels || myTravels.length === 0 ? (
-        <ViajeroEmptyMessage message="No travels were found" />
-      ) : (
-        <Grid>
-          <MyTravelsList travels={myTravels} />
-        </Grid>
-      )}
+
+      <Grid>
+        <MyTravelsList travels={myTravels} loading={loading} filters={filters} updateFilters={updateFilters} applyFilters={applyFilters} defaultFilters={defaultFilters} />
+      </Grid>
     </Container>
   );
 }

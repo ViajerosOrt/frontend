@@ -16,6 +16,7 @@ import { TravelFilters } from "@/hooks/useTravelsFilters";
 import { useForm } from "@mantine/form";
 import { getTransportAvatar } from "@/utils";
 import { DatePicker } from "@mantine/dates";
+import { useAuth } from "@/hooks/useAth";
 
 export const TravelFiltersDrawer = (
   { opened,
@@ -23,7 +24,8 @@ export const TravelFiltersDrawer = (
     filters,
     updateFilters,
     applyFilters,
-    defaultFilters
+    defaultFilters,
+    showMyTravelNames = false
   }
     :
     {
@@ -33,7 +35,9 @@ export const TravelFiltersDrawer = (
       updateFilters: (field: string, value: any) => void,
       applyFilters: (newFilters: TravelFilters) => void,
       defaultFilters: TravelFilters
+      showMyTravelNames?: boolean
     },) => {
+  const { currentUser, onLogout } = useAuth()
   // Activities
   const { data: activitiesData } = useGetAllActivitiesQuery();
   const activities = activitiesData?.activities || [];
@@ -48,7 +52,9 @@ export const TravelFiltersDrawer = (
   // Travel names
   const { data } = useTravelsQuery({
   })
-  const travelTitles = data?.travels.map((travel) => travel.travelTitle)
+  const travels = showMyTravelNames ? data?.travels?.filter((travel) => travel.creatorUser.email == currentUser?.email) : data?.travels
+
+  const travelTitles = travels?.map((travel) => travel.travelTitle)
 
   // Show Dates states
   const [showStartDate, setShowStartDate] = useState<boolean>(false);

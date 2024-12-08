@@ -1,16 +1,17 @@
-import { TravelDto, Activity } from "../../../graphql/__generated__/gql";
-import { Grid, Text, Tabs, Box, Group, ActionIcon } from '@mantine/core';
+import { TravelDto } from "../../../graphql/__generated__/gql";
+import { Grid, Text, Tabs, Box, Group, ActionIcon, Button } from '@mantine/core';
 import { TravelCard } from "../TravelCard/TravelCard";
 import { useState } from 'react';
 import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from '../../../consts/consts';
 import React from 'react';
 import { TravelDetailsModal } from './TravelList';
 import { BOLD, SEMI_BOLD } from "@/consts";
-import { useTravelFilters } from "@/hooks/useTravelsFilters";
 import { useDisclosure } from "@mantine/hooks";
+import { TravelFiltersDrawer } from "@/components/TravelFiltersDrawer/TravelsFilterDrawer";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
-import { TravelFiltersDrawer } from "@/components/TravelFiltersDrawer/TravelsFilterDrawer";
+import { FaPlane } from "react-icons/fa";
+import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"];
 
@@ -25,8 +26,23 @@ const travelsFiltered = (travels: TravelDto[]) => {
     return { upcoming, ongoing, finished };
 };
 
-export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
-    const { filters, updateFilters, applyFilters, defaultFilters } = useTravelFilters();
+export const MyTravelsList = (
+    { travels,
+        loading,
+        filters,
+        updateFilters,
+        applyFilters,
+        defaultFilters
+    }:
+        {
+            travels: TravelDto[],
+            loading: boolean,
+            filters: any,
+            updateFilters: any,
+            applyFilters: any,
+            defaultFilters: any
+
+        }) => {
     const [opened, { open, close }] = useDisclosure(false)
 
     const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
@@ -35,151 +51,153 @@ export const MyTravelsList = ({ travels }: { travels: TravelDto[] }) => {
     const { upcoming, ongoing, finished } = travelsFiltered(travels);
     const [activeTab, setActiveTab] = useState<string | null>('upcoming');
 
+    if (loading) {
+        return (
+            <ViajeroLoader />
+        )
+    }
+
+
     return (
         <Box w="100%" mt={20}>
-
             <Tabs value={activeTab} onChange={setActiveTab} orientation="horizontal" variant="unstyled"  >
                 <Tabs.List
                     style={{
                         display: 'flex',
                         justifyContent: 'space-between',
+                        alignItems: 'end',
                         marginBottom: '10px',
-                        marginLeft: '60px',
                         paddingBottom: '20px',
                     }}>
-                    <Tabs.Tab
-                        value="upcoming"
-                        mb="md"
-                        mr={120}
-                        px={15}
-                        py={20}
-                        fw={BOLD}
-                        bg={activeTab === 'upcoming' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
+                    <Button
+                        onClick={() => setActiveTab('upcoming')}
+                        mt="md"
+                        size="md"
+                        radius="md"
+                        maw={250}
+                        color={VIAJERO_GREEN}
                         style={{
                             flex: 1,
-                            fontSize: '14px',
-                            borderRadius: 10,
-                            color: 'white',
-                            transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
-                            transform: activeTab === 'upcoming' ? 'scale(1.1)' : 'scale(1)',
+                            fontWeight: activeTab === 'upcoming' ? BOLD : SEMI_BOLD,
                         }}
-                        onMouseEnter={(e) => {
-                            const target = e.target as HTMLElement;
-                            target.style.transform = "scale(1.17)";
-                        }}
-                        onMouseLeave={(e) => {
-                            const target = e.target as HTMLElement;
-                            target.style.transform = "scale(1)";
-                        }}
-                    >About to start</Tabs.Tab>
+                    >
+                        About to start
+                    </Button>
 
-                    <Tabs.Tab value="ongoing" mb="md"
-                        px={10}
-                        py={20}
-                        ml={120}
-                        mr={40}
-                        fw={BOLD}
-                        bg={activeTab === 'ongoing' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
+                    <Button
+                        onClick={() => setActiveTab('ongoing')}
+                        mt="md"
+                        size="md"
+                        radius="md"
+                        maw={250}
+                        color={VIAJERO_GREEN}
+                        rightSection={<FaPlane />}
                         style={{
                             flex: 1,
-                            fontSize: '14px',
-                            borderRadius: 10,
-                            color: 'white',
-                            transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
-                            transform: activeTab === 'upcoming' ? 'scale(1.1)' : 'scale(1)',
+                            fontWeight: activeTab === 'ongoing' ? BOLD : SEMI_BOLD,
                         }}
-                        onMouseEnter={(e) => {
-                            const target = e.target as HTMLElement;
-                            target.style.transform = "scale(1.17)";
-                        }}
-                        onMouseLeave={(e) => {
-                            const target = e.target as HTMLElement;
-                            target.style.transform = "scale(1)";
-                        }}
-                    >In Progress</Tabs.Tab>
+                    >
+                        In Progress
+                    </Button>
 
-                    <Tabs.Tab value="finished" mb="md"
-                        ml={240}
-                        px={10}
-                        py={20}
-                        fw={BOLD}
-                        bg={activeTab === 'finished' ? VIAJERO_GREEN_DARK : VIAJERO_GREEN}
+                    <Button
+                        onClick={() => setActiveTab('finished')}
+                        mt="md"
+                        size="md"
+                        radius="md"
+                        maw={250}
+                        color={VIAJERO_GREEN}
+                        rightSection={<FaPlane />}
                         style={{
                             flex: 1,
-                            fontSize: '14px',
-                            borderRadius: 10,
-                            color: 'white',
-                            transition: 'transform 0.3s ease, box-shadow 0.3s ease, background-color 0.3s ease',
-                            transform: activeTab === 'upcoming' ? 'scale(1.1)' : 'scale(1)',
+                            fontWeight: activeTab === 'finished' ? BOLD : SEMI_BOLD,
                         }}
-                        onMouseEnter={(e) => {
-                            const target = e.target as HTMLElement;
-                            target.style.transform = "scale(1.17)";
-                        }}
-                        onMouseLeave={(e) => {
-                            const target = e.target as HTMLElement;
-                            target.style.transform = "scale(1)";
-                        }}
-                    >Ended</Tabs.Tab>
+                    >
+                        Ended
+                    </Button>
+                    <TravelFiltersDrawer
+                        opened={opened}
+                        close={close}
+                        filters={filters}
+                        updateFilters={updateFilters}
+                        applyFilters={applyFilters}
+                        defaultFilters={defaultFilters}
+                        showMyTravelNames={true}
+                    />
 
+                    <Group wrap="nowrap" mt={8} mx={16}>
+                        <ActionIcon variant="filled" color={VIAJERO_GREEN} onClick={open} w={100} h={40}
+                            size="md"
+                            radius="md">
+                            <Text mr={14} fw={SEMI_BOLD}>Filters</Text><FontAwesomeIcon icon={faFilter} />
+                        </ActionIcon>
+                    </Group>
                 </Tabs.List>
 
-                <Tabs.Panel value="upcoming" pt="xs">
-                    <Grid mt="md" gutter="lg">
-                        {upcoming.length > 0 ? (
-                            upcoming.map((travel, index) => (
-                                <TravelCard travel={travel}
-                                    key={travel.id}
-                                    imageSrc={travelImages[index % travelImages.length]}
-                                    setSelectedTravel={(travel) => {
-                                        setSelectedTravel(travel);
-                                        setSelectedImageSrc(travelImages[index % travelImages.length]);
-                                    }}
-                                />
-                            ))
-                        ) : (
-                            <Text>You dont have travels about to start.</Text>
-                        )}
-                    </Grid>
-                </Tabs.Panel>
 
-                <Tabs.Panel value="ongoing" pt="xs">
-                    <Grid mt="md" gutter="lg">
-                        {ongoing.length > 0 ? (
-                            ongoing.map((travel, index) => (
-                                <TravelCard travel={travel}
-                                    key={travel.id}
-                                    imageSrc={travelImages[index % travelImages.length]}
-                                    setSelectedTravel={(travel) => {
-                                        setSelectedTravel(travel);
-                                        setSelectedImageSrc(travelImages[index % travelImages.length]);
-                                    }}
-                                />
-                            ))
-                        ) : (
-                            <Text>You dont have travels in progress.</Text>
-                        )}
-                    </Grid>
-                </Tabs.Panel>
+                {filters !== defaultFilters && travels.length == 0 ? (< Text > There are no travels matching your filters.</Text >)
+                    : (
+                        <>
+                            <Tabs.Panel value="upcoming" pt="xs">
+                                <Grid mt="md" gutter="lg">
+                                    {upcoming.length > 0 ? (
+                                        upcoming.map((travel, index) => (
+                                            <TravelCard travel={travel}
+                                                key={travel.id}
+                                                imageSrc={travelImages[index % travelImages.length]}
+                                                setSelectedTravel={(travel) => {
+                                                    setSelectedTravel(travel);
+                                                    setSelectedImageSrc(travelImages[index % travelImages.length]);
+                                                }}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Text>You dont have travels about to start.</Text>
+                                    )}
+                                </Grid>
+                            </Tabs.Panel>
 
-                <Tabs.Panel value="finished" pt="xs">
-                    <Grid mt="md" gutter="lg">
-                        {finished.length > 0 ? (
-                            finished.map((travel, index) => (
-                                <TravelCard travel={travel}
-                                    key={travel.id}
-                                    imageSrc={travelImages[index % travelImages.length]}
-                                    setSelectedTravel={(travel) => {
-                                        setSelectedTravel(travel);
-                                        setSelectedImageSrc(travelImages[index % travelImages.length]);
-                                    }}
-                                />
-                            ))
-                        ) : (
-                            <Text>You dont have travels that ended.</Text>
-                        )}
-                    </Grid>
-                </Tabs.Panel>
+                            <Tabs.Panel value="ongoing" pt="xs">
+                                <Grid mt="md" gutter="lg">
+                                    {ongoing.length > 0 ? (
+                                        ongoing.map((travel, index) => (
+                                            <TravelCard travel={travel}
+                                                key={travel.id}
+                                                imageSrc={travelImages[index % travelImages.length]}
+                                                setSelectedTravel={(travel) => {
+                                                    setSelectedTravel(travel);
+                                                    setSelectedImageSrc(travelImages[index % travelImages.length]);
+                                                }}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Text>You dont have travels in progress.</Text>
+                                    )}
+                                </Grid>
+
+                            </Tabs.Panel>
+
+                            <Tabs.Panel value="finished" pt="xs">
+                                <Grid mt="md" gutter="lg">
+                                    {finished.length > 0 ? (
+                                        finished.map((travel, index) => (
+                                            <TravelCard travel={travel}
+                                                key={travel.id}
+                                                imageSrc={travelImages[index % travelImages.length]}
+                                                setSelectedTravel={(travel) => {
+                                                    setSelectedTravel(travel);
+                                                    setSelectedImageSrc(travelImages[index % travelImages.length]);
+                                                }}
+                                            />
+                                        ))
+                                    ) : (
+                                        <Text>You dont have travels that ended.</Text>
+                                    )}
+
+                                </Grid>
+                            </Tabs.Panel>
+                        </>
+                    )}
             </Tabs>
 
             <TravelDetailsModal
