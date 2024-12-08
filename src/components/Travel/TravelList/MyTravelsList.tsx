@@ -15,7 +15,6 @@ import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"];
 
-
 const travelsFiltered = (travels: TravelDto[]) => {
     const now = new Date();
 
@@ -56,7 +55,6 @@ export const MyTravelsList = (
             <ViajeroLoader />
         )
     }
-
 
     return (
         <Box w="100%" mt={20}>

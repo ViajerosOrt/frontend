@@ -1,9 +1,7 @@
 import { TravelDto } from "../../graphql/__generated__/gql";
-import { ViajeroEmptyMessage } from "../../components/ViajeroEmptyMessage/viajeroEmptyMessage";
-import { ViajeroLoader } from "../../components/ViajeroLoader/ViajeroLoader";
-import { Container, Title, Grid } from "@mantine/core";
+import { Container, Grid } from "@mantine/core";
 import { MyTravelsList } from "../../components/Travel/TravelList/MyTravelsList";
-import React, { useEffect } from "react";
+import React from "react";
 import { useAuth } from "@/hooks/useAth";
 import { useMyTravelFilters } from "@/hooks/useMyTravelsFilters";
 

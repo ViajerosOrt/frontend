@@ -38,6 +38,7 @@ export const TravelFiltersDrawer = (
       showMyTravelNames?: boolean
     },) => {
   const { currentUser, onLogout } = useAuth()
+
   // Activities
   const { data: activitiesData } = useGetAllActivitiesQuery();
   const activities = activitiesData?.activities || [];
@@ -53,7 +54,6 @@ export const TravelFiltersDrawer = (
   const { data } = useTravelsQuery({
   })
   const travels = showMyTravelNames ? data?.travels?.filter((travel) => travel.creatorUser.email == currentUser?.email) : data?.travels
-
   const travelTitles = travels?.map((travel) => travel.travelTitle)
 
   // Show Dates states
