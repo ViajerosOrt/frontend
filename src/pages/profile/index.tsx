@@ -1,7 +1,7 @@
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { Travel, useUserByIdQuery } from "@/graphql/__generated__/gql";
-import { BOLD, VIAJERO_GREEN } from "@/consts";
+import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
 import { useAuth } from "@/hooks/useAth";
 import {
   Avatar,
@@ -24,6 +24,7 @@ import { getActivityAvatar, travelImages } from "@/utils";
 import { useHover } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
+import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 
 export default function Profile() {
@@ -43,7 +44,7 @@ export default function Profile() {
   if (!user) {
     return <ViajeroEmptyMessage message="There was a problem retrieving your user data" />
   }
-
+  console.log(user)
   return (
     <Container mt="xl" ta="left" w="100%" >
       <Button
@@ -86,6 +87,23 @@ export default function Profile() {
             <Text fw={BOLD} mb="xs">Description:</Text>
             <Text>{user.description || 'No description provided.'}</Text>
           </Box>
+
+          <Group align="start">
+            <Text fw={BOLD} mb="xs" >Social Networks:</Text>
+            {(user.whatsapp || user.instagram) ? (
+              <>
+                <Group mr={30}>
+                  <FaWhatsapp color="#25D366" className="h-6 w-6" />
+                  <Text>{user.whatsapp}</Text>
+                </Group>
+                <Group>
+                  <FaInstagram color="#E1306C" className="h-6 w-6" />
+                  <Text >{user.instagram}</Text>
+                </Group>
+              </>
+            ) : "You don't have social networks yet, add some in the edit page!"}
+
+          </Group>
 
           <Divider />
 

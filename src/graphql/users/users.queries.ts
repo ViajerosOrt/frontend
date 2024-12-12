@@ -8,6 +8,8 @@ export const GET_USER = gql`
       description
       email
       name
+      whatsapp
+      instagram
       reviewsCreated {
         content
         stars

@@ -49,15 +49,14 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
 
   const userColor = Consts.getColorByPercentage(selectedTravel?.usersCount!, selectedTravel?.maxCap!);
 
-  const [joinToTravel] = useJoinToTravelMutation({
-    refetchQueries: ["travels"]
-  });
+  const [joinToTravel] = useJoinToTravelMutation();
 
   const handleJoinTravel = () => {
     joinToTravel({
       variables: {
-        travelId: selectedTravel?.id || ''
+        travelId: selectedTravel?.id || '',
       },
+      refetchQueries: ['Travels'],
       onCompleted(result) {
         if (result.joinToTravel.id) {
           notifications.show({

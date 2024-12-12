@@ -23,6 +23,9 @@ import { showNotification } from '@mantine/notifications';
 import { useRouter } from "next/router";
 import { USER_MAX_DESCRIPTION_LENGHT, USER_MAX_NAME_LENGHT } from "@/consts/validators";
 import { useState } from "react";
+import { FaInstagram, FaWhatsapp } from "react-icons/fa";
+import 'react-phone-number-input/style.css'
+import PhoneInput from 'react-phone-number-input'
 
 type UserEditFormProps = {
   user: User
@@ -61,7 +64,9 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
       password: user.password,
       description: user.description || '',
       birthDate: new Date(user.birthDate),
-      activitiesIds: activitiesIds || []
+      activitiesIds: activitiesIds || [],
+      whatsapp: user.whatsapp || '',
+      instagram: user.instagram || ''
     },
     validate: zodResolver(userSchema),
   });
@@ -174,6 +179,25 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
                 style={{ fontWeight: 700, fontSize: '1.5rem' }}
                 comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
               />
+            </Box>
+            <Box>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Social Networks </Text>
+              <Text size="sm" c="gray">Your social networks so travelers can reach you.</Text>
+              <Group mt={12}>
+                <FaWhatsapp color="#25D366" className="h-6 w-6" />
+                <PhoneInput defaultCountry="UY" {...form.getInputProps('whatsapp')} style={{
+                  paddingTop: '5px',
+                  paddingLeft: "10px",
+                  paddingBottom: "5px",
+                  marging: '10px',
+                  border: '1px solid #ced4da', // Ensures the border is present
+                  borderRadius: '5px',         // Optional: Add rounded corners
+                }} />
+              </Group>
+              <Group mt={12}>
+                <FaInstagram color="#E1306C" className="h-6 w-6" />
+                <TextInput mt={10} w="30%" {...form.getInputProps('instagram')} placeholder="Your instagram account name" />
+              </Group>
             </Box>
             <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
               Edit Profile
