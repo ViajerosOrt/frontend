@@ -4,6 +4,7 @@ import { setContext } from "@apollo/client/link/context";
 import { onError } from '@apollo/client/link/error'
 
 const backendApi = process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? "http://localhost:4000/graphql"
+console.log(backendApi)
 
 const httpLink = createHttpLink({
   uri: backendApi,
