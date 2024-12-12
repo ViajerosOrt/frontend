@@ -7,7 +7,7 @@ const backendApi = process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? "http://localhost:
 console.log(backendApi)
 
 const httpLink = createHttpLink({
-  uri: backendApi,
+  uri: backendApi, 
 });
 
 export function useViajeroApolloClient() {
