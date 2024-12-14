@@ -22,6 +22,42 @@ export const GET_USER = gql`
         id
         activityName
       }
+        reviewsCreated {
+      content
+      type
+      travel {
+        id
+        travelTitle
+        travelDescription
+        startDate
+        finishDate
+       transport {
+        name
+        id
+      }
+        travelActivities {
+        id
+        activityName
+      }
+        country
+        travelActivities {
+          activityName
+          id
+        }
+        country
+        transport {
+          name
+          id
+        }
+      }
+      stars
+      id
+      receivedUserBy {
+        id
+        name
+        email
+      }
+    }
       travelsCreated {
         travelTitle
         id

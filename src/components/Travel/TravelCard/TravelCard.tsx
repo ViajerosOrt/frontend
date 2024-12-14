@@ -1,7 +1,8 @@
-import { getTransportAvatar } from "@/utils";
+import { getDaysPending, getTransportAvatar } from "@/utils";
 import { Consts, VIAJERO_GREEN, VIAJERO_RED, VIAJERO_YELLOW } from "../../../consts/consts";
 import { TravelDto } from "../../../graphql/__generated__/gql";
 import {
+  Badge,
   Box,
   Button,
   Card,
@@ -17,6 +18,7 @@ import React from "react";
 import { Dispatch, SetStateAction } from "react";
 import { CgProfile } from "react-icons/cg";
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
+import { BOLD } from "@/consts";
 
 type TravelCardProps = {
   travel: TravelDto,
@@ -26,10 +28,10 @@ type TravelCardProps = {
 
 export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardProps) => {
   const { hovered, ref } = useHover();
-  const formattedStartDate = new Date(travel.startDate).toLocaleDateString('es-ES');
-  const formattedEndDate = new Date(travel.finishDate).toLocaleDateString('es-ES');
 
   const userColor = Consts.getColorByPercentage(travel?.usersCount!, travel?.maxCap!);
+
+  const daysPending = getDaysPending(new Date(travel.startDate));
 
   return (
     <Grid.Col span={4} style={{ display: 'flex', flexDirection: 'column', minHeight: "350px", }}>
@@ -58,11 +60,17 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
           />
         </Card.Section>
 
-        <Stack m={12} justify="space-between">
-          <Text fw={700}>{travel.travelTitle}</Text>
-          <Text size="sm">{formattedStartDate} - {formattedEndDate}</Text>
-        </Stack>
 
+        <Group m={12} justify="space-between">
+          <Text fw={BOLD}>{travel.travelTitle}</Text>
+          <Stack gap={4} align="flex-start">
+            {daysPending > 0 && (
+              <Badge color={VIAJERO_GREEN} size="md">
+                In {daysPending} {daysPending > 1 ? 'days' : 'day'}
+              </Badge>
+            )}
+          </Stack>
+        </Group>
 
         <Text m={12} truncate lineClamp={2} mih={60} style={{
           overflowX: 'auto',

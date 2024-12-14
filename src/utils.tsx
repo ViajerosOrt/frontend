@@ -103,3 +103,11 @@ export const getTransportAvatar = (
     </Avatar>
   );
 };
+
+export function getDaysPending(date: Date): number {
+  const today = new Date();
+  const startDate = new Date(date);
+  const daysPending = Math.ceil((startDate.getTime() - today.getTime()) / (1000 * 60 * 60 * 24)); // Difference in days
+  return daysPending;
+}
+

@@ -4,7 +4,6 @@ import { TravelCard } from "../TravelCard/TravelCard";
 import { useState } from 'react';
 import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from '../../../consts/consts';
 import React from 'react';
-import { TravelDetailsModal } from './TravelList';
 import { BOLD, SEMI_BOLD } from "@/consts";
 import { useDisclosure } from "@mantine/hooks";
 import { TravelFiltersDrawer } from "@/components/TravelFiltersDrawer/TravelsFilterDrawer";
@@ -12,6 +11,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FaPlane } from "react-icons/fa";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
+import { TravelDetailsModal } from "@/components/TravelDetailsModal/TravelDetailsModal";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"];
 

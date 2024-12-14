@@ -147,7 +147,7 @@ export default function Profile() {
   )
 }
 
-const TravelCreatedCard = ({ travel, index }: { travel: Travel, index: number }) => {
+export const TravelCreatedCard = ({ travel, index }: { travel: Travel, index: number }) => {
   const { hovered, ref } = useHover();
 
   const formattedStartDate = new Date(travel.startDate).toLocaleDateString('es-ES');
