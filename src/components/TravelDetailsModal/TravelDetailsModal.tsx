@@ -80,7 +80,6 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
         backgroundOpacity: 0.55,
         blur: 3,
       }}
-      transitionProps={{ transition: 'fade', duration: 200 }}
     >
       <Image
         src={selectedImageSrc || "/default-travel.jpg"}

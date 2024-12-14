@@ -3,16 +3,22 @@ import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
 import { Review, TravelDto, useUserByIdQuery } from "@/graphql/__generated__/gql";
 import { useAuth } from "@/hooks/useAth";
 import { travelImages } from "@/utils";
-import { Box, Card, Container, Group, Image, Stack, Text, Title, Button } from "@mantine/core";
+import { Box, Card, Container, Group, Image, Stack, Text, Title, Button, Modal } from "@mantine/core";
 import { FaPlane } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
 import { TravelDetailsModal } from "@/components/TravelDetailsModal/TravelDetailsModal";
+import { ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
+import { useDisclosure } from "@mantine/hooks";
 
 export default function Reviews() {
   const { currentUser } = useAuth()
   const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
+  const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
+  const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
+
+
 
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: currentUser?.id || '' },
@@ -52,6 +58,7 @@ export default function Reviews() {
                     review={review as Review}
                     setSelectedTravel={setSelectedTravel}
                     setSelectedImageSrc={setSelectedImageSrc}
+                    setSelectedUserId={setSelectedUserId}
                     index={index}
                   />
                 ))}
@@ -71,6 +78,8 @@ export default function Reviews() {
                     review={review as Review}
                     setSelectedTravel={setSelectedTravel}
                     setSelectedImageSrc={setSelectedImageSrc}
+                    setSelectedUserId={setSelectedUserId}
+                    openUserModal={openUserModal}
                   />
                 ))}
               </Stack>
@@ -92,15 +101,31 @@ export default function Reviews() {
         showJoinButton={false}
         showMaxCap={false}
       />
+
+      <Modal
+        opened={opened}
+        centered
+        onClose={() => {
+          closeUserModal();
+          setTimeout(() => {
+            setSelectedUserId(undefined);
+          }, 300);
+        }}
+        size="2xl"
+      >
+        <ProfileDetails userId={selectedUserId || ''} />
+      </Modal>
     </Container>
   )
 }
 
-export const ReviewCard = ({ review, setSelectedTravel, setSelectedImageSrc, index }: {
+export const ReviewCard = ({ review, setSelectedTravel, setSelectedImageSrc, setSelectedUserId, index, openUserModal }: {
   review: Review,
   setSelectedTravel: any,
   setSelectedImageSrc: any,
-  index?: number
+  setSelectedUserId: any,
+  index?: number,
+  openUserModal?: () => void
 }) => {
   return (
     <Card shadow="sm" padding="lg" radius="md" withBorder>
@@ -155,7 +180,22 @@ export const ReviewCard = ({ review, setSelectedTravel, setSelectedImageSrc, ind
                 <Text size="md">{review.receivedUserBy?.name}</Text>
                 <Text mt={10} size="sm" c="dimmed">{review.receivedUserBy?.email}</Text>
               </Box>
+              <Stack align="center">
+                <Button
+                  mt="sm"
+                  variant="light"
+                  w="40%"
+                  color={VIAJERO_GREEN}
+                  onClick={() => {
+                    setSelectedUserId(review.receivedUserBy?.id);
+                    openUserModal && openUserModal();
+                  }}
+                >
+                  View Profile
+                </Button>
+              </Stack>
             </Stack>
+
           </Card.Section>
         )
         }
