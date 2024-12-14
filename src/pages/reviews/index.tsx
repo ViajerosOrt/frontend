@@ -4,12 +4,15 @@ import { Review, TravelDto, useUserByIdQuery } from "@/graphql/__generated__/gql
 import { useAuth } from "@/hooks/useAth";
 import { travelImages } from "@/utils";
 import { Box, Card, Container, Group, Image, Stack, Text, Title, Button, Modal } from "@mantine/core";
-import { FaPlane } from "react-icons/fa";
+import { FaBook, FaPlane } from "react-icons/fa";
 import { CgProfile } from "react-icons/cg";
 import { useState } from "react";
 import { TravelDetailsModal } from "@/components/TravelDetailsModal/TravelDetailsModal";
 import { ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
 import { useDisclosure } from "@mantine/hooks";
+import Link from "next/link";
+import { IoBook } from "react-icons/io5";
+import { ReviewLeftCard } from "@/components/ReviewLeftCard/ReviewLeftCard";
 
 export default function Reviews() {
   const { currentUser } = useAuth()
@@ -17,8 +20,6 @@ export default function Reviews() {
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
-
-
 
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: currentUser?.id || '' },
@@ -37,6 +38,17 @@ export default function Reviews() {
 
   return (
     <Container size="xl" mt="xl">
+      <Button
+        component={Link}
+        href="/reviews/selectTravel"
+        mt="md"
+        size="md"
+        radius="md"
+        color={VIAJERO_GREEN}
+        rightSection={<IoBook />}
+      >
+        Add a review
+      </Button>
       <Title order={2} size={32} mb={20} ta="center" fw={BOLD}>
         Reviews
       </Title>
@@ -53,7 +65,7 @@ export default function Reviews() {
               </Title>
               <Stack gap="md" w="100%">
                 {travelReviews.map((review, index) => (
-                  <ReviewCard
+                  <ReviewLeftCard
                     key={review.id}
                     review={review as Review}
                     setSelectedTravel={setSelectedTravel}
@@ -73,13 +85,14 @@ export default function Reviews() {
               </Title>
               <Stack gap="md" w="100%">
                 {participantReviews.map((review) => (
-                  <ReviewCard
+                  <ReviewLeftCard
                     key={review.id}
                     review={review as Review}
                     setSelectedTravel={setSelectedTravel}
                     setSelectedImageSrc={setSelectedImageSrc}
                     setSelectedUserId={setSelectedUserId}
                     openUserModal={openUserModal}
+                    showViewProfile={true}
                   />
                 ))}
               </Stack>
@@ -113,93 +126,9 @@ export default function Reviews() {
         }}
         size="2xl"
       >
-        <ProfileDetails userId={selectedUserId || ''} />
+        <ProfileDetails userId={selectedUserId || ''} showViewProfile={false} />
       </Modal>
     </Container>
   )
 }
 
-export const ReviewCard = ({ review, setSelectedTravel, setSelectedImageSrc, setSelectedUserId, index, openUserModal }: {
-  review: Review,
-  setSelectedTravel: any,
-  setSelectedImageSrc: any,
-  setSelectedUserId: any,
-  index?: number,
-  openUserModal?: () => void
-}) => {
-  return (
-    <Card shadow="sm" padding="lg" radius="md" withBorder>
-      <Stack gap="md">
-        <Text size="lg" style={{ lineHeight: 1.4 }}>
-          {review.content}
-        </Text>
-
-        <Group gap="xs">
-          {[...Array(5)].map((_, i) => (
-            <Text key={i} c={i < Number(review.stars) ? "yellow" : "gray"}>★</Text>
-          ))}
-        </Group>
-
-        {review.type === "TRAVEL" ? (
-          <Card.Section p="md" bg="gray.0">
-            <Stack gap={4}>
-              <Group mb={10}>
-                <FaPlane size={20} color={VIAJERO_GREEN} />
-                <Text size="md" fw={SEMI_BOLD}>Travel Review</Text>
-              </Group>
-              <Group>
-                <Box>
-                  <Text size="md">{review.travel?.travelTitle}</Text>
-                  <Text mt={20} size="sm" c="dimmed" lineClamp={2}>{review.travel?.travelDescription}</Text>
-                </Box>
-              </Group>
-              <Stack align="center">
-                <Button
-                  mt="sm"
-                  variant="light"
-                  w="40%"
-                  color={VIAJERO_GREEN}
-                  onClick={() => {
-                    setSelectedTravel(review.travel);
-                    setSelectedImageSrc(travelImages[index || 0 % travelImages.length]);
-                  }}
-                >
-                  View Travel Details
-                </Button>
-              </Stack>
-            </Stack>
-          </Card.Section>
-        ) : (
-          <Card.Section p="md" bg="gray.0">
-            <Stack gap={4}>
-              <Group mb={10}>
-                <CgProfile size={20} color={VIAJERO_GREEN} />
-                <Text size="md" fw={SEMI_BOLD}>Participant Review</Text>
-              </Group>
-              <Box>
-                <Text size="md">{review.receivedUserBy?.name}</Text>
-                <Text mt={10} size="sm" c="dimmed">{review.receivedUserBy?.email}</Text>
-              </Box>
-              <Stack align="center">
-                <Button
-                  mt="sm"
-                  variant="light"
-                  w="40%"
-                  color={VIAJERO_GREEN}
-                  onClick={() => {
-                    setSelectedUserId(review.receivedUserBy?.id);
-                    openUserModal && openUserModal();
-                  }}
-                >
-                  View Profile
-                </Button>
-              </Stack>
-            </Stack>
-
-          </Card.Section>
-        )
-        }
-      </Stack>
-    </Card>
-  );
-}

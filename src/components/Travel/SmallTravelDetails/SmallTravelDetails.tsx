@@ -8,23 +8,13 @@ import {
   Box,
   Button,
   Card,
-  Center,
-  Container,
-  Divider,
-  Group,
   Image,
-  Paper,
-  SimpleGrid,
   Stack,
   Text
 } from "@mantine/core";
-import { CgProfile } from "react-icons/cg";
-import Link from "next/link";
-import { getActivityAvatar, travelImages } from "@/utils";
+import { travelImages } from "@/utils";
 import { useHover } from "@mantine/hooks";
-import { useRouter } from "next/router";
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
-import { ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
 
 export const SmallTravelDetails = ({ travel, index }: { travel: Travel, index: number }) => {
   const { hovered, ref } = useHover();

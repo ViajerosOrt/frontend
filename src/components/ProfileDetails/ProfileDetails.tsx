@@ -1,6 +1,6 @@
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { Travel, useUserByIdQuery } from "@/graphql/__generated__/gql";
+import { Review, Travel, useUserByIdQuery } from "@/graphql/__generated__/gql";
 import { BOLD } from "@/consts";
 import {
   Avatar,
@@ -8,7 +8,7 @@ import {
   Center,
   Divider,
   Group,
-  Paper,
+  Modal,
   SimpleGrid,
   Stack,
   Text
@@ -19,9 +19,14 @@ import { getActivityAvatar } from "@/utils";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { SmallTravelDetails } from "../Travel/SmallTravelDetails/SmallTravelDetails";
 import { useRouter } from "next/router";
+import { ReviewReceivedCard } from "../ReviewReceivedCard/ReviewReceivedCard";
+import { useDisclosure } from "@mantine/hooks";
+import { useState } from "react";
 
-export const ProfileDetails = ({ userId }: { userId: string }) => {
+export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: string, showViewProfile?: boolean }) => {
   const router = useRouter();
+  const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
+  const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
 
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: userId || '' },
@@ -33,7 +38,6 @@ export const ProfileDetails = ({ userId }: { userId: string }) => {
   if (loading || !user) {
     return <ViajeroLoader />
   }
-
 
   return (
     <Stack gap="xl" p={20}>
@@ -118,6 +122,43 @@ export const ProfileDetails = ({ userId }: { userId: string }) => {
         )}
       </Box>
 
-    </Stack>
+      <Divider />
+      <Box>
+        {user?.reviewsReceived && user.reviewsReceived.length > 0 ? (
+          <>
+            <Text fw={BOLD} ta="center" mb="xs">Reviews</Text>
+            <Stack gap="md">
+              {user.reviewsReceived?.map((review, index) => (
+                <ReviewReceivedCard
+                  key={review.id}
+                  review={review as Review}
+                  setSelectedUserId={setSelectedUserId}
+                  index={index}
+                  showCreatedBy={true}
+                  openUserModal={openUserModal}
+                  showViewProfile={showViewProfile}
+                />
+              ))}
+            </Stack>
+          </>
+        ) : (
+          <Text ta="center">No reviews received yet.</Text>
+        )}
+      </Box>
+
+      <Modal
+        opened={opened}
+        centered
+        onClose={() => {
+          closeUserModal();
+          setTimeout(() => {
+            setSelectedUserId(undefined);
+          }, 300);
+        }}
+        size="2xl"
+      >
+        <ProfileDetails userId={selectedUserId || ''} showViewProfile={false} />
+      </Modal>
+    </Stack >
   )
 }
