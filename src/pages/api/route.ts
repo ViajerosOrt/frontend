@@ -15,7 +15,7 @@ export default async function handler(
     res.status(401).json({
       error: 'User is not authenticated',
     })
-    router.push("/");
+    router.push("/login");
     return
   }
 
