@@ -44,7 +44,7 @@ export default function Profile() {
   if (!user) {
     return <ViajeroEmptyMessage message="There was a problem retrieving your user data" />
   }
-  console.log(user)
+
   return (
     <Container mt="xl" ta="left" w="100%" >
       <Button
