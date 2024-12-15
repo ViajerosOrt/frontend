@@ -38,7 +38,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
   if (loading || !user) {
     return <ViajeroLoader />
   }
-
+  console.log(user)
   return (
     <Stack gap="xl" p={20}>
       <Center>
@@ -126,7 +126,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
       <Box>
         {user?.reviewsReceived && user.reviewsReceived.length > 0 ? (
           <>
-            <Text fw={BOLD} ta="center" mb="xs">Reviews</Text>
+            <Text fw={BOLD} ta="center" mb="xs">Reviews received</Text>
             <Stack gap="md">
               {user.reviewsReceived?.map((review, index) => (
                 <ReviewReceivedCard

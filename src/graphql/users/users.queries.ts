@@ -40,6 +40,7 @@ export const GET_USER = gql`
           travelDescription
           startDate
           finishDate
+           
           transport {
             name
             id

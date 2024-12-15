@@ -1,34 +1,36 @@
 import { BackButton } from "@/components/BackButton/BackButton";
+import { SmallTravelDetails } from "@/components/Travel/SmallTravelDetails/SmallTravelDetails";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { BOLD, VIAJERO_GREEN } from "@/consts";
-import { Travel, useCreateReviewMutation, useUserByIdQuery } from "@/graphql/__generated__/gql";
-import { useAuth } from "@/hooks/useAth";
-import { Container, Title, Paper, Stack, Text, Rating, Textarea, Button, Switch, Select } from "@mantine/core";
-import { useRouter } from "next/router";
-import { useForm } from '@mantine/form';
-import { showNotification } from '@mantine/notifications';
-import { useState } from "react";
+import { Travel, useReviewQuery, useUpdateReviewMutation, useUserByIdQuery } from "@/graphql/__generated__/gql";
 
-export default function Review() {
+import { useAuth } from "@/hooks/useAth";
+import { Button, Container, Paper, Rating, Select, Stack, Switch, Text, Textarea, Title } from "@mantine/core";
+import { useForm } from "@mantine/form";
+import { showNotification } from "@mantine/notifications";
+
+import { useRouter } from "next/router";
+import { useEffect, useState } from "react";
+
+export default function UpdateReview() {
   const router = useRouter();
   const { currentUser } = useAuth();
-  const travelId = router.query.travelId as string;
+  const reviewId = router.query.reviewId as string;
 
   const [isUserReview, setIsUserReview] = useState(false);
 
-  const [createReview] = useCreateReviewMutation({
+  const [updateReview] = useUpdateReviewMutation({
     refetchQueries: ["userById"]
   });
 
-  const { data, loading } = useUserByIdQuery({
-    variables: { userByIdId: currentUser?.id || '' },
-    skip: !currentUser?.id
+  const { data, loading } = useReviewQuery({
+    variables: { reviewId: reviewId || '' },
+    skip: !reviewId
   });
 
-  const selectedTravel = data?.userById?.joinsTravels?.find(
-    travel => travel.id === travelId
-  );
+  const review = data?.review;
 
+  const selectedTravel = review?.travel;
   const participants = selectedTravel?.usersTravelers?.filter(user => user.id !== currentUser?.id) || [];
 
   const participantOptions = participants.map(user => ({
@@ -38,9 +40,9 @@ export default function Review() {
 
   const form = useForm({
     initialValues: {
-      content: '',
-      stars: 0,
-      receiverId: '',
+      content: review?.content || '',
+      stars: review?.stars || 0,
+      receiverId: review?.receivedUserBy?.id || '',
     },
     validate: {
       content: (value) => (value.length < 10 ? 'Review must be at least 10 characters long' : null),
@@ -49,26 +51,39 @@ export default function Review() {
     },
   });
 
+  useEffect(() => {
+    if (review?.type === 'USER') {
+      setIsUserReview(true);
+    }
+
+    if (review) {
+      form.setValues({
+        content: review.content || '',
+        stars: review.stars || 0,
+        receiverId: review.receivedUserBy?.id || '',
+      });
+    }
+  }, [review]);
+
   const handleSubmit = async (values: typeof form.values) => {
     try {
-      await createReview({
+      await updateReview({
         variables: {
-          createReviewInput: {
+          id: reviewId,
+          updateReviewInput: {
             content: values.content,
-            stars: values.stars,
-          },
-          travelId: travelId,
-          userReceiverId: isUserReview ? values.receiverId : '',
+            stars: String(values.stars),
+          }
         },
       });
       showNotification({
-        message: 'Review submitted successfully',
+        message: 'Review updated successfully',
         color: 'green',
       });
       router.push('/reviews');
     } catch (error) {
       showNotification({
-        message: 'Error submitting review',
+        message: 'Error updating review',
         color: 'red',
       });
     }
@@ -78,15 +93,11 @@ export default function Review() {
     return <ViajeroLoader />;
   }
 
-  if (!selectedTravel) {
-    return <div>Travel not found</div>;
-  }
-
   return (
     <Container size="xl" mt="xl">
       <BackButton />
-      <Title order={2} size={32} mb={20} ta="center" fw={BOLD}>
-        Review for {selectedTravel.travelTitle}
+      <Title order={2} size={32} ta="center" fw={BOLD} mb={40}>
+        Update Review
       </Title>
 
       <Paper shadow="md" radius="md" p="xl" withBorder>
@@ -105,6 +116,7 @@ export default function Review() {
             <Stack gap={4}>
               <Switch
                 label="Review a participant"
+                disabled
                 color={VIAJERO_GREEN}
                 checked={isUserReview}
                 onChange={(event) => {
@@ -115,6 +127,7 @@ export default function Review() {
 
               {isUserReview && (
                 <Select
+                  disabled
                   mt={12}
                   label="Select participant"
                   placeholder="Choose a participant to review"

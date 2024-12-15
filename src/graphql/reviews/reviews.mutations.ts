@@ -7,3 +7,21 @@ export const CREATE_REVIEW = gql`
   }
 }
 `;
+
+export const REMOVE_REVIEW = gql`
+ mutation RemoveReview($removeReviewId: String!) {
+  removeReview(id: $removeReviewId) {
+    id
+  }
+}
+`;
+
+export const UPDATE_REVIEW = gql`
+ mutation UpdateReview($id: String!, $updateReviewInput: UpdateReviewInput!) {
+  updateReview(id: $id, updateReviewInput: $updateReviewInput) {
+    id
+    content
+    stars
+  }
+ }
+`;
