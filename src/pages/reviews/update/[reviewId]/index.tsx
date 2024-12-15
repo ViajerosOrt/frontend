@@ -1,8 +1,7 @@
 import { BackButton } from "@/components/BackButton/BackButton";
-import { SmallTravelDetails } from "@/components/Travel/SmallTravelDetails/SmallTravelDetails";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { BOLD, VIAJERO_GREEN } from "@/consts";
-import { Travel, useReviewQuery, useUpdateReviewMutation, useUserByIdQuery } from "@/graphql/__generated__/gql";
+import { useReviewQuery, useUpdateReviewMutation } from "@/graphql/__generated__/gql";
 
 import { useAuth } from "@/hooks/useAth";
 import { Button, Container, Paper, Rating, Select, Stack, Switch, Text, Textarea, Title } from "@mantine/core";
