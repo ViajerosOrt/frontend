@@ -139,8 +139,8 @@ export default function Home() {
                 Explore profiles and customize yours.
               </Title>
               <Text size="xl" c="dimmed">
-                Make your profile with your own style. Add a description, update your preferences, and showcase your travel preferences.
-                You can also explore other travelers' profiles!
+                Make your profile with your own style. Add a description, social networks and showcase your travel preferences.
+                You can also explore other traveler's profiles!
               </Text>
             </Stack>
             <Image
