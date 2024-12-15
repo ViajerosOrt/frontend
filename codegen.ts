@@ -6,7 +6,6 @@ configuration({ path: resolve(__dirname, ".env.local") });
 
 const backendApi = process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? 'http://localhost:4000/graphql'
 
-console.log("Backend API: ", backendApi)
 // TODO: Change schema when deploying the app with a diferent endpoint.
 const config: CodegenConfig = {
   schema: backendApi,
