@@ -1,5 +1,6 @@
-import { Avatar } from '@mantine/core';
+import { Avatar, Group } from '@mantine/core';
 import axios from 'axios';
+import { useEffect, useState } from 'react';
 import { FaWalking, FaRunning, FaSwimmer, FaDumbbell, FaHiking, FaBicycle, FaMountain, FaSkating, FaBalanceScale, FaMusic, FaHandHolding, FaPersonBooth, FaWater, FaPlane, FaShip, FaCar, FaMotorcycle, FaTrain } from 'react-icons/fa';
 import { MdOutlineDirectionsBus, MdOutlineFitnessCenter, MdSportsGymnastics } from 'react-icons/md';
 
@@ -181,3 +182,35 @@ export const fetchNearPlaces = async (lat: number, lng: number) => {
 };
 
 
+
+export const CountryFlag = ({ country }: { country: string }) => {
+  const [flag, setFlag] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchFlag = async () => {
+      try {
+        const response = await axios.get(`https://restcountries.com/v3.1/name/${country}?fullText=true`);
+        const countryData = response.data[0];
+        setFlag(countryData.flags.svg);
+      } catch (error) {
+        console.error("Error getting the flag:", error);
+      }
+    };
+
+      fetchFlag();
+  }, [country]);
+
+
+  return (
+    <Group gap={1}>
+      {flag && (
+        <img
+          src={flag}
+          alt={country}
+          style={{ width: 50, height: 20, objectFit: 'contain' }}
+        />
+      )}
+      <span>{country}</span>
+    </Group>
+  );
+};

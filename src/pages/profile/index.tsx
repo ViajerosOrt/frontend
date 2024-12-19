@@ -20,7 +20,7 @@ import {
 } from "@mantine/core";
 import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
-import { getActivityAvatar, travelImages } from "@/utils";
+import { CountryFlag, getActivityAvatar, travelImages } from "@/utils";
 import { useHover } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
@@ -68,7 +68,7 @@ export default function Profile() {
           </Center>
 
           <Box>
-            <SimpleGrid cols={3} spacing="lg">
+            <SimpleGrid cols={4} spacing="lg">
               <Group align="end">
                 <Text fw={BOLD}>Name:</Text>
                 <Text>{user.name}</Text>
@@ -80,6 +80,10 @@ export default function Profile() {
               <Group mt="xs">
                 <Text fw={BOLD}>Birth Date:</Text>
                 <Text>{new Date(user.birthDate).toLocaleDateString()}</Text>
+              </Group>
+              <Group mt="xs">
+                <Text fw={BOLD}>Country:</Text>
+                <CountryFlag country = {user.country!}></CountryFlag>
               </Group>
             </SimpleGrid>
           </Box>

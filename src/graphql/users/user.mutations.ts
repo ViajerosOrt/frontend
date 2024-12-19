@@ -6,6 +6,7 @@ export const UPDATE_USER = gql`
       birthDate
       description
       name
+      country
       userActivities {
         activityName
       }

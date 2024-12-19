@@ -10,6 +10,7 @@ export const GET_USER = gql`
       name
       whatsapp
       instagram
+      country
       reviewsCreated {
         content
         stars
