@@ -24,6 +24,7 @@ import { getActivityAvatar, travelImages } from "@/utils";
 import { useHover } from "@mantine/hooks";
 import { useRouter } from "next/router";
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
+import { ReactElement, JSXElementConstructor, ReactNode, AwaitedReactNode, Key } from "react";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 
