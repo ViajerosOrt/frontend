@@ -3,12 +3,13 @@ frontend:
   phases:
     preBuild:
       commands:
-        - npm ci
+        - npm i
     build:
       commands:
         - npm run build
+        - npm run export
   artifacts:
-    baseDirectory: build
+    baseDirectory: out
     files:
       - '**/*'
   cache:
