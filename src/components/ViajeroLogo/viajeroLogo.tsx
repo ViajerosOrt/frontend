@@ -6,9 +6,8 @@ export const ViajeroLogo = ({ height = 50, width = 50 }: { height?: number, widt
   const [scale, setScale] = useState(1);
 
   return (
-
     <Group align="left">
-      <Anchor href="/login"
+      <Anchor href="/"
         component={Link}
         style={{
           textDecoration: "none",

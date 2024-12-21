@@ -14,7 +14,7 @@ export default function Travels() {
     return rest as TravelDto;
   }) || [];
 
-  const myTravels = travels.filter((travel) => travel.creatorUser.email == currentUser?.email)
+  const myTravels = travels.filter((travel) => travel.isJoined)
 
 
   return (

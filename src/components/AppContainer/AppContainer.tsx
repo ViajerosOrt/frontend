@@ -10,8 +10,6 @@ import { CgProfile } from "react-icons/cg";
 import { ViajeroLogo } from "../ViajeroLogo/viajeroLogo";
 import { VIAJERO_GREEN, ANIMATIONS, VIAJERO_GREEN_DARK } from "../../consts/consts";
 import React from "react";
-import { IoAirplaneOutline } from 'react-icons/io5';
-import { FaPlane, FaPlaneArrival, FaPlaneDeparture } from "react-icons/fa";
 import PlaneAnimation from "../Animations/PlaneAnimation";
 
 export const AppContainer = ({ children }: { children: React.ReactNode }) => {
@@ -29,7 +27,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
       title: 'Signed out',
       message: 'Your user was signed out',
       color: "green",
-      zIndex: 2077
+      zindex: 2077
     })
     router.push("/");
   }
