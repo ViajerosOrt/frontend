@@ -140,7 +140,7 @@ export default function Home() {
               </Title>
               <Text size="xl" c="dimmed">
                 Make your profile with your own style. Add a description, social networks and showcase your travel preferences.
-                You can also explore other traveler's profiles!
+                You can also explore other travelers profiles!
               </Text>
             </Stack>
             <Image
