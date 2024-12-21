@@ -1,18 +1,19 @@
 
 import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery } from "../../graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
-import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select } from '@mantine/core';
+import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select, useCombobox, Combobox, CheckIcon, PillsInput, Input, Pill } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useState } from 'react';
 import { z } from 'zod';
 import { VIAJERO_GREEN } from "../../consts/consts";
-import { FaCheck } from "react-icons/fa";
 import { BackButton } from "../BackButton/BackButton";
 import { TRAVEL_MAX_DESCRIPTION_LENGTH, TRAVEL_MAX_TITLE_LENGTH } from "../../consts/validators";
 import { useRouter } from "next/router";
 import { getTransportAvatar } from "@/utils";
+import { Countries } from '../MapComponents/Countries';
 import React from "react";
+import dynamic from "next/dynamic";
 
 const travelValuesSchema = z.object({
   title: z.string().min(1, 'Title is required').max(50),
@@ -20,9 +21,10 @@ const travelValuesSchema = z.object({
   maxCap: z.number().min(1, 'Max Capacity must be more than 1'),
   items: z.array(z.string()).optional(),
   activities: z.array(z.string()).optional(),
-  location: z.object({
-    longLatPoint: z.string().min(1, 'Coordinates are required'),
-  }),
+});
+
+const Map = dynamic(() => import('../MapComponents/Map'), {
+  ssr: false,
 });
 
 const TravelCreateForm = () => {
@@ -50,16 +52,23 @@ const TravelCreateForm = () => {
   const [item, setItem] = useState('');
   const [items, setItems] = useState<string[]>([]);
 
+  const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
+  const [location, setLocation] = useState<{coordinates: [number, number];streetName: string;city: string; state:string} | null>(null);
 
   const form = useForm({
     initialValues: {
       title: '',
       description: '',
       maxCap: 1,
-      location: { longLatPoint: '1234' }, //TODO: CAMBIAR POR LOCATION DEL USUARIO
+      location: location?.coordinates,
+      country: '',
     },
     validate: zodResolver(travelValuesSchema),
   });
+
+  const handleLocationSelected = (location: { coordinates: [number, number], streetName: string, city: string, state:string }) => {
+    setLocation(location);
+  };
 
   // Add an item to the list (called by handleKeyDown)
   const handleAddItem = () => {
@@ -100,12 +109,11 @@ const TravelCreateForm = () => {
       startDate: selectedDates[0]?.toISOString(),
       finishDate: selectedDates[1]?.toISOString(),
       maxCap: values.maxCap,
-      country: '',
+      country: selectedCountry || '',
       isEndable: false,
     };
 
     try {
-
       //We call the mutation to create the travel
       await createTravel({
         variables: {
@@ -114,10 +122,10 @@ const TravelCreateForm = () => {
           transportId: selectedTransportId,
           items: items.length > 0 ? items : [],
           createLocationInput: {
-            name: "Solymar",
-            state: "Canelones",
-            address: "StewartVargasd",
-            longLatPoint: values.location.longLatPoint,
+            longLatPoint: `${location?.coordinates[0]},${location?.coordinates[1]}`,
+            address: location?.streetName!,
+            name: location?.city!,
+            state: location?.state!
           },
         },
       });
@@ -188,6 +196,16 @@ const TravelCreateForm = () => {
                 </Text>
               </Group>
             </Stack>
+
+            <Stack gap={4}>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country</Text>
+              <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
+
+              <Countries value={selectedCountry} onChange={setSelectedCountry }   disabled={!!location} />
+
+            </Stack>
+
+            <Map country={selectedCountry!}  zoom={7}  onLocationSelected={handleLocationSelected}/>
 
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
             <Text size="sm" c="gray">The total number of allowed participants.</Text>
