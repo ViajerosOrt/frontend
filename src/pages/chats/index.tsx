@@ -8,7 +8,7 @@ function ChatsPage() {
   return (
     <Box h="100%" w="100%">
       <Center>
-        <Text>Select or start a conversation</Text>
+        <Text>Select a conversation</Text>
       </Center>
     </Box>
   );

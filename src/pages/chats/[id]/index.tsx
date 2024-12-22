@@ -43,11 +43,13 @@ function ChatDetailsPage() {
       });
       setNewMessage("");
       showNotification({
+        position: 'top-right',
         message: 'Message sent successfully',
         color: 'green',
       });
     } catch (error) {
       showNotification({
+        position: 'top-right',
         message: 'Error sending message',
         color: 'red',
       });
@@ -82,8 +84,10 @@ function ChatDetailsPage() {
           flex: 1,
           overflowY: "auto",
         }}>
+        {chat?.messages?.length === 0 && (
+          <ViajeroEmptyMessage message="No messages in this chat yet." />
+        )}
         {chat?.messages?.map((message: Message) => (
-
           <ChatMessage key={message?.id} message={message} isCurrentUser={message.user.id === currentUser?.id} />
         ))}
         <Box ref={messagesEndRef} />
