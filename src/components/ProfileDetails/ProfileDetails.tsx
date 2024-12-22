@@ -38,7 +38,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
   if (loading || !user) {
     return <ViajeroLoader />
   }
-  console.log(user)
+
   return (
     <Stack gap="xl" p={20}>
       <Center>

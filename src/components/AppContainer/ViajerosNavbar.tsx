@@ -1,6 +1,6 @@
 import { AppShell, Stack, NavLink } from "@mantine/core";
 import { IoIosAirplane } from "react-icons/io";
-import { MdCardTravel } from "react-icons/md";
+import { MdCardTravel, MdMessage } from "react-icons/md";
 import Link from "next/link";
 import { URL } from "url";
 import { useEffect, useState } from "react";
@@ -24,6 +24,11 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
       to: "/myTravels",
       label: "My travels",
       leftSection: <MdCardTravel />,
+    },
+    {
+      to: "/chats",
+      label: "Chats",
+      leftSection: <MdMessage />,
     },
     {
       to: "/reviews",
