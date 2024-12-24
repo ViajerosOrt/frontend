@@ -1,3 +1,4 @@
+import { ChatHeaderSection } from "@/components/Chats/ChatHeaderSection";
 import ChatMessage from "@/components/Chats/ChatMessage";
 import { ChatLayout } from "@/components/Layout/ChatLayout";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
@@ -78,6 +79,7 @@ function ChatDetailsPage() {
         flexDirection: "column",
       }}
     >
+      <ChatHeaderSection chat={chat} />
       <Paper p="md" shadow="sm"
         bg="#e5ddd5"
         style={{

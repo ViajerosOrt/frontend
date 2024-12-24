@@ -1,7 +1,7 @@
 import { Box, List, Loader, Text, Image, Paper, Avatar, Group, Stack, Anchor, Button } from "@mantine/core";
 import Link from "next/link";
 import { Chat, useChatUserQuery } from "@/graphql/__generated__/gql";
-import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
+import { BOLD, SEMI_BOLD, VIAJERO_GREEN, VIAJERO_GREEN_LIGHT } from "@/consts";
 import { ViajeroEmptyMessage } from "../ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "../ViajeroLoader/ViajeroLoader";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -44,10 +44,11 @@ export function ChatList() {
           radius="md"
           w="100%"
           style={{
-            backgroundColor: isSelected(chat.id) ? "#7cc18e" : 'transparent' // Change background color if selected
+            backgroundColor: isSelected(chat.id) ? VIAJERO_GREEN_LIGHT : 'transparent' // Change background color if selected
           }}
         >
           <Group gap="xl" wrap="nowrap" w="100%">
+            {/* TODO: Add travel image */}
             <Avatar src={travelImages[index % travelImages.length]} radius="xl" size={40} />
             <Stack>
               <Text fw={BOLD}>{chat.travel?.travelTitle}</Text>

@@ -33,3 +33,12 @@ export const CREATE_TRAVEL_MUTATION = gql(`
       }
     }
   `);
+
+
+export const LEAVE_TRAVEL = gql`
+  mutation LeaveTravel($travelId: String!) {
+  leaveTravel(travelId: $travelId) {
+    id
+  }
+}
+  `;
