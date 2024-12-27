@@ -1,16 +1,26 @@
-import { VIAJERO_GREEN } from "@/consts";
+import { BOLD, VIAJERO_GREEN } from "@/consts";
 import { useAuth } from "@/hooks/useAth";
 import {
+  Avatar,
+  Box,
   Button,
+  Center,
   Container,
+  Divider,
+  Group,
+  Paper,
+  SimpleGrid,
+  Stack, Text
 } from "@mantine/core";
 import { CgProfile } from "react-icons/cg";
 import Link from "next/link";
-import { CountryFlag, ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
+import { ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { useUserByIdQuery } from "@/graphql/__generated__/gql";
+import { Travel, useUserByIdQuery } from "@/graphql/__generated__/gql";
 import { useRouter } from "next/router";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
+import { CountryFlag, getActivityAvatar } from "@/utils";
+import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 
 export default function Profile() {
   const { currentUser } = useAuth()
