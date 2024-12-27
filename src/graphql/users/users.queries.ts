@@ -3,6 +3,7 @@ import { gql } from "@apollo/client";
 export const GET_USER = gql`
   query UserById($userByIdId: String!) {
     userById(id: $userByIdId) {
+     id
       birthDate
       password
       description
@@ -11,17 +12,74 @@ export const GET_USER = gql`
       whatsapp
       instagram
       country
-      reviewsCreated {
+      userActivities {
+        id
+        activityName
+      }
+      reviewsReceived {
+        id
         content
         stars
+        type
         travel {
           travelTitle
           travelDescription
         }
+        createdUserBy {
+          email
+          id
+          name
+        }
       }
-      userActivities {
+      reviewsCreated {
         id
-        activityName
+        content
+        type
+        travel {
+          id
+          travelTitle
+          travelDescription
+          startDate
+          finishDate
+           
+          transport {
+            name
+            id
+          }
+          travelActivities {
+            id
+            activityName
+          }
+          country
+        }
+        stars
+        receivedUserBy {
+          id
+          name
+          email
+        }
+      }
+      joinsTravels {
+        country
+        finishDate
+        id
+        maxCap
+        startDate
+        transport {
+          name
+          id
+        }
+        travelTitle
+        travelDescription
+        usersTravelers {
+          id
+          email
+          name
+        }
+        travelActivities {
+          id
+          activityName
+        }
       }
       travelsCreated {
         travelTitle

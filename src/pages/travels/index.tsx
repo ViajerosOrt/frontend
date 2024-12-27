@@ -26,7 +26,17 @@ import { TravelFiltersDrawer } from "@/components/TravelFiltersDrawer/TravelsFil
 
 export default function Travels() {
   const { filters, updateFilters, applyFilters, defaultFilters, data, loading } = useTravelFilters();
-  const travels = data?.travels
+
+  // Solo mostramos viajes que cumplan con los siguientes requisitos:
+  // Tengan espacio para uno.
+  // No esten en progreso (sea posible el unirse)
+  // Si el usuario ya se unio, mostramos el viaje sin importar las caracteristicas de arriba.
+  const travels = data?.travels.filter((travel) => {
+    const hasStarted = new Date(travel.startDate) <= new Date();
+    const isFull = travel.maxCap && travel.usersCount && travel.usersCount == travel.maxCap;
+
+    return !hasStarted && !isFull || travel.isJoined;
+  });
 
   const [opened, { open, close }] = useDisclosure(false)
 

@@ -8,6 +8,7 @@ import { useRouter } from "next/router";
 import { CgProfile } from "react-icons/cg";
 import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from "../../consts/consts";
 import React from "react";
+import { IoBook } from "react-icons/io5";
 
 export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
   const router = useRouter();
@@ -23,6 +24,11 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
       to: "/myTravels",
       label: "My travels",
       leftSection: <MdCardTravel />,
+    },
+    {
+      to: "/reviews",
+      label: "Reviews",
+      leftSection: <IoBook />,
     },
     {
       to: "/profile",
