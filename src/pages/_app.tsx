@@ -15,23 +15,33 @@ import { Notifications } from "@mantine/notifications";
 import '@mantine/dates/styles.css';
 import React from "react";
 import '../styles/styles.css';
+import { NextPage } from "next";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
   // We need to define what style we want for Viajeros!
 });
 
+type NextPageWithLayout = NextPage & {
+  getLayout?: (page: React.ReactNode) => React.ReactNode;
+};
+
+type AppPropsWithLayout = AppProps & {
+  Component: NextPageWithLayout;
+};
 
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({ Component, pageProps }: AppPropsWithLayout) {
   const router = useRouter();
   // Routes that shouldn't have the Mantine AppShell layout.
   // The other approach is to use per-page layouts
   const publicPages = ["/", "/login"];
-
   // Public pages does not have the App Layout.
   const isPublicPage = publicPages.includes(router.pathname);
 
+  // If the page has a getLayout method, use it to wrap the page (ej: chats).
+  const getLayout = Component.getLayout ?? ((page) => page);
+  const isChatsPage = router.pathname.startsWith("/chats");
   const client = useViajeroApolloClient()
 
   return (
@@ -40,7 +50,7 @@ export default function App({ Component, pageProps }: AppProps) {
       {isPublicPage ? (
         <ApolloProvider client={client}>
           <UnauthenticatedRoutes>
-            <Component {...pageProps} />
+            {getLayout(<Component {...pageProps} />)}
           </UnauthenticatedRoutes>
         </ApolloProvider>
       ) : (
@@ -48,7 +58,7 @@ export default function App({ Component, pageProps }: AppProps) {
           <AuthenticatedRoutes>
             <AppContainer>
               <ApolloProvider client={client}>
-                <Component {...pageProps} />
+                {getLayout(<Component {...pageProps} />)}
               </ApolloProvider>
             </AppContainer>
           </AuthenticatedRoutes>

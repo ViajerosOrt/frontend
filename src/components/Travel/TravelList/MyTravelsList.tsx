@@ -140,14 +140,16 @@ export const MyTravelsList = (
                                 <Grid mt="md" gutter="lg">
                                     {upcoming.length > 0 ? (
                                         upcoming.map((travel, index) => (
-                                            <TravelCard travel={travel}
-                                                key={travel.id}
-                                                imageSrc={travelImages[index % travelImages.length]}
-                                                setSelectedTravel={(travel) => {
-                                                    setSelectedTravel(travel);
-                                                    setSelectedImageSrc(travelImages[index % travelImages.length]);
-                                                }}
-                                            />
+                                            <Grid.Col span={{ base: 12, md: 4, lg: 4 }} key={travel.id}>
+                                                <TravelCard travel={travel}
+                                                    imageSrc={travelImages[index % travelImages.length]}
+                                                    setSelectedTravel={(travel) => {
+                                                        setSelectedTravel(travel);
+                                                        setSelectedImageSrc(travelImages[index % travelImages.length]);
+                                                    }}
+                                                />
+                                            </Grid.Col >
+
                                         ))
                                     ) : (
                                         <Text>You dont have travels about to start.</Text>
@@ -159,14 +161,15 @@ export const MyTravelsList = (
                                 <Grid mt="md" gutter="lg">
                                     {ongoing.length > 0 ? (
                                         ongoing.map((travel, index) => (
-                                            <TravelCard travel={travel}
-                                                key={travel.id}
-                                                imageSrc={travelImages[index % travelImages.length]}
-                                                setSelectedTravel={(travel) => {
-                                                    setSelectedTravel(travel);
-                                                    setSelectedImageSrc(travelImages[index % travelImages.length]);
-                                                }}
-                                            />
+                                            <Grid.Col span={{ base: 12, md: 4, lg: 4 }} key={travel.id}>
+                                                <TravelCard travel={travel}
+                                                    imageSrc={travelImages[index % travelImages.length]}
+                                                    setSelectedTravel={(travel) => {
+                                                        setSelectedTravel(travel);
+                                                        setSelectedImageSrc(travelImages[index % travelImages.length]);
+                                                    }}
+                                                />
+                                            </Grid.Col>
                                         ))
                                     ) : (
                                         <Text>You dont have travels in progress.</Text>
@@ -179,14 +182,15 @@ export const MyTravelsList = (
                                 <Grid mt="md" gutter="lg">
                                     {finished.length > 0 ? (
                                         finished.map((travel, index) => (
-                                            <TravelCard travel={travel}
-                                                key={travel.id}
-                                                imageSrc={travelImages[index % travelImages.length]}
-                                                setSelectedTravel={(travel) => {
-                                                    setSelectedTravel(travel);
-                                                    setSelectedImageSrc(travelImages[index % travelImages.length]);
-                                                }}
-                                            />
+                                            <Grid.Col span={{ base: 12, md: 4, lg: 4 }} key={travel.id}>
+                                                <TravelCard travel={travel}
+                                                    imageSrc={travelImages[index % travelImages.length]}
+                                                    setSelectedTravel={(travel) => {
+                                                        setSelectedTravel(travel);
+                                                        setSelectedImageSrc(travelImages[index % travelImages.length]);
+                                                    }}
+                                                />
+                                            </Grid.Col>
                                         ))
                                     ) : (
                                         <Text>You dont have travels that ended.</Text>

@@ -1,12 +1,6 @@
-import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
-import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { Travel, useUserByIdQuery } from "@/graphql/__generated__/gql";
-import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
-import { useAuth } from "@/hooks/useAth";
+import { Travel } from "@/graphql/__generated__/gql";
+import { BOLD } from "@/consts";
 import {
-  Avatar,
-  Box,
-  Button,
   Card,
   Image,
   Stack,

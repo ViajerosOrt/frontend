@@ -4,6 +4,7 @@ import { useState } from "react";
 import { travelImages } from "@/utils";
 import React from "react";
 import { TravelDetailsModal } from "@/components/TravelDetailsModal/TravelDetailsModal";
+import { Grid } from "@mantine/core";
 
 
 export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
@@ -14,14 +15,15 @@ export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
     <>
       {
         travels.map((travel, index) => (
-          <TravelCard travel={travel}
-            key={travel.id}
-            imageSrc={travelImages[index % travelImages.length]}
-            setSelectedTravel={(travel) => {
-              setSelectedTravel(travel);
-              setSelectedImageSrc(travelImages[index % travelImages.length]);
-            }}
-          />
+          <Grid.Col span={{ base: 12, md: 4, lg: 4 }} key={travel.id}>
+            <TravelCard travel={travel}
+              imageSrc={travelImages[index % travelImages.length]}
+              setSelectedTravel={(travel) => {
+                setSelectedTravel(travel);
+                setSelectedImageSrc(travelImages[index % travelImages.length]);
+              }}
+            />
+          </Grid.Col>
         ))
       }
 

@@ -1,4 +1,7 @@
 import { gql } from "@apollo/client";
+import { TRAVEL_FIELDS } from "./travel.fragments";
+
+
 
 export const GET_TRAVELS = gql`
   query Travels(
@@ -19,6 +22,20 @@ export const GET_TRAVELS = gql`
       countryName: $countryName
       creatorId: $creatorId
     ) {
+      ...TravelFields
+    }
+  }
+  ${TRAVEL_FIELDS}
+`;
+
+
+export const GET_TRAVEL_BY_ID = gql`
+  query Travel($id: String!) {
+    travel(id: $id) {
+      ...TravelFields
+    }
+  }
+  ${TRAVEL_FIELDS}
       id
       travelTitle
       travelDescription
