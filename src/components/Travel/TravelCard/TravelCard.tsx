@@ -1,4 +1,4 @@
-import { getDaysPending, getTransportAvatar } from "@/utils";
+import { CountryFlag, getDaysPending, getTransportAvatar } from "@/utils";
 import { Consts, VIAJERO_GREEN, VIAJERO_RED, VIAJERO_YELLOW } from "../../../consts/consts";
 import { TravelDto } from "../../../graphql/__generated__/gql";
 import {
@@ -60,6 +60,11 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel }: TravelCardPr
           />
         </Card.Section>
 
+        {travel.country && (
+          <Box style={{ position: 'absolute', top: 310, left: 12 }}>
+            <CountryFlag country={travel.country} />
+          </Box>
+        )}
 
         <Group m={12} justify="space-between">
           <Text fw={BOLD}>{travel.travelTitle}</Text>

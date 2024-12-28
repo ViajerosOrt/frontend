@@ -51,6 +51,7 @@ export const GET_TRAVELS = gql`
         id
         activityName
       }
+      country
     }
   }
 `;

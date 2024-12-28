@@ -123,9 +123,9 @@ const TravelCreateForm = () => {
           items: items.length > 0 ? items : [],
           createLocationInput: {
             longLatPoint: `${location?.coordinates[0]},${location?.coordinates[1]}`,
-            address: location?.streetName!,
-            name: location?.city!,
-            state: location?.state!
+            address: location?.streetName! || '',
+            name: location?.city! || '',
+            state: location?.state! || ''
           },
         },
       });

@@ -60,6 +60,11 @@ export const TravelFiltersDrawer = (
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
   const [showEndDate, setShowEndDate] = useState<boolean>(false);
 
+  //Countries
+  const countries = travels?.map((travel) => travel.country).filter((country) => country != null).filter((value, index, self) => self.indexOf(value) === index);
+  const parsedCountries = countries ? countries.map((country) => ({ label: country || '', value: country || '' })) : [];
+
+
   const form = useForm({
     initialValues: filters,
   });
@@ -126,6 +131,21 @@ export const TravelFiltersDrawer = (
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
             />
           </Stack>
+
+          <Stack gap={4} mb={20}>
+            <Title order={6}>
+              Country
+            </Title>
+            <Text size="sm" c="gray">Select a country where you want to travel!</Text>
+            <Select
+              {...form.getInputProps("countryName")}
+              data={parsedCountries}
+              placeholder="Select a country"
+              style={{ fontSize: '1.5rem' }}
+              comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+            />
+          </Stack>
+
           <Stack gap={4} mb={20}>
             <Switch
               color={VIAJERO_GREEN}
