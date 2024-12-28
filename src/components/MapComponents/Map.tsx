@@ -121,7 +121,7 @@ const Map = ({ country, zoom, onLocationSelected }: MapProps) => {
           <Accordion.Item value="options">
             <Accordion.Control
               style={{
-                backgroundColor: 'rgba(227, 234, 113, 0.6)',
+                backgroundColor: 'rgba(101, 167, 121, 0.6)',
                 padding: '12px 16px',
                 borderRadius: '10px',
                 fontWeight: 'bold',
@@ -134,7 +134,7 @@ const Map = ({ country, zoom, onLocationSelected }: MapProps) => {
             </Accordion.Control>
             <Accordion.Panel
               style={{
-                backgroundColor: 'rgba(244, 247, 208, 0.5)',
+                backgroundColor: 'rgba(119, 165, 133, 0.5)',
                 padding: '20px',
                 borderRadius: '10px',
                 boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',

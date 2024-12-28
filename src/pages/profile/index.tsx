@@ -15,7 +15,6 @@ import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmp
 export default function Profile() {
   const { currentUser } = useAuth()
 
-  const router = useRouter();
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: currentUser?.id || '' },
     skip: !!!currentUser?.id

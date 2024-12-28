@@ -1,5 +1,5 @@
 import { gql } from "@apollo/client";
-import { USER_FRAGMENT } from "../users/users.queries";
+import { USER_FRAGMENT } from "../users/user.fragments";
 
 export const GET_CHATS_FOR_USER = gql`
 query ChatUser {

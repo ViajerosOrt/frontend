@@ -26,6 +26,7 @@ import { useState } from "react";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
+import { Countries } from "../MapComponents/Countries";
 
 type UserEditFormProps = {
   user: User
@@ -66,12 +67,17 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
       birthDate: new Date(user.birthDate),
       activitiesIds: activitiesIds || [],
       whatsapp: user.whatsapp || '',
-      instagram: user.instagram || ''
+      instagram: user.instagram || '',
+      country: user.country || ''
     },
     validate: zodResolver(userSchema),
   });
 
   const [updateUser] = useUpdateMutation({ refetchQueries: ["User"] })
+
+  const handleCountryChange = (val: string | null) => {
+    form.setFieldValue('country', val!)
+  };
 
   const handleUpdateUser = async () => {
     const values = { ...form.values, activitiesIds: selectedActivitiesIds };
@@ -163,6 +169,16 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
               <Text size="sm" c="gray">Your birthdate.</Text>
               <DatePickerInput mt={10} defaultDate={new Date(user.birthDate)}  {...form.getInputProps('birthDate')} />
             </Box>
+
+            <Box>
+              <Text fw={BOLD} style={{ fontSize: '1.5rem' }}> Country </Text>
+              <Text size="sm" c="gray">Your country.</Text>
+              <Countries
+              value={form.values.country}
+              disabled={false} 
+              onChange={handleCountryChange}/>
+            </Box>
+
             <Box>
               <Text fw={BOLD} style={{ fontSize: '1.5rem' }}>Activities</Text>
               <Text size="sm" c="gray">A selection of your favorite activities.</Text>

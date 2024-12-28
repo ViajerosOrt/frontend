@@ -13,7 +13,7 @@ import {
   Text
 } from "@mantine/core";
 import { CgProfile } from "react-icons/cg";
-import { getActivityAvatar } from "@/utils";
+import { CountryFlag, getActivityAvatar } from "@/utils";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { SmallTravelDetails } from "../Travel/SmallTravelDetails/SmallTravelDetails";
 import { useRouter } from "next/router";
@@ -63,6 +63,12 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
             <Text fw={BOLD}>Birth Date:</Text>
             <Text>{new Date(user.birthDate).toLocaleDateString()}</Text>
           </Group>
+          {user.country && (
+            <Group mt="xs">
+              <Text fw={BOLD}>Country:</Text>
+              <CountryFlag country={user.country}></CountryFlag>
+            </Group>
+          )}
         </SimpleGrid>
       </Box>
 

@@ -10,6 +10,7 @@ export const USER_FRAGMENT = gql`
     name
     whatsapp
     instagram
+    country
     userActivities {
       id
       activityName
