@@ -5,13 +5,7 @@ import { Box, Center, Text } from "@mantine/core";
 import React from "react";
 
 function ChatsPage() {
-  return (
-    <Box h="100%" w="100%">
-      <Center>
-        <Text>Select a conversation</Text>
-      </Center>
-    </Box>
-  );
+  return null
 }
 
 ChatsPage.getLayout = function getLayout(page: React.ReactNode) {
