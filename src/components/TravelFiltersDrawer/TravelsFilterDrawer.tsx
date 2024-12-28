@@ -37,7 +37,7 @@ export const TravelFiltersDrawer = (
       defaultFilters: TravelFilters
       showMyTravelNames?: boolean
     },) => {
-  const { currentUser, onLogout } = useAuth()
+  const { currentUser } = useAuth()
 
   // Activities
   const { data: activitiesData } = useGetAllActivitiesQuery();
@@ -55,6 +55,7 @@ export const TravelFiltersDrawer = (
   })
   const travels = showMyTravelNames ? data?.travels?.filter((travel) => travel.creatorUser.email == currentUser?.email) : data?.travels
   const travelTitles = travels?.map((travel) => travel.travelTitle)
+  const uniqueTravelTitles = Array.from(new Set(travelTitles));
 
   // Show Dates states
   const [showStartDate, setShowStartDate] = useState<boolean>(false);
@@ -122,7 +123,7 @@ export const TravelFiltersDrawer = (
               Travel title
             </Title>
             <Text size="sm" c="gray">The title of the activity</Text>
-            <Autocomplete placeholder="Write a travel title" {...form.getInputProps("travelName")} data={travelTitles}
+            <Autocomplete placeholder="Write a travel title" {...form.getInputProps("travelName")} data={uniqueTravelTitles}
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
             />
           </Stack>

@@ -1,9 +1,21 @@
 import { gql } from "@apollo/client";
+import { USER_FRAGMENT } from "../users/users.queries";
 
 export const GET_CHATS_FOR_USER = gql`
 query ChatUser {
   chatUser {
     id
+    messages {
+     id
+      user {
+      id
+        name
+        email
+      }
+      content
+      createdAt
+      id
+    }
     travel {
       id
       travelTitle
@@ -24,7 +36,7 @@ query Chat($chatId: String!) {
   chat(id: $chatId) {
     id
     messages {
-    id
+     id
       user {
       id
         name
@@ -40,10 +52,9 @@ query Chat($chatId: String!) {
       travelTitle
     }
     users {
-      name
-      id
-      email
+      ...UserFields
     }
   }
 }
+  ${USER_FRAGMENT}
 `;

@@ -1,95 +1,101 @@
 import { gql } from "@apollo/client";
 
-export const GET_USER = gql`
-  query UserById($userByIdId: String!) {
-    userById(id: $userByIdId) {
-     id
-      birthDate
-      password
-      description
-      email
-      name
-      whatsapp
-      instagram
-      userActivities {
-        id
-        activityName
+export const USER_FRAGMENT = gql`
+  fragment UserFields on User {
+    id
+    birthDate
+    password
+    description
+    email
+    name
+    whatsapp
+    instagram
+    userActivities {
+      id
+      activityName
+    }
+    reviewsReceived {
+      id
+      content
+      stars
+      type
+      travel {
+        travelTitle
+        travelDescription
       }
-      reviewsReceived {
+      createdUserBy {
+        email
         id
-        content
-        stars
-        type
-        travel {
-          travelTitle
-          travelDescription
-        }
-        createdUserBy {
-          email
-          id
-          name
-        }
+        name
       }
-      reviewsCreated {
+    }
+    reviewsCreated {
+      id
+      content
+      type
+      travel {
         id
-        content
-        type
-        travel {
-          id
-          travelTitle
-          travelDescription
-          startDate
-          finishDate
-           
-          transport {
-            name
-            id
-          }
-          travelActivities {
-            id
-            activityName
-          }
-          country
-        }
-        stars
-        receivedUserBy {
-          id
-          name
-          email
-        }
-      }
-      joinsTravels {
-        country
-        finishDate
-        id
-        maxCap
+        travelTitle
+        travelDescription
         startDate
+        finishDate
         transport {
           name
           id
         }
-        travelTitle
-        travelDescription
-        usersTravelers {
-          id
-          email
-          name
-        }
         travelActivities {
           id
           activityName
         }
+        country
       }
-      travelsCreated {
-        travelTitle
+      stars
+      receivedUserBy {
         id
-        travelDescription
-        startDate
-        finishDate
-        travelActivities {
-          activityName
-        }
+        name
+        email
+      }
+    }
+    joinsTravels {
+      country
+      finishDate
+      id
+      maxCap
+      startDate
+      transport {
+        name
+        id
+      }
+      travelTitle
+      travelDescription
+      usersTravelers {
+        id
+        email
+        name
+      }
+      travelActivities {
+        id
+        activityName
+      }
+    }
+    travelsCreated {
+      travelTitle
+      id
+      travelDescription
+      startDate
+      finishDate
+      travelActivities {
+        activityName
       }
     }
   }
+`;
+
+export const GET_USER = gql`
+  query UserById($userByIdId: String!) {
+    userById(id: $userByIdId) {
+      ...UserFields
+    }
+  }
+  ${USER_FRAGMENT}
 `;

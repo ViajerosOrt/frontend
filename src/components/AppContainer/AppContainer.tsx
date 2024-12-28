@@ -87,7 +87,6 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
                 borderRadius: 8,
                 border: '3px solid #4e8e5a',
               }}
-
             >
               Logout
             </Button>
@@ -97,6 +96,5 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
         <AppShell.Main>{children}</AppShell.Main>
       </AppShell >
     </>
-
   );
 };

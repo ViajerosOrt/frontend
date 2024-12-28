@@ -48,7 +48,6 @@ export default function Travels() {
 
   return (
     <Container size="xl" mt="xl">
-
       <Group align="end" justify="space-between">
         <Button
           component={Link}
@@ -92,7 +91,6 @@ export default function Travels() {
         </Grid >
       )
       }
-
     </Container >
   );
 }

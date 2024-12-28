@@ -1,4 +1,4 @@
-import { Avatar, Button, Group, Menu, Modal, Stack, Text } from "@mantine/core"
+import { ActionIcon, Avatar, Button, Group, Menu, Modal, Stack, Text } from "@mantine/core"
 
 import { Flex } from "@mantine/core"
 import { BackButton } from "../BackButton/BackButton"
@@ -8,8 +8,11 @@ import { travelImages } from "@/utils"
 import { useDisclosure } from "@mantine/hooks"
 import { showNotification } from "@mantine/notifications"
 import { useRouter } from "next/router"
+import Link from "next/link"
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome"
+import { faChevronLeft } from "@fortawesome/free-solid-svg-icons"
 
-export const ChatHeaderSection = ({ chat }: { chat: Chat }) => {
+export const ChatHeaderSection = ({ chat, to }: { chat: Chat, to?: string }) => {
   const [opened, { open: openLeaveTravel, close }] = useDisclosure(false);
   const router = useRouter();
   const [leaveTravel] = useLeaveTravelMutation();
@@ -32,7 +35,6 @@ export const ChatHeaderSection = ({ chat }: { chat: Chat }) => {
       });
     }
   }
-
   return (
     <Flex
       bg={VIAJERO_GREEN_LIGHT}
@@ -46,16 +48,19 @@ export const ChatHeaderSection = ({ chat }: { chat: Chat }) => {
         zIndex: 10,
       }}
     >
-      <BackButton />
+      <ActionIcon variant="filled" component={Link} href={to || "/chats"} px="md" color={VIAJERO_GREEN}>
+        <FontAwesomeIcon icon={faChevronLeft} color="white" />
+      </ActionIcon>
       {/* TODO: Add travel image */}
-      <Group>
-        <Avatar src={travelImages[0 % travelImages.length]} radius="xl" size={40} />
+      <Link href={`/chats/${chat.id}/details`}>
+        <Group>
+          <Avatar src={travelImages[0 % travelImages.length]} radius="xl" size={40} />
 
-        <Text fw={BOLD}>
-          {chat?.travel?.travelTitle ?? 'No Title'}
-        </Text>
-      </Group>
-
+          <Text fw={BOLD}>
+            {chat?.travel?.travelTitle ?? 'No Title'}
+          </Text>
+        </Group>
+      </Link>
       <Menu>
         <Menu.Target>
           <Button variant="filled" color={VIAJERO_GREEN}>Config</Button>

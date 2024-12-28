@@ -1,4 +1,3 @@
-import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { Review, Travel, useUserByIdQuery } from "@/graphql/__generated__/gql";
 import { BOLD } from "@/consts";
@@ -14,7 +13,6 @@ import {
   Text
 } from "@mantine/core";
 import { CgProfile } from "react-icons/cg";
-import Link from "next/link";
 import { getActivityAvatar } from "@/utils";
 import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import { SmallTravelDetails } from "../Travel/SmallTravelDetails/SmallTravelDetails";
@@ -22,8 +20,10 @@ import { useRouter } from "next/router";
 import { ReviewReceivedCard } from "../ReviewReceivedCard/ReviewReceivedCard";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
+import { useAuth } from "@/hooks/useAth";
 
 export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: string, showViewProfile?: boolean }) => {
+  const currentUser = useAuth()
   const router = useRouter();
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
@@ -34,6 +34,8 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
   })
 
   const user = data?.userById
+
+  const viewerIsCurrentUser = currentUser?.currentUser?.id === userId
 
   if (loading || !user) {
     return <ViajeroLoader />
@@ -111,7 +113,11 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
           <SimpleGrid cols={3} spacing="md">
             {user.travelsCreated.map((travel, index) => {
               return (
-                <Box key={travel.id} style={{ cursor: 'pointer' }} onClick={() => router.push("/myTravels")}>
+                <Box key={travel.id} style={{ cursor: viewerIsCurrentUser ? 'pointer' : 'default' }} onClick={() => {
+                  if (viewerIsCurrentUser) {
+                    router.push(`/myTravels`)
+                  }
+                }}>
                   <SmallTravelDetails travel={travel as Travel} index={index} />
                 </Box>
               )

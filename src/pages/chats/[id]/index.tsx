@@ -7,6 +7,7 @@ import { SEMI_BOLD } from "@/consts";
 import { VIAJERO_GREEN } from "@/consts/consts";
 import { Message, useSendMessageMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
+import { GET_TRAVEL_BY_ID } from "@/graphql/travels/travels.queries";
 import { useAuth } from "@/hooks/useAth";
 import { useQuery } from "@apollo/client";
 import { Box, Button, Container, Flex, Paper, Text, Textarea } from "@mantine/core";
@@ -14,7 +15,7 @@ import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
 
-function ChatDetailsPage() {
+function ChatPage() {
   const router = useRouter();
   const { id } = router.query;
   const { currentUser } = useAuth()
@@ -71,7 +72,7 @@ function ChatDetailsPage() {
   if (error) return <ViajeroEmptyMessage message="Error loading chat" />;
 
   return (
-    <Container
+    <Box
       m={1}
       h="calc(100vh - 6rem)"
       style={{
@@ -106,12 +107,12 @@ function ChatDetailsPage() {
         />
         <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage}>Send</Button>
       </Flex>
-    </Container>
+    </Box>
   );
 }
 
-ChatDetailsPage.getLayout = function getLayout(page: React.ReactNode) {
+ChatPage.getLayout = function getLayout(page: React.ReactNode) {
   return <ChatLayout mobileToggle={true}>{page}</ChatLayout>;
 };
 
-export default ChatDetailsPage;
+export default ChatPage;
