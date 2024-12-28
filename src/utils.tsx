@@ -204,7 +204,7 @@ export const CountryFlag = ({ country }: { country: string }) => {
       }
     };
 
-      fetchFlag();
+    fetchFlag();
   }, [country]);
 
 
