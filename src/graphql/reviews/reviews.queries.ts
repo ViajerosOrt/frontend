@@ -1,28 +1,28 @@
 import { gql } from "@apollo/client";
 
 export const REVIEWS_BY_ID = gql`
- query Review($reviewId: String!) {
-  review(id: $reviewId) {
-    content
-    createdUserBy {
+  query Review($reviewId: String!) {
+    review(id: $reviewId) {
+      content
+      createdUserBy {
+        id
+        email
+      }
       id
-      email
-    }
-    id
-    stars
+      stars
       receivedUserBy {
-      id
-    }
-    travel {
-      id
-      travelTitle
+        id
+      }
+      travel {
+        id
+        travelTitle
         usersTravelers {
           id
           email
           name
         }
+      }
+      type
     }
-    type
   }
-}
 `;
