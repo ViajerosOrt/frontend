@@ -2,59 +2,58 @@ import { gql } from "@apollo/client";
 import { USER_FRAGMENT } from "../users/user.fragments";
 
 export const GET_CHATS_FOR_USER = gql`
-query ChatUser {
-  chatUser {
-    id
-    messages {
-     id
-      user {
+  query ChatUser {
+    chatUser {
       id
-        name
-        email
+      messages {
+        id
+        user {
+          id
+          name
+          email
+        }
+        content
+        createdAt
+        id
       }
-      content
-      createdAt
-      id
-    }
-    travel {
-      id
-      travelTitle
-      travelDescription
-    }
-    users {
-      id
-      email
-      description
+      travel {
+        id
+        travelTitle
+        travelDescription
+      }
+      users {
+        id
+        email
+        description
+      }
     }
   }
-}
 `;
 
-
 export const GET_CHAT_BY_ID = gql`
-query Chat($chatId: String!) {
-  chat(id: $chatId) {
-    id
-    messages {
-     id
-      user {
+  query Chat($chatId: String!) {
+    chat(id: $chatId) {
       id
-        name
-        email
+      messages {
+        id
+        user {
+          id
+          name
+          email
+        }
+        content
+        createdAt
+        id
       }
-      content
-      createdAt
-      id
-    }
-    travel {
-      id
-      travelDescription
-      travelTitle
-    }
-    users {
-      ...UserFields
+      travel {
+        id
+        travelDescription
+        travelTitle
+      }
+      users {
+        ...UserFields
+      }
     }
   }
-}
   ${USER_FRAGMENT}
 `;
