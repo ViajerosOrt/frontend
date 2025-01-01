@@ -99,7 +99,7 @@ export default function Reviews() {
       ) : (
         <Card p="xl" radius="md" withBorder>
           <Text ta="center" c="dimmed">
-            You haven't written any reviews yet!
+            You havent written any reviews yet!
           </Text>
         </Card>
       )}
