@@ -30,15 +30,15 @@ export const CREATE_TRAVEL_MUTATION = gql(`
         finishDate
         maxCap
         isEndable
+        imageUrl
       }
     }
   `);
 
-
 export const LEAVE_TRAVEL = gql`
   mutation LeaveTravel($travelId: String!) {
-  leaveTravel(travelId: $travelId) {
-    id
+    leaveTravel(travelId: $travelId) {
+      id
+    }
   }
-}
-  `;
+`;

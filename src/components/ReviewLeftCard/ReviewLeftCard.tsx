@@ -98,7 +98,7 @@ export const ReviewLeftCard = ({ review, setSelectedTravel, setSelectedImageSrc,
                   color={VIAJERO_GREEN}
                   onClick={() => {
                     setSelectedTravel(review.travel);
-                    setSelectedImageSrc(travelImages[index || 0 % travelImages.length]);
+                    setSelectedImageSrc(review.travel?.imageUrl);
                   }}
                 >
                   View Travel Details

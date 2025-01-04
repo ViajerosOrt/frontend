@@ -16,6 +16,7 @@ export const REVIEWS_BY_ID = gql`
       travel {
         id
         travelTitle
+        imageUrl
         usersTravelers {
           id
           email

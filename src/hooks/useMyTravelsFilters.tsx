@@ -1,4 +1,4 @@
-import { useTravelsQuery } from "@/graphql/__generated__/gql";
+import { useTravelsQuery, } from "@/graphql/__generated__/gql";
 import { useState } from "react";
 
 export interface MyTravelFilters {

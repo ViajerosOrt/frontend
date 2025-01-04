@@ -54,7 +54,7 @@ export const ChatHeaderSection = ({ chat, to }: { chat: Chat, to?: string }) => 
       {/* TODO: Add travel image */}
       <Link href={`/chats/${chat.id}/details`}>
         <Group>
-          <Avatar src={travelImages[0 % travelImages.length]} radius="xl" size={40} />
+          <Avatar src={chat.travel.imageUrl! ||travelImages[0 % travelImages.length]} radius="xl" size={40} />
 
           <Text fw={BOLD}>
             {chat?.travel?.travelTitle ?? 'No Title'}

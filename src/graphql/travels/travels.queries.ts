@@ -1,8 +1,6 @@
 import { gql } from "@apollo/client";
 import { TRAVEL_FIELDS } from "./travel.fragments";
 
-
-
 export const GET_TRAVELS = gql`
   query Travels(
     $transportId: String
@@ -27,7 +25,6 @@ export const GET_TRAVELS = gql`
   }
   ${TRAVEL_FIELDS}
 `;
-
 
 export const GET_TRAVEL_BY_ID = gql`
   query Travel($id: String!) {

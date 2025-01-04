@@ -11,6 +11,7 @@ export const USER_FRAGMENT = gql`
     whatsapp
     instagram
     country
+    userImage
     userActivities {
       id
       activityName
@@ -61,6 +62,7 @@ export const USER_FRAGMENT = gql`
       country
       finishDate
       id
+      imageUrl
       maxCap
       startDate
       transport {
@@ -73,6 +75,7 @@ export const USER_FRAGMENT = gql`
         id
         email
         name
+        userImage
       }
       travelActivities {
         id
@@ -82,6 +85,7 @@ export const USER_FRAGMENT = gql`
     travelsCreated {
       travelTitle
       id
+      imageUrl
       travelDescription
       startDate
       finishDate

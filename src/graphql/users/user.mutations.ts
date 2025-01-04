@@ -7,6 +7,7 @@ export const UPDATE_USER = gql`
       description
       name
       country
+      userImage
       userActivities {
         activityName
       }

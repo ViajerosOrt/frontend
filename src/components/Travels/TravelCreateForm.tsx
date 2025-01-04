@@ -1,7 +1,7 @@
 
 import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery } from "../../graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
-import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select, useCombobox, Combobox, CheckIcon, PillsInput, Input, Pill } from '@mantine/core';
+import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select, useCombobox, Combobox, CheckIcon, PillsInput, Input, Pill, FileInput } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useState } from 'react';
@@ -14,6 +14,8 @@ import { getTransportAvatar } from "@/utils";
 import { Countries } from '../MapComponents/Countries';
 import React from "react";
 import dynamic from "next/dynamic";
+import { AiOutlineCloudUpload } from 'react-icons/ai';
+
 
 const travelValuesSchema = z.object({
   title: z.string().min(1, 'Title is required').max(50),
@@ -54,6 +56,16 @@ const TravelCreateForm = () => {
 
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [location, setLocation] = useState<{coordinates: [number, number];streetName: string;city: string; state:string} | null>(null);
+
+  const [file, setFile] = useState<File | null>(null);
+
+  const handleFileChange = (file: File | null) => {
+    setFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+    }  
+  };
 
   const form = useForm({
     initialValues: {
@@ -102,7 +114,35 @@ const TravelCreateForm = () => {
     //We obtain the values from the form const that we defined earlier
     const values = form.values;
 
-    //We put all together in a constant for better use
+    let uploadedImageUrl = null;
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        //TODO Change url for the deploy
+        const uploadResponse = await fetch('http://localhost:4000/upload', {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          console.log('Error');
+          throw new Error('Failed to upload image');
+        }
+
+        const uploadResult = await uploadResponse.json();
+        uploadedImageUrl = uploadResult.url;
+      } catch (error) {
+        console.log('Upload error details:', error);
+        showNotification({
+          message: `Error uploading image: ${error}`,
+          color: 'red',
+        });
+        return;
+      }
+    }
+
     const travelData = {
       travelTitle: values.title,
       travelDescription: values.description,
@@ -111,6 +151,15 @@ const TravelCreateForm = () => {
       maxCap: values.maxCap,
       country: selectedCountry || '',
       isEndable: false,
+      countryOfOrigin: 'Uruguay',
+      imageUrl: uploadedImageUrl
+    };
+
+    const createLocationInput = {
+      longLatPoint: location ? `${location.coordinates[0]},${location.coordinates[1]}` : '',
+      address: location?.streetName || location?.city || 'No address available',
+      name: location?.city || 'Uknown City',
+      state: location?.state || 'Unknown State'
     };
 
     try {
@@ -121,26 +170,29 @@ const TravelCreateForm = () => {
           activityId: selectedActivities.length > 0 ? selectedActivities : [],
           transportId: selectedTransportId,
           items: items.length > 0 ? items : [],
-          createLocationInput: {
-            longLatPoint: `${location?.coordinates[0]},${location?.coordinates[1]}`,
-            address: location?.streetName!,
-            name: location?.city!,
-            state: location?.state!
-          },
+          createLocationInput
         },
       });
 
-      showNotification({ message: 'Travel created sucesfully', color: 'green' });
+      showNotification({ message: 'Travel created successfully', color: 'green' });
       form.reset();
-
       setSelectedDates([null, null]);
       setSelectedActivities([]);
-      router.back()
+      router.back();
 
     } catch (error: any) {
-
-      showNotification({ message: error.message ? error.message : 'Error creating the travel', color: 'red' });
+      console.error('Create travel error:', {
+        message: error.message,
+        graphQLErrors: error.graphQLErrors,
+        networkError: error.networkError,
+        extraInfo: error.extraInfo
+      });
+      showNotification({
+        message: error.message ? error.message : 'Error creating the travel',
+        color: 'red'
+      });
     }
+
   };
 
   return (
@@ -198,14 +250,43 @@ const TravelCreateForm = () => {
             </Stack>
 
             <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country</Text>
-              <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
-
-              <Countries value={selectedCountry} onChange={setSelectedCountry }   disabled={!!location} />
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Image</Text>
+              <Text size="sm" c="gray">Upload an image for your travel!</Text>
+              <FileInput
+                accept="image/*"
+                onChange={handleFileChange}
+                leftSection={<AiOutlineCloudUpload size={20} />}
+                placeholder="Upload image"
+                radius="md"
+                size="sm"
+                styles={{
+                  input: {
+                    cursor: 'pointer',
+                    '&:hover': {
+                      borderColor: 'var(--mantine-color-blue-filled)'
+                    }
+                  },
+                  section: {
+                    color: 'var(--mantine-color-dimmed)',
+                    '&:hover': {
+                      color: 'var(--mantine-color-blue-filled)'
+                    }
+                  }
+                }}
+              />
 
             </Stack>
 
-            <Map country={selectedCountry!}  zoom={7}  onLocationSelected={handleLocationSelected}/>
+
+            <Stack gap={4}>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country</Text>
+              <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
+
+              <Countries value={selectedCountry} onChange={setSelectedCountry} disabled={!!location} />
+
+            </Stack>
+
+            <Map country={selectedCountry!} zoom={7} onLocationSelected={handleLocationSelected} />
 
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
             <Text size="sm" c="gray">The total number of allowed participants.</Text>

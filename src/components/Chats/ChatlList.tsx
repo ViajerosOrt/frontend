@@ -54,7 +54,7 @@ export function ChatList() {
           >
             <Group gap="xl" wrap="nowrap" w="100%">
               {/* TODO: Add travel image */}
-              <Avatar src={travelImages[index % travelImages.length]} radius="xl" size={40} />
+              <Avatar src={chat.travel?.imageUrl} radius="xl" size={40} />
               <Stack>
                 <Text fw={BOLD}>{chat.travel?.travelTitle}</Text>
                 <Text truncate maw={isMobile ? 200 : 600} c={isSelected(chat.id) ? "black" : "dimmed"}>

@@ -66,7 +66,8 @@ export const LoginForm = () => {
               id: user.id,
               email: user.email,
               accessToken: accessToken,
-              name: user.name
+              name: user.name,
+              userImage : user.userImage! || ''
             }
           })
           router.push("/travels");

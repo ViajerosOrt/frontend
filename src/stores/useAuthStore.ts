@@ -7,6 +7,7 @@ export interface UserState {
   accessToken: AccessToken | undefined | null
   email: string
   name: string
+  userImage : string
 }
 
 type AuthStoreState = {

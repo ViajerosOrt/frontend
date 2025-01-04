@@ -17,7 +17,7 @@ export const TravelList = ({ travels }: { travels: TravelDto[] }) => {
         travels.map((travel, index) => (
           <Grid.Col span={{ base: 12, md: 4, lg: 4 }} key={travel.id}>
             <TravelCard travel={travel}
-              imageSrc={travelImages[index % travelImages.length]}
+              imageSrc={travel.imageUrl! || travelImages[index % travelImages.length]}
               setSelectedTravel={(travel) => {
                 setSelectedTravel(travel);
                 setSelectedImageSrc(travelImages[index % travelImages.length]);

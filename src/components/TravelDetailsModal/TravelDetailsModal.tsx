@@ -82,7 +82,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
       }}
     >
       <Image
-        src={selectedImageSrc || "/default-travel.jpg"}
+        src={selectedTravel?.imageUrl || "/default-travel.jpg"}
         alt={selectedTravel?.travelTitle}
         fit="cover"
         height={200}

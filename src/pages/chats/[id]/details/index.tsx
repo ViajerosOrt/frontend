@@ -59,7 +59,7 @@ function ChatDetails() {
 
         {/* TODO: USE REAL IMAGE */}
         <Box w={isMobile ? "100%" : "50%"}>
-          <TravelCard travel={travel} imageSrc={travelImages[1 % travelImages.length]} setSelectedTravel={(travel) => {
+          <TravelCard travel={travel} imageSrc={travel.imageUrl! || travelImages[1 % travelImages.length]} setSelectedTravel={(travel) => {
             setSelectedTravel(travel);
             setSelectedImageSrc(travelImages[1 % travelImages.length]);
           }} showOpenChatButton={false} />
@@ -94,9 +94,10 @@ function ChatDetails() {
                   alt={user.name}
                   radius="xl"
                   size={40}
+                  src= {user.userImage}
                   color="green"
                 >
-                  <CgProfile size={25} />
+                  
                 </Avatar>
                 <Stack>
                   <Text fw={BOLD}>{user.name}</Text>

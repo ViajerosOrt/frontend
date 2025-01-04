@@ -50,7 +50,7 @@ export default function SelectTravel() {
 
       {endedTravels.length === 0 && (
         <Text ta="center" c="dimmed" mt={40}>
-          You don't have any completed travels yet. Once you complete a travel, you can come back to write a review!
+          You dont have any completed travels yet. Once you complete a travel, you can come back to write a review!
         </Text>
       )}
     </Container>

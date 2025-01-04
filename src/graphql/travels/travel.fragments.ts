@@ -10,6 +10,7 @@ export const TRAVEL_FIELDS = gql`
     maxCap
     isJoined
     usersCount
+    imageUrl
     transport {
       name
       id

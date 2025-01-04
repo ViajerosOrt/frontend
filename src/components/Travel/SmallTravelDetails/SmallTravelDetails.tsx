@@ -31,7 +31,7 @@ export const SmallTravelDetails = ({ travel, index }: { travel: Travel, index: n
       <Card.Section>
         <Image
           h={180}
-          src={travelImages[index % travelImages.length] || "/default-travel.jpg"}
+          src={travel.imageUrl || travelImages[index % travelImages.length] || "/default-travel.jpg"}
           alt={travel.travelTitle}
         />
       </Card.Section>
