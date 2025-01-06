@@ -18,14 +18,14 @@ export const TRAVEL_FIELDS = gql`
       id
       name
       items {
-      id
-        name
-        state
-         user {
         id
         name
-        email
-      }
+        state
+        user {
+          id
+          name
+          email
+        }
       }
     }
     usersTravelers {
