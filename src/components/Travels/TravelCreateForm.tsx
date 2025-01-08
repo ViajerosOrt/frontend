@@ -53,7 +53,7 @@ const TravelCreateForm = () => {
   const [items, setItems] = useState<string[]>([]);
 
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
-  const [location, setLocation] = useState<{coordinates: [number, number];streetName: string;city: string; state:string} | null>(null);
+  const [location, setLocation] = useState<{ coordinates: [number, number]; streetName: string; city: string; state: string } | null>(null);
 
   const form = useForm({
     initialValues: {
@@ -66,7 +66,7 @@ const TravelCreateForm = () => {
     validate: zodResolver(travelValuesSchema),
   });
 
-  const handleLocationSelected = (location: { coordinates: [number, number], streetName: string, city: string, state:string }) => {
+  const handleLocationSelected = (location: { coordinates: [number, number], streetName: string, city: string, state: string }) => {
     setLocation(location);
   };
 
@@ -111,6 +111,8 @@ const TravelCreateForm = () => {
       maxCap: values.maxCap,
       country: selectedCountry || '',
       isEndable: false,
+      //  TODO: CHANGE THIS
+      countryOfOrigin: "Uruguay"
     };
 
     try {
@@ -201,11 +203,11 @@ const TravelCreateForm = () => {
               <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country</Text>
               <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
 
-              <Countries value={selectedCountry} onChange={setSelectedCountry }   disabled={!!location} />
+              <Countries value={selectedCountry} onChange={setSelectedCountry} disabled={!!location} />
 
             </Stack>
 
-            <Map country={selectedCountry!}  zoom={7}  onLocationSelected={handleLocationSelected}/>
+            <Map country={selectedCountry!} zoom={7} onLocationSelected={handleLocationSelected} />
 
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
             <Text size="sm" c="gray">The total number of allowed participants.</Text>
