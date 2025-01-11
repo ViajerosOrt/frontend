@@ -42,7 +42,7 @@ const TravelCreateForm = () => {
 
   const { data: transportData } = useTransportsQuery();
   const transports = transportData?.transports || []
-  const parsedTransports = transports.map((transport) => {
+  const parsedTransports = transports.map((transport: { name: any; id: any; }) => {
     return { label: transport.name, value: transport.id };
   });
 
@@ -78,7 +78,7 @@ const TravelCreateForm = () => {
     validate: zodResolver(travelValuesSchema),
   });
 
-  const handleLocationSelected = (location: { coordinates: [number, number], streetName: string, city: string, state:string }) => {
+  const handleLocationSelected = (location: { coordinates: [number, number], streetName: string, city: string, state: string }) => {
     setLocation(location);
   };
 
@@ -309,7 +309,7 @@ const TravelCreateForm = () => {
               <Select data={parsedTransports} placeholder="Choose one transport" w="30%" onChange={setSelectedTransportId}
                 rightSection={
                   selectedTransportId
-                    ? getTransportAvatar(transports.find(t => t.id === selectedTransportId)?.name || '', "sm")
+                    ? getTransportAvatar(transports.find((t: { id: string; }) => t.id === selectedTransportId)?.name || '', "sm")
                     : null
                 } />
             </Box>
