@@ -83,6 +83,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
     >
       <Image
         src={selectedTravel?.imageUrl || "/default-travel.jpg"}
+        fallbackSrc="https://via.placeholder.com/200"
         alt={selectedTravel?.travelTitle}
         fit="cover"
         height={200}

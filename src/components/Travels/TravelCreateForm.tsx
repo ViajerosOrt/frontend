@@ -1,7 +1,7 @@
 
 import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery } from "../../graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
-import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select, useCombobox, Combobox, CheckIcon, PillsInput, Input, Pill, FileInput } from '@mantine/core';
+import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select, useCombobox, Combobox, CheckIcon, PillsInput, Input, Pill, FileInput, Loader } from '@mantine/core';
 import { DatePicker } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
 import { useState } from 'react';
@@ -58,6 +58,7 @@ const TravelCreateForm = () => {
   const [location, setLocation] = useState<{coordinates: [number, number];streetName: string;city: string; state:string} | null>(null);
 
   const [file, setFile] = useState<File | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
 
   const handleFileChange = (file: File | null) => {
     setFile(file);
@@ -111,6 +112,8 @@ const TravelCreateForm = () => {
       return;
     }
 
+    setIsLoading(true);
+
     //We obtain the values from the form const that we defined earlier
     const values = form.values;
 
@@ -120,8 +123,7 @@ const TravelCreateForm = () => {
         const formData = new FormData();
         formData.append('file', file);
 
-        //TODO Change url for the deploy
-        const uploadResponse = await fetch('http://localhost:4000/upload', {
+        const uploadResponse = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_GRAPHQL_API!, {
           method: 'POST',
           body: formData,
         });
@@ -191,6 +193,8 @@ const TravelCreateForm = () => {
         message: error.message ? error.message : 'Error creating the travel',
         color: 'red'
       });
+    } finally {
+      setIsLoading(false);
     }
 
   };
@@ -353,8 +357,9 @@ const TravelCreateForm = () => {
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
             />
 
-            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
-              Create Travel
+            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md"  disabled={isLoading} leftSection={isLoading ? 
+            <Loader size="sm" color="blue" /> : null}>
+              {isLoading ? 'Creating Travel...' : 'Create Travel'}
             </Button>
 
           </Stack>

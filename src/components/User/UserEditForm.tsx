@@ -10,6 +10,7 @@ import {
   Container,
   FileButton,
   Group,
+  Loader,
   MultiSelect,
   Paper,
   Stack,
@@ -63,6 +64,8 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
 
   const [file, setFile] = useState<File | null>(null);
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
   const { currentUser } = useAuth()
   const handleImageUpload = (selectedFile: File | null) => {
     if (!selectedFile) return;
@@ -100,15 +103,14 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
 
   const handleUpdateUser = async () => {
     const values = { ...form.values, activitiesIds: selectedActivitiesIds };
-
+    setIsLoading(true);
     let uploadedImageUrl = null;
     if (file) {
       try {
         const formData = new FormData();
         formData.append('file', file);
 
-        //TODO Change url for the deploy
-        const uploadResponse = await fetch('http://localhost:4000/upload', {
+        const uploadResponse = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_GRAPHQL_API!, {
           method: 'POST',
           body: formData,
         });
@@ -144,6 +146,8 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
       router.back()
     } catch (error: any) {
       showNotification({ message: error.message ? error.message : 'Error updating your profile', color: 'red' });
+    } finally {
+      setIsLoading(false);
     }
 
   }
@@ -276,8 +280,9 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
                 <TextInput mt={10} w="30%" {...form.getInputProps('instagram')} placeholder="Your instagram account name" />
               </Group>
             </Box>
-            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
-              Edit Profile
+            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" disabled={isLoading} leftSection={isLoading ?
+              <Loader size="sm" color="blue" /> : null}>
+              {isLoading ? 'Editing Profile...' : 'Edit Profile'}
             </Button>
           </Stack>
         </form>
