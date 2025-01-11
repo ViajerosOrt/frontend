@@ -114,7 +114,7 @@ export type DefaultIcons = { [key: string]: boolean };
 
 
 export const markerIcon = new L.Icon({
-  iconUrl: '/marker.png',
+  iconUrl: '/Map/marker.png',
   iconSize: [30, 30],
   iconAnchor: [15, 30],
   popupAnchor: [0, -30],
