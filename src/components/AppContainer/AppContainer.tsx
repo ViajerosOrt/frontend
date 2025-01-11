@@ -56,10 +56,10 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
             <Group align="center" justify="center" >
               <PlaneAnimation />
               <Avatar
-                size={80}
-                src={`https://robohash.org/${currentUser?.name}`}
+                size={60}
+                src={currentUser?.userImage}
                 radius="xl"
-                style={{ animation: ANIMATIONS.moving, verticalAlign: "middle", marginTop: -35, marginRight: 40 }}
+                style={{ verticalAlign: "middle", marginTop: -15, marginRight: 40 }}
               />
               <Text size="xl" fw={900} style={{ marginLeft: -60, marginTop: 25, animation: ANIMATIONS.breathing, }} >
                 {currentUser?.name}

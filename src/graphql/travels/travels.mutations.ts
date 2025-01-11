@@ -30,6 +30,7 @@ export const CREATE_TRAVEL_MUTATION = gql(`
         finishDate
         maxCap
         isEndable
+        imageUrl
       }
     }
   `);

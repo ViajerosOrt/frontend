@@ -18,6 +18,7 @@ import { Dispatch, SetStateAction } from "react";
 import { CgProfile } from "react-icons/cg";
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
 import { BOLD } from "@/consts";
+import TravelImage from "../TravelImages/TravelImage";
 
 type TravelCardProps = {
   travel: TravelDto,
@@ -31,7 +32,6 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
   const userColor = Consts.getColorByPercentage(travel?.usersCount!, travel?.maxCap!);
 
   const daysPending = getDaysPending(new Date(travel.startDate));
-
   return (
     <Card
       w="100%"
@@ -51,11 +51,9 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
       }}
     >
       <Card.Section>
-        <Image
-          src={imageSrc || "/default-travel.jpg"}
+      <TravelImage
+          src={travel.imageUrl! || imageSrc}
           alt={travel.travelTitle}
-          height={200}
-          style={{ objectFit: "cover", minHeight: '200px', height: '200px' }}
         />
       </Card.Section>
 

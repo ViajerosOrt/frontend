@@ -7,6 +7,7 @@ mutation login($input: LoginUserInput!){
       id
       email
       name
+      userImage
     }
     accessToken {
      value

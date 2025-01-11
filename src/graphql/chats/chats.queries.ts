@@ -20,6 +20,7 @@ export const GET_CHATS_FOR_USER = gql`
         id
         travelTitle
         travelDescription
+        imageUrl
       }
       users {
         id
@@ -49,6 +50,7 @@ export const GET_CHAT_BY_ID = gql`
         id
         travelDescription
         travelTitle
+        imageUrl
       }
       users {
         ...UserFields

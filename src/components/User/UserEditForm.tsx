@@ -3,11 +3,14 @@ import { BackButton } from "@/components/BackButton/BackButton";
 import { BOLD, VIAJERO_GREEN } from "@/consts";
 import { useGetAllActivitiesQuery, User, useUpdateMutation } from "@/graphql/__generated__/gql";
 import {
+  Avatar,
   Box,
   Button,
   Center,
   Container,
+  FileButton,
   Group,
+  Loader,
   MultiSelect,
   Paper,
   Stack,
@@ -27,6 +30,7 @@ import { FaInstagram, FaWhatsapp } from "react-icons/fa";
 import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { Countries } from "../MapComponents/Countries";
+import { useAuth } from "@/hooks/useAth";
 
 type UserEditFormProps = {
   user: User
@@ -58,6 +62,23 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
   const { data } = useGetAllActivitiesQuery();
   const activities = data?.activities || [];
 
+  const [file, setFile] = useState<File | null>(null);
+  const [uploadedImage, setUploadedImage] = useState<string | null>(null);
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { currentUser } = useAuth()
+  const handleImageUpload = (selectedFile: File | null) => {
+    if (!selectedFile) return;
+
+    const reader = new FileReader();
+    reader.onload = () => {
+      setUploadedImage(reader.result as string);
+    };
+    reader.readAsDataURL(selectedFile);
+    setFile(selectedFile);
+  };
+
+
   const form = useForm({
     initialValues: {
       name: user.name,
@@ -68,7 +89,8 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
       activitiesIds: activitiesIds || [],
       whatsapp: user.whatsapp || '',
       instagram: user.instagram || '',
-      country: user.country || ''
+      country: user.country || '',
+      userImage: '',
     },
     validate: zodResolver(userSchema),
   });
@@ -81,6 +103,36 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
 
   const handleUpdateUser = async () => {
     const values = { ...form.values, activitiesIds: selectedActivitiesIds };
+    setIsLoading(true);
+    let uploadedImageUrl = null;
+    if (file) {
+      try {
+        const formData = new FormData();
+        formData.append('file', file);
+
+        const uploadResponse = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_GRAPHQL_API!, {
+          method: 'POST',
+          body: formData,
+        });
+
+        if (!uploadResponse.ok) {
+          console.log('Error');
+          throw new Error('Failed to upload image');
+        }
+
+        const uploadResult = await uploadResponse.json();
+        uploadedImageUrl = uploadResult.url;
+        values.userImage = uploadedImageUrl;
+        currentUser!.userImage! = uploadedImageUrl!;
+      } catch (error) {
+        console.log('Upload error details:', error);
+        showNotification({
+          message: `Error uploading image: ${error}`,
+          color: 'red',
+        });
+        return;
+      }
+    }
 
     try {
       await updateUser({
@@ -94,6 +146,8 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
       router.back()
     } catch (error: any) {
       showNotification({ message: error.message ? error.message : 'Error updating your profile', color: 'red' });
+    } finally {
+      setIsLoading(false);
     }
 
   }
@@ -110,7 +164,18 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
         <form onSubmit={form.onSubmit(handleUpdateUser)}>
           <Stack gap="lg" w="100%">
             <Center >
-              <CgProfile size={80} />
+              <Avatar
+                src={uploadedImage || user.userImage}
+                size={100}
+                radius="xl"
+              />
+              <FileButton onChange={handleImageUpload} accept="image/*">
+                {(props) => (
+                  <Button size="xs" style={{ marginTop: 10 }} {...props}>
+                    {uploadedImage ? 'Change photo' : 'Upload photo'}
+                  </Button>
+                )}
+              </FileButton>
             </Center>
             <Box>
               <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Name </Text>
@@ -174,9 +239,9 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
               <Text fw={BOLD} style={{ fontSize: '1.5rem' }}> Country </Text>
               <Text size="sm" c="gray">Your country.</Text>
               <Countries
-              value={form.values.country}
-              disabled={false} 
-              onChange={handleCountryChange}/>
+                value={form.values.country}
+                disabled={false}
+                onChange={handleCountryChange} />
             </Box>
 
             <Box>
@@ -215,8 +280,9 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
                 <TextInput mt={10} w="30%" {...form.getInputProps('instagram')} placeholder="Your instagram account name" />
               </Group>
             </Box>
-            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md">
-              Edit Profile
+            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" disabled={isLoading} leftSection={isLoading ?
+              <Loader size="sm" color="blue" /> : null}>
+              {isLoading ? 'Editing Profile...' : 'Edit Profile'}
             </Button>
           </Stack>
         </form>
