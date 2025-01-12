@@ -172,12 +172,7 @@ const TravelCreateForm = () => {
           activityId: selectedActivities.length > 0 ? selectedActivities : [],
           transportId: selectedTransportId,
           items: items.length > 0 ? items : [],
-          createLocationInput: {
-            longLatPoint: `${location?.coordinates[0]},${location?.coordinates[1]}`,
-            address: location?.streetName! || '',
-            name: location?.city! || '',
-            state: location?.state! || ''
-          },
+          createLocationInput
         },
       });
 
