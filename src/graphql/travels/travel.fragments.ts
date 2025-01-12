@@ -11,6 +11,13 @@ export const TRAVEL_FIELDS = gql`
     isJoined
     usersCount
     imageUrl
+    country
+    travelLocation {
+      address
+      name
+      state
+      longLatPoint
+    }
     transport {
       name
       id

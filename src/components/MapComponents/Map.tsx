@@ -17,14 +17,14 @@ type MapProps = {
   country: string;
   zoom: number;
   onLocationSelected: (location: { coordinates: [number, number], streetName: string, city: string, state: string }) => void;
+  defaultCoordinates?: [number, number] | null;
 };
 
-const Map = ({ country, zoom, onLocationSelected }: MapProps) => {
-  const [coordinates, setCoordinates] = useState<[number, number] | null>(null);
-  const [userMarker, setUserMarker] = useState<[number, number] | null>(null);
+const Map = ({ country, zoom, onLocationSelected, defaultCoordinates }: MapProps) => {
+  const [coordinates, setCoordinates] = useState<[number, number] | null>(defaultCoordinates || null);
+  const [userMarker, setUserMarker] = useState<[number, number] | null>(defaultCoordinates || null);
   const [nearPlaces, setNearPlaces] = useState<any[]>([]);
   const [comboIcons, setComboIcons] = useState<DefaultIcons>(DEFAULT_ICONS);
-
 
   //Updates the state to show or hide the icons on the map
   const handleIconToggle = (iconName: string, show: boolean) => {
@@ -33,6 +33,13 @@ const Map = ({ country, zoom, onLocationSelected }: MapProps) => {
       [iconName]: show,
     }));
   };
+
+  useEffect(() => {
+    if (defaultCoordinates) {
+      setCoordinates(defaultCoordinates);
+      setUserMarker(defaultCoordinates);
+    }
+  }, [defaultCoordinates]);
 
   /*Filter the places based on what the user selected in the filters combo
     We use useMemo so it only filters it when near places or combo icons changed
@@ -46,6 +53,8 @@ const Map = ({ country, zoom, onLocationSelected }: MapProps) => {
   useEffect(() => {
     if (country) {
       fetchCountryByName(country).then(setCoordinates).catch(console.error);
+      setUserMarker(null)
+      setCoordinates(null)
     }
   }, [country]);
 
