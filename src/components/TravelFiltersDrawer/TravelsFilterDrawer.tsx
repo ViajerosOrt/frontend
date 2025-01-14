@@ -1,4 +1,4 @@
-import { useGetAllActivitiesQuery, useTransportsQuery, useTravelsQuery } from "../../graphql/__generated__/gql";
+import { TravelDto, useGetAllActivitiesQuery, useTransportsQuery, useTravelsQuery } from "../../graphql/__generated__/gql";
 import {
   Autocomplete,
   Button,
@@ -53,7 +53,8 @@ export const TravelFiltersDrawer = (
   // Travel names
   const { data } = useTravelsQuery({
   })
-  const travels = showMyTravelNames ? data?.travels?.filter((travel) => travel.creatorUser.email == currentUser?.email) : data?.travels
+
+  const travels = (showMyTravelNames ? data?.travels?.filter((travel) => travel.creatorUser.email == currentUser?.email) : data?.travels) as TravelDto[]
   const travelTitles = travels?.map((travel) => travel.travelTitle)
   const uniqueTravelTitles = Array.from(new Set(travelTitles));
 
