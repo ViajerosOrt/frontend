@@ -8,6 +8,7 @@ import React from "react";
 import { Activity, TravelDto, useJoinToTravelMutation } from "@/graphql/__generated__/gql";
 import { Consts } from "@/consts/consts";
 import { VIAJERO_GREEN } from "@/consts";
+import TravelImage from "../Travel/TravelImages/TravelImage";
 
 type TravelDetailsModalProps = {
   selectedTravel: TravelDto | undefined,
@@ -81,13 +82,9 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
         blur: 3,
       }}
     >
-      <Image
-        src={selectedTravel?.imageUrl || "/default-travel.jpg"}
-        fallbackSrc="https://via.placeholder.com/200"
-        alt={selectedTravel?.travelTitle}
-        fit="cover"
-        height={200}
-      />
+
+      <TravelImage src={selectedTravel?.imageUrl || "/default_travel.jpg"} alt={selectedTravel?.travelTitle || ''} />
+
 
       <Box p={16}>
         <Group justify="space-between">

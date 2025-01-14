@@ -1,10 +1,10 @@
 
-import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery } from "../../graphql/__generated__/gql";
+import { useCreateTravelMutation, useGetAllActivitiesQuery, useTransportsQuery, useTravelQuery, useUpdateTravelMutation } from "../../graphql/__generated__/gql";
 import { useForm, zodResolver } from '@mantine/form';
-import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select, useCombobox, Combobox, CheckIcon, PillsInput, Input, Pill, FileInput, Loader } from '@mantine/core';
-import { DatePicker } from '@mantine/dates';
+import { Button, TextInput, Textarea, NumberInput, Container, Stack, Text, Group, MultiSelect, Paper, Box, Title, Select, useCombobox, Combobox, CheckIcon, PillsInput, Input, Pill, Loader, FileInput } from '@mantine/core';
+import { DatePicker, DatePickerInput } from '@mantine/dates';
 import { notifications, showNotification } from '@mantine/notifications';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { z } from 'zod';
 import { VIAJERO_GREEN } from "../../consts/consts";
 import { BackButton } from "../BackButton/BackButton";
@@ -14,8 +14,7 @@ import { getTransportAvatar } from "@/utils";
 import { Countries } from '../MapComponents/Countries';
 import React from "react";
 import dynamic from "next/dynamic";
-import { AiOutlineCloudUpload } from 'react-icons/ai';
-
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 const travelValuesSchema = z.object({
   title: z.string().min(1, 'Title is required').max(50),
@@ -23,17 +22,25 @@ const travelValuesSchema = z.object({
   maxCap: z.number().min(1, 'Max Capacity must be more than 1'),
   items: z.array(z.string()).optional(),
   activities: z.array(z.string()).optional(),
+  startDate: z.date(),
+  finishDate: z.date(),
 });
 
 const Map = dynamic(() => import('../MapComponents/Map'), {
   ssr: false,
 });
 
-const TravelCreateForm = () => {
-  //Mutations and Querys
-  const [createTravel] = useCreateTravelMutation({
+const TravelUpdateForm = ({ travelId }: { travelId: string }) => {
+  const [updateTravel] = useUpdateTravelMutation({
     refetchQueries: ["travels"]
   });
+  const { data: travelData } = useTravelQuery({
+    variables: {
+      id: travelId
+    }
+  });
+  const [isLoadingFormSubmit, setIsLoadingFormSubmit] = useState(false);
+  const travel = travelData?.travel
 
   const router = useRouter()
 
@@ -42,39 +49,30 @@ const TravelCreateForm = () => {
 
   const { data: transportData } = useTransportsQuery();
   const transports = transportData?.transports || []
-  const parsedTransports = transports.map((transport: { name: any; id: any; }) => {
+  const parsedTransports = transports.map((transport) => {
     return { label: transport.name, value: transport.id };
   });
-
-  const [selectedDates, setSelectedDates] = useState<[Date | null, Date | null]>([null, null]);
-  const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
-  const [selectedTransportId, setSelectedTransportId] = useState<string | null>(null)
 
   //Items isnt done yet 2/11 FS
   const [item, setItem] = useState('');
   const [items, setItems] = useState<string[]>([]);
 
+  const [file, setFile] = useState<File | null>(null);
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [location, setLocation] = useState<{ coordinates: [number, number]; streetName: string; city: string; state: string } | null>(null);
-
-  const [file, setFile] = useState<File | null>(null);
-  const [isLoading, setIsLoading] = useState(false);
-
-  const handleFileChange = (file: File | null) => {
-    setFile(file);
-    if (file) {
-      const reader = new FileReader();
-      reader.readAsDataURL(file);
-    }
-  };
+  const [defaultCoordinates, setDefaultCoordinates] = useState<[number, number] | null>(null);
 
   const form = useForm({
     initialValues: {
-      title: '',
-      description: '',
-      maxCap: 1,
-      location: location?.coordinates,
-      country: '',
+      title: travel?.travelTitle || '',
+      description: travel?.travelDescription || '',
+      maxCap: travel?.maxCap || 1,
+      location: travel?.travelLocation || location?.coordinates,
+      country: travel?.country || '',
+      startDate: travel?.startDate!,
+      finishDate: travel?.finishDate!,
+      transport: travel?.transport?.id || null,
+      activities: travel?.travelActivities?.map((activity) => activity.id) || [],
     },
     validate: zodResolver(travelValuesSchema),
   });
@@ -83,7 +81,34 @@ const TravelCreateForm = () => {
     setLocation(location);
   };
 
-  // Add an item to the list (called by handleKeyDown)
+  useEffect(() => {
+    if (travel) {
+      form.setValues({
+        title: travel?.travelTitle || '',
+        description: travel?.travelDescription || '',
+        maxCap: travel?.maxCap || 1,
+        location: travel?.travelLocation || location?.coordinates,
+        country: travel?.country || '',
+        startDate: new Date(travel?.startDate!),
+        finishDate: new Date(travel?.finishDate!),
+        transport: travel?.transport?.id || null,
+        activities: travel?.travelActivities?.map((activity) => activity.id) || [],
+      });
+      if (travel?.travelLocation) {
+        const longLatPoint = travel?.travelLocation.longLatPoint.split(',').map(Number) as [number, number]
+        setLocation({
+          coordinates: longLatPoint,
+          streetName: travel?.travelLocation.address,
+          city: travel?.travelLocation.name,
+          state: travel?.travelLocation.state
+        })
+        setDefaultCoordinates(longLatPoint)
+        setSelectedCountry(travel?.country!)
+        setItems(travel?.checklist?.items?.map((item) => item.name) || [])
+      }
+    }
+  }, [travel])
+
   const handleAddItem = () => {
     if (item.trim() === '') {
       return;
@@ -107,8 +132,8 @@ const TravelCreateForm = () => {
     setItem('');
   };
   //Principal function to send the travel to the data base
-  const handleCreateTravelSubmit = async () => {
-    if (!selectedDates[0] || !selectedDates[1]) {
+  const handleUpdateTravelSubmit = async () => {
+    if (!form.values.startDate || !form.values.finishDate) {
       showNotification({
         message: 'Please select both start and end dates for the travel.',
         color: 'red',
@@ -116,102 +141,100 @@ const TravelCreateForm = () => {
       return;
     }
 
-    setIsLoading(true);
 
-    //We obtain the values from the form const that we defined earlier
-    const values = form.values;
-
-    let uploadedImageUrl = null;
-    if (file) {
-      try {
-        const formData = new FormData();
-        formData.append('file', file);
-
-        const uploadResponse = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_GRAPHQL_API!, {
-          method: 'POST',
-          body: formData,
-        });
-        if (!uploadResponse.ok) {
-          console.log('Error');
-          throw new Error('Failed to upload image');
-        }
-
-        const uploadResult = await uploadResponse.json();
-        uploadedImageUrl = uploadResult.url;
-      } catch (error) {
-        console.log('Upload error details:', error);
-        showNotification({
-          message: `Error uploading image: ${error}`,
-          color: 'red',
-        });
-        return;
-      }
-    }
-
-    const travelData = {
-      travelTitle: values.title,
-      travelDescription: values.description,
-      startDate: selectedDates[0]?.toISOString(),
-      finishDate: selectedDates[1]?.toISOString(),
-      maxCap: values.maxCap,
-      country: selectedCountry || '',
-      isEndable: false,
-      countryOfOrigin: 'Uruguay',
-      imageUrl: uploadedImageUrl
-    };
-
-    const createLocationInput = {
-      longLatPoint: location ? `${location.coordinates[0]},${location.coordinates[1]}` : '',
-      address: location?.streetName || location?.city || 'No address available',
-      name: location?.city || 'Uknown City',
-      state: location?.state || 'Unknown State'
-    };
 
     try {
       //We call the mutation to create the travel
-      await createTravel({
+      setIsLoadingFormSubmit(true);
+      let uploadedImageUrl = null;
+      if (file) {
+        try {
+          const formData = new FormData();
+          formData.append('file', file);
+
+          const uploadResponse = await fetch(process.env.NEXT_PUBLIC_CLOUDINARY_GRAPHQL_API!, {
+            method: 'POST',
+            body: formData,
+          });
+          console.log(uploadResponse)
+          if (!uploadResponse.ok) {
+            console.log('Error');
+            throw new Error('Failed to upload image');
+          }
+
+          const uploadResult = await uploadResponse.json();
+          uploadedImageUrl = uploadResult.url;
+        } catch (error) {
+          console.log('Upload error details:', error);
+          showNotification({
+            message: `Error uploading image: ${error}`,
+            color: 'red',
+          });
+          return;
+        }
+      }
+
+      const values = form.values;
+
+      const travelData = {
+        id: travelId,
+        travelTitle: values.title,
+        travelDescription: values.description,
+        startDate: values.startDate,
+        finishDate: values.finishDate,
+        maxCap: values.maxCap,
+        country: selectedCountry || '',
+        isEndable: false,
+        imageUrl: uploadedImageUrl
+      };
+
+      await updateTravel({
         variables: {
-          createTravelInput: travelData,
-          activityId: selectedActivities.length > 0 ? selectedActivities : [],
-          transportId: selectedTransportId,
+          updateTravelInput: travelData,
+          activityId: form.values.activities.length > 0 ? form.values.activities : [],
           items: items.length > 0 ? items : [],
-          createLocationInput
+          transportId: form.values.transport,
+          updateLocationInput: {
+            longLatPoint: `${location?.coordinates[0]},${location?.coordinates[1]}`,
+            address: location?.streetName!,
+            name: location?.city!,
+            state: location?.state!
+          },
         },
       });
 
-      showNotification({ message: 'Travel created successfully', color: 'green' });
+      showNotification({ message: 'Travel updated sucesfully', color: 'green' });
       form.reset();
-      setSelectedDates([null, null]);
-      setSelectedActivities([]);
-      router.back();
+
+      router.back()
 
     } catch (error: any) {
-      console.error('Create travel error:', {
-        message: error.message,
-        graphQLErrors: error.graphQLErrors,
-        networkError: error.networkError,
-        extraInfo: error.extraInfo
-      });
-      showNotification({
-        message: error.message ? error.message : 'Error creating the travel',
-        color: 'red'
-      });
-    } finally {
-      setIsLoading(false);
-    }
 
+      showNotification({ message: error.message ? error.message : 'Error creating the travel', color: 'red' });
+    } finally {
+      setIsLoadingFormSubmit(false);
+    }
   };
+
+  const handleFileChange = (file: File | null) => {
+    setFile(file);
+    if (file) {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+    }
+  };
+
 
   return (
     <Container mt="xl" ta="left" w="100%" >
       <Group align="center" w="100%">
         <BackButton />
         <Box style={{ flex: 1, textAlign: 'center' }}>
-          <Title mb="lg">Create a Travel</Title>
+          <Title mb="lg">Update your Travel</Title>
         </Box>
       </Group>
       <Paper p="xl" shadow="md" mt={20} withBorder >
-        <form onSubmit={form.onSubmit(handleCreateTravelSubmit)}>
+        <form onSubmit={form.onSubmit(handleUpdateTravelSubmit)}>
           <Stack w="100%" >
             <Stack gap={4}>
               <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title  </Text>
@@ -281,19 +304,17 @@ const TravelCreateForm = () => {
                   }
                 }}
               />
-
             </Stack>
-
 
             <Stack gap={4}>
               <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country</Text>
               <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
 
-              <Countries defaultCountry={null} value={selectedCountry} onChange={setSelectedCountry} disabled={!!location} />
+              <Countries defaultCountry={travel?.country!} value={selectedCountry} onChange={setSelectedCountry} disabled={false} />
 
             </Stack>
 
-            <Map country={selectedCountry!} zoom={7} onLocationSelected={handleLocationSelected} />
+            <Map country={selectedCountry || travel?.country!} zoom={7} onLocationSelected={handleLocationSelected} defaultCoordinates={defaultCoordinates} />
 
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
             <Text size="sm" c="gray">The total number of allowed participants.</Text>
@@ -301,22 +322,24 @@ const TravelCreateForm = () => {
 
             <Text mt={12} style={{ fontWeight: 700, fontSize: '1.5rem' }}>Start and End Date</Text>
             <Text size="sm" c="gray">The start and end dates of the travel.</Text>
-            <Box>
-              <DatePicker
-                type="range"
-                value={selectedDates}
-                onChange={setSelectedDates}
-                allowSingleDateInRange
+            <Group>
+              <DatePickerInput
+                {...form.getInputProps('startDate')}
               />
-            </Box>
+              <DatePickerInput
+                {...form.getInputProps('finishDate')}
+              />
+            </Group>
 
             <Box>
               <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Transport</Text>
               <Text size="sm" c="gray">An optional transport for the travel.</Text>
-              <Select data={parsedTransports} placeholder="Choose one transport" w="30%" onChange={setSelectedTransportId}
+              <Select
+                {...form.getInputProps('transport')}
+                data={parsedTransports} placeholder="Choose one transport" w="30%"
                 rightSection={
-                  selectedTransportId
-                    ? getTransportAvatar(transports.find((t: { id: string; }) => t.id === selectedTransportId)?.name || '', "sm")
+                  form.values.transport
+                    ? getTransportAvatar(transports.find(t => t.id === form.values.transport)?.name || '', "sm")
                     : null
                 } />
             </Box>
@@ -324,13 +347,13 @@ const TravelCreateForm = () => {
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Activities</Text>
             <Text size="sm" c="gray">A selection of activities included in the travel.</Text>
             <MultiSelect
+              {...form.getInputProps('activities')}
               data={activities.map((
                 activity: { id: any; activityName: any; }) => ({
                   value: activity.id,
                   label: activity.activityName
                 }))}
               placeholder="Select activites for your travel"
-              onChange={setSelectedActivities}
               w="60%"
               style={{ fontWeight: 700, fontSize: '1.5rem' }}
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
@@ -339,6 +362,7 @@ const TravelCreateForm = () => {
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>CheckList</Text>
             <Text size="sm" c="gray">A list of essential items to bring in the travel. Each participant will be able to bring one of these.</Text>
             <Text size="sm" c="gray">(You can add multiple items separated by commas by clicking the + button)</Text>
+
             <Group>
               <TextInput
                 style={{ fontWeight: 700, fontSize: '1.5rem', width: '30%' }}
@@ -361,9 +385,9 @@ const TravelCreateForm = () => {
               comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
             />
 
-            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" disabled={isLoading} leftSection={isLoading ?
+            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" disabled={isLoadingFormSubmit} leftSection={isLoadingFormSubmit ?
               <Loader size="sm" color="black" /> : null}>
-              {isLoading ? 'Creating Travel...' : 'Create Travel'}
+              {isLoadingFormSubmit ? 'Updating Travel...' : 'Update Travel'}
             </Button>
 
           </Stack>
@@ -373,5 +397,5 @@ const TravelCreateForm = () => {
   );
 };
 
-export default TravelCreateForm;
+export default TravelUpdateForm;
 

@@ -51,17 +51,11 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
       }}
     >
       <Card.Section>
-      <TravelImage
+        <TravelImage
           src={travel.imageUrl! || imageSrc}
           alt={travel.travelTitle}
         />
       </Card.Section>
-
-        {travel.country && (
-          <Box style={{ position: 'absolute', top: 310, left: 12 }}>
-            <CountryFlag country={travel.country} />
-          </Box>
-        )}
 
       <Group m={12} justify="space-between">
         <Text fw={BOLD}>{travel.travelTitle}</Text>
@@ -83,9 +77,18 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
       </Text>
 
       {travel.transport && (
-        <Group gap="sm" align="center">
-          {getTransportAvatar(travel.transport.name)}
-          <Text>{travel.transport.name}</Text>
+        <Group gap="sm" justify="space-between" wrap="nowrap" >
+          <Box>
+            <Group gap="sm">
+              {getTransportAvatar(travel.transport.name)}
+              <Text>{travel.transport.name}</Text>
+            </Group>
+          </Box>
+          {travel.country && (
+            <Box>
+              <CountryFlag country={travel.country!} />
+            </Box>
+          )}
         </Group>
       )}
 

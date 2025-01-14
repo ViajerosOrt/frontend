@@ -199,16 +199,6 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
               </Group>
             </Box>
             <Box>
-              <Tooltip.Floating label="You can't update your email right now." disabled={false} color="red">
-                <Box>
-                  <Text fw={BOLD} style={{ fontSize: '1.5rem' }}> Email </Text>
-                  <Text size="sm" c="gray">Your email.</Text>
-                  <TextInput mt={10} disabled {...form.getInputProps('email')} required />
-                </Box>
-              </Tooltip.Floating>
-
-            </Box>
-            <Box>
               <Text fw={BOLD} style={{ fontSize: '1.5rem' }}> Description </Text>
               <Text size="sm" c="gray">Your description.</Text>
               <TextInput mt={10}{...form.getInputProps('description')} required />
