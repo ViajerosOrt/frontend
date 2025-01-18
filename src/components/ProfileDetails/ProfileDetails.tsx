@@ -44,7 +44,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
   return (
     <Stack gap="xl" p={20}>
       <Center>
-        <Avatar src = {currentUser.currentUser?.userImage} size={120} radius="xl" color="green">
+        <Avatar src={currentUser.currentUser?.userImage} size={120} radius="xl" color="green">
         </Avatar>
       </Center>
 

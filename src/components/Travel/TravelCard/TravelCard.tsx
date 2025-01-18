@@ -1,6 +1,6 @@
 import { CountryFlag, getDaysPending, getTransportAvatar } from "@/utils";
 import { Consts, VIAJERO_GREEN } from "../../../consts/consts";
-import { TravelDto } from "../../../graphql/__generated__/gql";
+import { TravelDto, useChatTravelQuery } from "../../../graphql/__generated__/gql";
 import {
   Badge,
   Box,
@@ -19,6 +19,7 @@ import { CgProfile } from "react-icons/cg";
 import { ActivitiesAvatarGroup } from "@/components/Activity/ActivitiesAvatarGroup";
 import { BOLD } from "@/consts";
 import TravelImage from "../TravelImages/TravelImage";
+import Link from "next/link";
 
 type TravelCardProps = {
   travel: TravelDto,
@@ -31,7 +32,15 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
   const { hovered, ref } = useHover();
   const userColor = Consts.getColorByPercentage(travel?.usersCount!, travel?.maxCap!);
 
+  const { data: chatData } = useChatTravelQuery({
+    variables: {
+      travelId: travel.id
+    }
+  });
+  const chatId = chatData?.chatTravel?.[0]?.id;
+
   const daysPending = getDaysPending(new Date(travel.startDate));
+
   return (
     <Card
       w="100%"
@@ -56,6 +65,12 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
           alt={travel.travelTitle}
         />
       </Card.Section>
+
+      {travel.country && (
+        <Box style={{ position: 'absolute', top: 310, left: 12 }}>
+          <CountryFlag country={travel.country} />
+        </Box>
+      )}
 
       <Group m={12} justify="space-between">
         <Text fw={BOLD}>{travel.travelTitle}</Text>
@@ -99,7 +114,7 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
               <Button variant="light" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => setSelectedTravel(travel)}>
                 View Details
               </Button>
-              <Button variant={"filled"} color={"purple"} fullWidth mt="md" radius="md" onClick={() => null}>
+              <Button component={Link} href={`/chats/${chatId}`} variant={"filled"} color={"purple"} fullWidth mt="md" radius="md">
                 Open Chat
               </Button>
             </Group>

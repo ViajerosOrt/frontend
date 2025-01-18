@@ -44,11 +44,6 @@ function ChatPage() {
         },
       });
       setNewMessage("");
-      showNotification({
-        position: 'top-right',
-        message: 'Message sent successfully',
-        color: 'green',
-      });
     } catch (error) {
       showNotification({
         position: 'top-right',
