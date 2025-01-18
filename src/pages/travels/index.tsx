@@ -21,12 +21,13 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { useDisclosure } from "@mantine/hooks";
 import { SEMI_BOLD } from "@/consts";
 import { TravelFiltersDrawer } from "@/components/TravelFiltersDrawer/TravelsFilterDrawer";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 
 
 export default function Travels() {
   const { filters, updateFilters, applyFilters, defaultFilters, data, loading } = useTravelFilters();
-
+  const { isMobile } = useIsMobile();
   // Solo mostramos viajes que cumplan con los siguientes requisitos:
   // Tengan espacio para uno.
   // No esten en progreso (sea posible el unirse)
@@ -46,13 +47,37 @@ export default function Travels() {
     )
   }
 
-  return (
-    <Container size="xl" mt="xl">
-      <Group align="end" justify="space-between">
+  const TravelButtons = () => (
+    isMobile ? (
+      <Group grow w="100%" mb="md">
         <Button
           component={Link}
           href="/travels/travelCreate"
-          mt="md"
+          size="md"
+          radius="md"
+          color={VIAJERO_GREEN}
+          leftSection={<FaPlane />}
+          fullWidth
+        >
+          Create Travel
+        </Button>
+        <Button
+          onClick={open}
+          size="md"
+          radius="md"
+          variant="outline"
+          color={VIAJERO_GREEN}
+          leftSection={<FontAwesomeIcon icon={faFilter} />}
+          fullWidth
+        >
+          Filters
+        </Button>
+      </Group>
+    ) : (
+      <Group align="end" justify="space-between" w="100%">
+        <Button
+          component={Link}
+          href="/travels/travelCreate"
           size="md"
           radius="md"
           color={VIAJERO_GREEN}
@@ -60,6 +85,26 @@ export default function Travels() {
         >
           Create a new travel
         </Button>
+
+        <ActionIcon
+          variant="filled"
+          color={VIAJERO_GREEN}
+          onClick={open}
+          w={100}
+          h={40}
+          size="md"
+          radius="md"
+        >
+          <Text mr={14} fw={SEMI_BOLD}>Filters</Text>
+          <FontAwesomeIcon icon={faFilter} />
+        </ActionIcon>
+      </Group>
+    )
+  );
+
+  return (
+    <Container size="xl" mt="xl">
+        <TravelButtons />
 
         <TravelFiltersDrawer
           opened={opened}
@@ -69,16 +114,6 @@ export default function Travels() {
           applyFilters={applyFilters}
           defaultFilters={defaultFilters}
         />
-
-        <Group wrap="nowrap" mt={8} mx={16}>
-          <ActionIcon variant="filled" color={VIAJERO_GREEN} onClick={open} w={100} h={40}
-            size="md"
-            radius="md">
-            <Text mr={14} fw={SEMI_BOLD}>Filters</Text><FontAwesomeIcon icon={faFilter} />
-          </ActionIcon>
-        </Group>
-      </Group>
-
 
       <Title order={2} mb={20} size={24} ta="center">
         Choose your next travel

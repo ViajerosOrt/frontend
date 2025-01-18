@@ -11,15 +11,21 @@ import { ViajeroLogo } from "../ViajeroLogo/viajeroLogo";
 import { VIAJERO_GREEN, ANIMATIONS, VIAJERO_GREEN_DARK } from "../../consts/consts";
 import React from "react";
 import PlaneAnimation from "../Animations/PlaneAnimation";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export const AppContainer = ({ children }: { children: React.ReactNode }) => {
   const [opened, { toggle, close }] = useDisclosure();
   const { currentUser, onLogout } = useAuth()
   const router = useRouter();
+  const { isMobile, isLoading } = useIsMobile();
 
   const closeSidebar = useCallback(() => {
     close();
   }, [close]);
+
+  const navigateToProfile = () => {
+    router.push("/profile");
+  };
 
   const handleLogout = () => {
     onLogout(currentUser?.id)
@@ -31,6 +37,25 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
     })
     router.push("/");
   }
+
+  const UserProfile = () => (
+    <Group align="center" gap="xs" onClick={isMobile ? navigateToProfile : undefined}  style={isMobile ? { cursor: 'pointer' } : undefined}>
+      <Avatar
+        size={isMobile ? 40 : 50}
+        src={currentUser?.userImage}
+        radius="xl"
+      />
+      <Text 
+        size={isMobile ? "md" : "xl"} 
+        fw={900} 
+        style={{ 
+          animation: ANIMATIONS.breathing,
+        }}
+      >
+        {currentUser?.name}
+      </Text>
+    </Group>
+  );
 
   return (
     <>
@@ -45,25 +70,25 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
       >
         <AppShell.Header>
           <Group justify="space-between" px="md" py={8} align="center" h="100%">
-            <Burger
-              opened={opened}
-              onClick={toggle}
-              hiddenFrom="md"
-              size="md"
-            />
-            <ViajeroLogo />
-
-            <Group align="center" justify="center" >
-              <PlaneAnimation />
-              <Avatar
-                size={60}
-                src={currentUser?.userImage}
-                radius="xl"
-                style={{ verticalAlign: "middle", marginTop: -15, marginRight: 40 }}
+            <Group>
+              <Burger
+                opened={opened}
+                onClick={toggle}
+                hiddenFrom="md"
+                size="md"
               />
-              <Text size="xl" fw={900} style={{ marginLeft: -60, marginTop: 25, animation: ANIMATIONS.breathing, }} >
-                {currentUser?.name}
-              </Text>
+              {!isMobile && <ViajeroLogo />}
+            </Group>
+
+            <Group>
+              <PlaneAnimation />
+              {isMobile ? (
+                <UserProfile />
+              ) : ( 
+                <Group align="center" justify="center">
+                  <UserProfile />
+                </Group>
+              )}
             </Group>
           </Group>
         </AppShell.Header>
@@ -78,9 +103,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
               onClick={handleLogout}
               mt="auto"
               mb={30}
-              leftSection={
-                <IoMdExit size="" />
-              }
+              leftSection={<IoMdExit />}
               style={{
                 fontSize: '1.1rem',
                 fontWeight: 600,
@@ -94,7 +117,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
         </AppShell.Navbar>
 
         <AppShell.Main>{children}</AppShell.Main>
-      </AppShell >
+      </AppShell>
     </>
   );
 };

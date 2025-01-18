@@ -19,7 +19,6 @@ export default function Reviews() {
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
-
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: currentUser?.id || '' },
     skip: !!!currentUser?.id
@@ -45,6 +44,11 @@ export default function Reviews() {
         radius="md"
         color={VIAJERO_GREEN}
         rightSection={<IoBook />}
+        styles={{
+          root: {
+            width: isMobile ? '100%' : 'auto',
+          }
+        }}
       >
         Add a review
       </Button>

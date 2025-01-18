@@ -22,6 +22,7 @@ import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAth";
 import { useIsMobile } from "@/hooks/useIsMobile";
+import { Countries } from "../MapComponents/Countries";
 
 export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: string, showViewProfile?: boolean }) => {
   const currentUser = useAuth()
@@ -29,7 +30,6 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
   const { isMobile } = useIsMobile();
-
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: userId || '' },
     skip: !!!userId
@@ -46,16 +46,15 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
       </Center>
     )
   }
-
   return (
-    <Stack gap="xl" p={20}>
+    <Stack gap="xl" p={isMobile ? 15 : 20}>
       <Center>
-        <Avatar src={currentUser.currentUser?.userImage} size={120} radius="xl" color="green">
+        <Avatar src = {user.userImage} size={120} radius="xl" color="green">
         </Avatar>
       </Center>
 
       <Box>
-        <SimpleGrid cols={3} spacing="lg">
+        <SimpleGrid cols={isMobile ? 1:3} spacing={isMobile ? "xs" : "lg"}>
           <Group align="end">
             <Text fw={BOLD}>Name:</Text>
             <Text>{user.name}</Text>
@@ -70,23 +69,23 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
           </Group>
           {user.country && (
             <Group mt="xs">
-              <Text fw={BOLD}>Country:</Text>
+              <Text fw={BOLD} >Country:</Text>
               <CountryFlag country={user.country}></CountryFlag>
             </Group>
           )}
+          <Group mt="xs">
+            <Text fw={BOLD} mb="xs" >Description:</Text>
+            <Text mb= "10px">{user.description || 'No description provided.'}</Text>
+          </Group>
         </SimpleGrid>
       </Box>
 
-      <Box>
-        <Text fw={BOLD} mb="xs">Description:</Text>
-        <Text>{user.description || 'No description provided.'}</Text>
-      </Box>
 
       <Group align="start">
         <Text fw={BOLD} mb="xs" >Social Networks:</Text>
         {(user.whatsapp || user.instagram) ? (
           <>
-            <Group mr={30}>
+            <Group mr={isMobile ? 60:20} >
               <FaWhatsapp color="#25D366" className="h-6 w-6" />
               <Text>{user.whatsapp}</Text>
             </Group>
@@ -121,7 +120,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
       <Box>
         <Text fw={BOLD} ta="center" mb="xs">Travels Created</Text>
         {user?.travelsCreated && user?.travelsCreated.length > 0 ? (
-          <SimpleGrid cols={3} spacing="md">
+          <SimpleGrid cols={isMobile ? 1:3} spacing="md">
             {user.travelsCreated.map((travel, index) => {
               return (
                 <Box key={travel.id} style={{ cursor: viewerIsCurrentUser ? 'pointer' : 'default' }} onClick={() => {
@@ -140,6 +139,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
       </Box>
 
       <Divider />
+      
       <Box>
         {user?.reviewsReceived && user.reviewsReceived.length > 0 ? (
           <>

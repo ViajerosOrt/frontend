@@ -6,6 +6,7 @@ import axios from 'axios';
 import { Accordion, Box, Checkbox, Grid } from '@mantine/core';
 import Icons, { DEFAULT_ICONS, DefaultIcons, markerIcon } from './MapIcons';
 import { fetchCountryByName, fetchNearPlaces } from '@/utils';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 /*
 Map component to given a country name, center it on the country coordinates and  when the user clicks in the map, 
@@ -25,6 +26,7 @@ const Map = ({ country, zoom, onLocationSelected, defaultCoordinates }: MapProps
   const [userMarker, setUserMarker] = useState<[number, number] | null>(defaultCoordinates || null);
   const [nearPlaces, setNearPlaces] = useState<any[]>([]);
   const [comboIcons, setComboIcons] = useState<DefaultIcons>(DEFAULT_ICONS);
+  const { isMobile } = useIsMobile();
 
   //Updates the state to show or hide the icons on the map
   const handleIconToggle = (iconName: string, show: boolean) => {
@@ -125,66 +127,105 @@ const Map = ({ country, zoom, onLocationSelected, defaultCoordinates }: MapProps
           </Marker>
         ))}
       </MapContainer>
-      <Box style={{ position: 'absolute', top: 20, right: 20, zIndex: 1000 }}>
-        <Accordion>
+      <Box style={{ position: 'absolute', ...(isMobile ? { bottom: 20, left: 10, right: 10, width: '200px', } : { top: 20, right: 20, width: 'auto', }), zIndex: 1000, maxHeight: '60vh', }}>
+        <Accordion styles={{
+          content: {
+            padding: 0,
+          },
+        }}>
           <Accordion.Item value="options">
             <Accordion.Control
               style={{
-                backgroundColor: 'rgba(101, 167, 121, 0.6)',
-                padding: '12px 16px',
-                borderRadius: '10px',
+                backgroundColor: 'rgba(101, 167, 121, 0.9)',
+                padding: '12px',
+                borderRadius: '10px 10px 10px 10px',
                 fontWeight: 'bold',
                 fontFamily: 'Poppins, sans-serif',
                 fontSize: '16px',
-                transition: 'all 0.3s ease',
-                backdropFilter: 'blur(8px)',
               }}>
               Filters
             </Accordion.Control>
             <Accordion.Panel
               style={{
-                backgroundColor: 'rgba(119, 165, 133, 0.5)',
-                padding: '20px',
-                borderRadius: '10px',
-                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)',
+                backgroundColor: 'rgba(119, 165, 133, 0.8)',
+                borderRadius: '10px 10px 10px 10px',
+                boxShadow: '0 4px 6px rgba(0, 0, 0, 0.1)'
               }}>
-              <Grid gutter="xs">
-                {Object.keys(comboIcons).map((iconName) => (
-                  <Grid.Col span={4} key={iconName}>
-                    <Checkbox
-                      label={
-                        <Box
-                          style={{
-                            display: 'flex',
-                            alignItems: 'center',
-                            gap: '10px',
-                          }}
-                        >
-                          <img
-                            src={Icons.getIcon(iconName).options.iconUrl}
-                            alt={iconName}
+              <Box
+                style={{
+                  maxHeight: '300px',
+                  overflowY: 'auto',
+                  padding: '15px',
+                  scrollbarWidth: 'thin',
+                  scrollbarColor: 'rgba(255, 255, 255, 0.5) transparent',
+                  '&::WebkitScrollbar': {
+                    width: '6px',
+                  },
+                  '&::WebkitScrollbarTrack': {
+                    background: 'transparent',
+                  },
+                  '&::WebkitScrollbarThumb': {
+                    backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                    borderRadius: '3px',
+                  },
+                }}
+              >
+                <Grid gutter="xs">
+                  {Object.keys(comboIcons).map((iconName) => (
+                    <Grid.Col span={isMobile ? 12 : 4} key={iconName} style={{ marginBottom: isMobile ? '8px' : '5px', }}>
+                      <Checkbox
+                        label={
+                          <Box
                             style={{
-                              width: '20px',
-                              height: '20px',
-                            }}
-                          />
-                          <span
-                            style={{
-                              textTransform: 'capitalize',
-                              fontFamily: 'Poppins, sans-serif',
-                              fontWeight: 'bold',
+                              display: 'flex',
+                              alignItems: 'center',
+                              gap: '8px',
                             }}
                           >
-                            {iconName}
-                          </span>
-                        </Box>
-                      }
-                      checked={comboIcons[iconName]}
-                      onChange={(e) => handleIconToggle(iconName, e.target.checked)}
-                    />
-                  </Grid.Col>
-                ))}
-              </Grid>
+                            <img
+                              src={Icons.getIcon(iconName).options.iconUrl}
+                              alt={iconName}
+                              style={{
+                                width: '20px',
+                                height: '20px',
+                                flexShrink: 0,
+                              }}
+                            />
+                            <span
+                              style={{
+                                textTransform: 'capitalize',
+                                fontFamily: 'Poppins, sans-serif',
+                                fontWeight: 'bold',
+                                fontSize: isMobile ? '14px' : '16px',
+                                lineHeight: '1.2',
+                                wordBreak: 'break-word',
+                                display: 'block',
+                                color: '#fff',
+                                textShadow: '0 1px 2px rgba(0,0,0,0.2)',
+                              }}
+                            >
+                              {iconName}
+                            </span>
+                          </Box>
+                        }
+                        checked={comboIcons[iconName]}
+                        onChange={(e) => handleIconToggle(iconName, e.target.checked)}
+                        styles={{
+                          root: {
+                            display: 'flex',
+                            alignItems: 'center',
+                          },
+                          label: {
+                            display: 'flex',
+                            alignItems: 'center',
+                            cursor: 'pointer',
+                          },
+                        }}
+                      />
+                    </Grid.Col>
+                  ))}
+                </Grid>
+              </Box>
             </Accordion.Panel>
           </Accordion.Item>
         </Accordion>

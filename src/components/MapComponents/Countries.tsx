@@ -1,6 +1,8 @@
 import { useState, useEffect } from 'react';
-import { Combobox, Group, Input, CheckIcon, useCombobox, Box, ScrollArea } from '@mantine/core';
+import { Combobox, Group, Input, CheckIcon, useCombobox, Box, ScrollArea, ActionIcon } from '@mantine/core';
+import { TbRotate } from 'react-icons/tb';
 import axios from 'axios';
+import { useIsMobile } from '@/hooks/useIsMobile';
 
 /*
 In charge of fetching and displaying countries with their flags in a Combo Box, uses restcountries Api
@@ -23,12 +25,15 @@ export function Countries({ value, defaultCountry, onChange, disabled = false }:
     const combobox = useCombobox();
     const [countries, setCountries] = useState<Country[]>([]);
     const [flagsMap, setFlagsMap] = useState<Map<string, string>>(new Map());
+    const [search, setSearch] = useState('');
+    const { isMobile } = useIsMobile();
 
     const handleValueSelect = (val: string) => {
         onChange(val);
+        setSearch(val);
         combobox.closeDropdown();
     };
-
+ 
     //We get the label and flag with restcountries api, then we sort it alphabetically 
     useEffect(() => {
         const getCountries = async () => {
@@ -60,9 +65,13 @@ export function Countries({ value, defaultCountry, onChange, disabled = false }:
 
     const selectedFlag = flagsMap.get(value || '');
 
+    const filteredCountries = countries.filter((country) =>
+        country.label.toLowerCase().includes(search.toLowerCase())
+    );
+
     //Creates the list of options inside the dropdowm
-    const options = countries.map((country) => (
-        <Combobox.Option value={country.value} key={country.value} active={value === country.value} style={{ cursor: 'pointer' }}>
+    const options = filteredCountries.map((country) => (
+        <Combobox.Option value={country.value} key={country.value} active={value === country.value} style={{ cursor: 'pointer' }} >
             <Group gap="sm">
                 {value && value === country.value && <CheckIcon size={12} />}
                 <Group gap={7}>
@@ -73,22 +82,33 @@ export function Countries({ value, defaultCountry, onChange, disabled = false }:
         </Combobox.Option>
     ));
 
+    const handleInputChange = (newValue: string) => {
+        if (value) {
+            onChange(null);
+        }
+        setSearch(newValue);
+        if (!combobox.dropdownOpened) {
+            combobox.openDropdown();
+        }
+    };
+
     //ComboBox to display options, we use the DropdownTarget to activate when clicked and Dropshown to show the options
     return (
         <Combobox store={combobox} disabled={disabled} onOptionSubmit={handleValueSelect} withinPortal={false} >
             <Combobox.DropdownTarget>
                 <Input
-                    value={value || ''}
-                    readOnly={disabled}
-                    placeholder="Select a country"
+                    value={value || search}
+                    onChange={(event) => handleInputChange(event.currentTarget.value)}
+                    disabled={disabled}
+                    placeholder="Select or search a country"
                     onClick={() => combobox.toggleDropdown()}
-                    style={{ width: 350, cursor: 'pointer' }}
+                    style={{ width: isMobile ? '250px':'100%', cursor: 'pointer' }}
                     rightSection={value ? (
                         <img src={selectedFlag}
                             alt={value}
                             style={{ width: 50, height: 25 }} />
                     ) : null}
-                />
+                    />
             </Combobox.DropdownTarget>
             <Combobox.Dropdown>
                 <ScrollArea style={{ maxHeight: 350, overflowY: 'auto', position: "relative", zIndex: 100, }}>

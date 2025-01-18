@@ -105,6 +105,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
     const values = { ...form.values, activitiesIds: selectedActivitiesIds };
     setIsLoading(true);
     let uploadedImageUrl = null;
+    
     if (file) {
       try {
         const formData = new FormData();
@@ -231,7 +232,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
               <Countries
                 value={form.values.country}
                 disabled={false}
-                onChange={handleCountryChange} />
+                onChange={handleCountryChange} defaultCountry={null} />
             </Box>
 
             <Box>
