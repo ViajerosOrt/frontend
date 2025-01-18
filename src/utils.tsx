@@ -197,6 +197,7 @@ export const CountryFlag = ({ country }: { country: string }) => {
     const fetchFlag = async () => {
       try {
         const response = await axios.get(`https://restcountries.com/v3.1/name/${country}?fullText=true`);
+
         const countryData = response.data[0];
         setFlag(countryData.flags.svg);
       } catch (error) {
@@ -206,7 +207,6 @@ export const CountryFlag = ({ country }: { country: string }) => {
 
     fetchFlag();
   }, [country]);
-
 
   return (
     <Group gap={1}>

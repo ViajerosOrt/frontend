@@ -18,7 +18,8 @@ interface ApiCountry {
     flags: { svg: string };
 }
 
-export function Countries({ value, onChange, disabled, }: { value: string | null, onChange: (val: string | null) => void, disabled: boolean; }) {
+export function Countries({ value, defaultCountry, onChange, disabled = false }: { value: string | null, defaultCountry: string | null, onChange: (val: string | null) => void, disabled: boolean; }) {
+
     const combobox = useCombobox();
     const [countries, setCountries] = useState<Country[]>([]);
     const [flagsMap, setFlagsMap] = useState<Map<string, string>>(new Map());

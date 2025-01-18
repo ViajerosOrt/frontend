@@ -123,7 +123,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
                     router.push(`/myTravels`)
                   }
                 }}>
-                  <SmallTravelDetails travel={travel as Travel} index={index} />
+                  <SmallTravelDetails showEdit={viewerIsCurrentUser} travel={travel as Travel} index={index} />
                 </Box>
               )
             })}
