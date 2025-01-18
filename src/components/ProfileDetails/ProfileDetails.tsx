@@ -21,12 +21,14 @@ import { ReviewReceivedCard } from "../ReviewReceivedCard/ReviewReceivedCard";
 import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAth";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: string, showViewProfile?: boolean }) => {
   const currentUser = useAuth()
   const router = useRouter();
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
+  const { isMobile } = useIsMobile();
 
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: userId || '' },
@@ -38,13 +40,17 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
   const viewerIsCurrentUser = currentUser?.currentUser?.id === userId
 
   if (loading || !user) {
-    return <ViajeroLoader />
+    return (
+      <Center h="100%" w="100%">
+        <ViajeroLoader />
+      </Center>
+    )
   }
 
   return (
     <Stack gap="xl" p={20}>
       <Center>
-        <Avatar src = {currentUser.currentUser?.userImage} size={120} radius="xl" color="green">
+        <Avatar src={currentUser.currentUser?.userImage} size={120} radius="xl" color="green">
         </Avatar>
       </Center>
 
@@ -160,13 +166,13 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
       <Modal
         opened={opened}
         centered
+        size={isMobile ? "100%" : "60%"}
         onClose={() => {
           closeUserModal();
           setTimeout(() => {
             setSelectedUserId(undefined);
           }, 300);
         }}
-        size="2xl"
       >
         <ProfileDetails userId={selectedUserId || ''} showViewProfile={false} />
       </Modal>

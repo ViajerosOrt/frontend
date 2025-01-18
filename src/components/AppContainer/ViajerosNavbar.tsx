@@ -41,9 +41,8 @@ export function ViajerosNavbar({ closeSidebar }: { closeSidebar: () => void }) {
       leftSection: <CgProfile />,
     },
   ];
-
   useEffect(() => {
-    const activeLink = primaryLinks.find(link => link.to === router.pathname);
+    const activeLink = primaryLinks.find(link => router.pathname.includes(link.to));
     if (activeLink) {
       setActiveLabel(activeLink.label);
     }
