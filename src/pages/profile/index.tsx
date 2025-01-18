@@ -9,7 +9,6 @@ import Link from "next/link";
 import { ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { useUserByIdQuery } from "@/graphql/__generated__/gql";
-import { useRouter } from "next/router";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { useIsMobile } from "@/hooks/useIsMobile";
 

@@ -14,11 +14,11 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function Reviews() {
   const { currentUser } = useAuth()
+  const { isMobile } = useIsMobile();
   const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
-  const { isMobile } = useIsMobile();
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: currentUser?.id || '' },
     skip: !!!currentUser?.id
@@ -121,13 +121,13 @@ export default function Reviews() {
       <Modal
         opened={opened}
         centered
+        size={isMobile ? "100%" : "60%"}
         onClose={() => {
           closeUserModal();
           setTimeout(() => {
             setSelectedUserId(undefined);
           }, 300);
         }}
-        size="2xl"
       >
         <ProfileDetails userId={selectedUserId || ''} showViewProfile={false} />
       </Modal>

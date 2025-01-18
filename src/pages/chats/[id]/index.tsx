@@ -7,10 +7,9 @@ import { SEMI_BOLD } from "@/consts";
 import { VIAJERO_GREEN } from "@/consts/consts";
 import { Message, useSendMessageMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
-import { GET_TRAVEL_BY_ID } from "@/graphql/travels/travels.queries";
 import { useAuth } from "@/hooks/useAth";
 import { useQuery } from "@apollo/client";
-import { Box, Button, Container, Flex, Paper, Text, Textarea } from "@mantine/core";
+import { Box, Button, Flex, Paper, Textarea } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -44,11 +43,6 @@ function ChatPage() {
         },
       });
       setNewMessage("");
-      showNotification({
-        position: 'top-right',
-        message: 'Message sent successfully',
-        color: 'green',
-      });
     } catch (error) {
       showNotification({
         position: 'top-right',
@@ -106,7 +100,7 @@ function ChatPage() {
           maxRows={5}
           w="85%"
         />
-        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage}>Send</Button>
+        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage} disabled={newMessage.length === 0}>Send</Button>
       </Flex>
     </Box>
   );

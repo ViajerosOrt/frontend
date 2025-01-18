@@ -34,3 +34,12 @@ export const GET_TRAVEL_BY_ID = gql`
   }
   ${TRAVEL_FIELDS}
 `;
+
+
+export const GET_CHAT_FOR_TRAVEL = gql`
+query FindChatByTravelId($travelId: String!) {
+  findChatByTravelId(travelId: $travelId) {
+    id
+  }
+}
+`;

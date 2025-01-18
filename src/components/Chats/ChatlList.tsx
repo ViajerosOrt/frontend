@@ -33,7 +33,14 @@ export function ChatList() {
   if (chats?.length === 0) return <ViajeroEmptyMessage message="No chats available" />
 
   return (
-    <Box w="100%" h="100%">
+    <Box
+      w="100%"
+      h="calc(100vh - 6rem)"
+      style={{
+        overflowY: 'auto',
+        paddingRight: '10px'
+      }}
+    >
       {chats?.map((chat, index) => {
         const lastMessage = chat.messages?.[chat.messages.length - 1];
 
