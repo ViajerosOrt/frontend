@@ -22,7 +22,7 @@ const travelValuesSchema = z.object({
   description: z.string().min(1, 'Description is required').max(200),
   maxCap: z.number().min(1, 'Max Capacity must be more than 1'),
   items: z.array(z.string()).optional(),
-  activities: z.array(z.string()).optional(),
+  activities: z.array(z.string()).optional()
 });
 
 const Map = dynamic(() => import('../MapComponents/Map'), {
@@ -116,6 +116,22 @@ const TravelCreateForm = () => {
       return;
     }
 
+    if (location === null) {
+      showNotification({
+        message: 'Please select a location for the travel.',
+        color: 'red',
+      });
+      return;
+    }
+
+    if (selectedTransportId === null) {
+      showNotification({
+        message: 'Please select a transport for the travel.',
+        color: 'red',
+      });
+      return;
+    }
+
     setIsLoading(true);
 
     //We obtain the values from the form const that we defined earlier
@@ -147,7 +163,6 @@ const TravelCreateForm = () => {
         return;
       }
     }
-
     const travelData = {
       travelTitle: values.title,
       travelDescription: values.description,
@@ -166,6 +181,7 @@ const TravelCreateForm = () => {
       name: location?.city || 'Uknown City',
       state: location?.state || 'Unknown State'
     };
+
 
     try {
       //We call the mutation to create the travel
@@ -199,7 +215,6 @@ const TravelCreateForm = () => {
     } finally {
       setIsLoading(false);
     }
-
   };
 
   return (
@@ -214,7 +229,7 @@ const TravelCreateForm = () => {
         <form onSubmit={form.onSubmit(handleCreateTravelSubmit)}>
           <Stack w="100%" >
             <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title  </Text>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title <span style={{ color: 'red' }}>*</span> </Text>
               <Text size="sm" c="gray">A unique and descriptive title for your travel.</Text>
               <TextInput {...form.getInputProps('title')} required />
               <Group justify="space-between">
@@ -235,7 +250,7 @@ const TravelCreateForm = () => {
               </Group>
             </Stack>
             <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Description</Text>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Description <span style={{ color: 'red' }}>*</span> </Text>
               <Text size="sm" c="gray">An overview of the travel plan.</Text>
               <Textarea {...form.getInputProps('description')} required />
               <Group justify="space-between">
@@ -286,7 +301,7 @@ const TravelCreateForm = () => {
 
 
             <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country</Text>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country <span style={{ color: 'red' }}>*</span>  </Text>
               <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
 
               <Countries defaultCountry={null} value={selectedCountry} onChange={setSelectedCountry} disabled={!!location} />
@@ -295,11 +310,11 @@ const TravelCreateForm = () => {
 
             <Map country={selectedCountry!} zoom={7} onLocationSelected={handleLocationSelected} />
 
-            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity</Text>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity <span style={{ color: 'red' }}>*</span> </Text>
             <Text size="sm" c="gray">The total number of allowed participants.</Text>
             <NumberInput {...form.getInputProps('maxCap')} min={1} required style={{ maxWidth: 80 }} />
 
-            <Text mt={12} style={{ fontWeight: 700, fontSize: '1.5rem' }}>Start and End Date</Text>
+            <Text mt={12} style={{ fontWeight: 700, fontSize: '1.5rem' }}>Start and End Date <span style={{ color: 'red' }}>*</span> </Text>
             <Text size="sm" c="gray">The start and end dates of the travel.</Text>
             <Box>
               <DatePicker
@@ -311,7 +326,7 @@ const TravelCreateForm = () => {
             </Box>
 
             <Box>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Transport</Text>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Transport <span style={{ color: 'red' }}>*</span> </Text>
               <Text size="sm" c="gray">An optional transport for the travel.</Text>
               <Select data={parsedTransports} placeholder="Choose one transport" w="30%" onChange={setSelectedTransportId}
                 rightSection={

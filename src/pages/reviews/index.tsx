@@ -10,9 +10,11 @@ import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import { IoBook } from "react-icons/io5";
 import { ReviewLeftCard } from "@/components/ReviewLeftCard/ReviewLeftCard";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function Reviews() {
   const { currentUser } = useAuth()
+  const { isMobile } = useIsMobile();
   const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
@@ -115,13 +117,13 @@ export default function Reviews() {
       <Modal
         opened={opened}
         centered
+        size={isMobile ? "100%" : "60%"}
         onClose={() => {
           closeUserModal();
           setTimeout(() => {
             setSelectedUserId(undefined);
           }, 300);
         }}
-        size="2xl"
       >
         <ProfileDetails userId={selectedUserId || ''} showViewProfile={false} />
       </Modal>

@@ -37,8 +37,8 @@ export const GET_TRAVEL_BY_ID = gql`
 
 
 export const GET_CHAT_FOR_TRAVEL = gql`
-query ChatTravel($travelId: String!) {
-  chatTravel(travelId: $travelId) {
+query FindChatByTravelId($travelId: String!) {
+  findChatByTravelId(travelId: $travelId) {
     id
   }
 }

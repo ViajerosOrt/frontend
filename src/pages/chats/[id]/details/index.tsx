@@ -5,16 +5,14 @@ import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { Item, TravelDto, useAssignItemToUserMutation, User, useRemoveItemToUserMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
 import { useQuery } from "@apollo/client";
-import { Box, Text, Title, Button, Group, Flex, Stack, Container, Paper, Avatar, ActionIcon, Modal, Checkbox, Switch, Loader } from "@mantine/core";
+import { Box, Text, Title, Group, Stack, Paper, Avatar, Modal, Switch, Loader } from "@mantine/core";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { travelImages } from "@/utils";
 import { TravelDetailsModal } from "@/components/TravelDetailsModal/TravelDetailsModal";
 import { GET_TRAVEL_BY_ID } from "@/graphql/travels/travels.queries";
 import { ChatHeaderSection } from "@/components/Chats/ChatHeaderSection";
-import { ST } from "next/dist/shared/lib/utils";
 import { FaWhatsapp } from "react-icons/fa";
-import { CgProfile } from "react-icons/cg";
 import { FaInstagram } from "react-icons/fa";
 import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
 import { useIsMobile } from "@/hooks/useIsMobile";
@@ -110,7 +108,6 @@ function ChatDetails() {
       <Stack p="md" align="center" >
         <Title order={3}>{travel?.travelTitle}</Title>
 
-        {/* TODO: USE REAL IMAGE */}
         <Box w={isMobile ? "100%" : "50%"}>
           <TravelCard travel={travel} imageSrc={travel.imageUrl! || travelImages[1 % travelImages.length]} setSelectedTravel={(travel) => {
             setSelectedTravel(travel);
@@ -147,10 +144,10 @@ function ChatDetails() {
                   alt={user.name}
                   radius="xl"
                   size={40}
-                  src= {user.userImage}
+                  src={user.userImage}
                   color="green"
                 >
-                  
+
                 </Avatar>
                 <Stack>
                   <Text fw={BOLD}>{user.name}</Text>
@@ -231,13 +228,13 @@ function ChatDetails() {
       <Modal
         opened={opened}
         centered
+        size={isMobile ? "100%" : "60%"}
         onClose={() => {
           closeUserModal();
           setTimeout(() => {
             setSelectedUserId(undefined);
           }, 300);
         }}
-        size="2xl"
       >
         <ProfileDetails userId={selectedUserId || ''} showViewProfile={false} />
       </Modal>

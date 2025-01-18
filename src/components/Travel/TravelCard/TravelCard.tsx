@@ -1,6 +1,6 @@
 import { CountryFlag, getDaysPending, getTransportAvatar } from "@/utils";
 import { Consts, VIAJERO_GREEN } from "../../../consts/consts";
-import { TravelDto, useChatTravelQuery } from "../../../graphql/__generated__/gql";
+import { TravelDto, useFindChatByTravelIdQuery } from "../../../graphql/__generated__/gql";
 import {
   Badge,
   Box,
@@ -32,12 +32,12 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
   const { hovered, ref } = useHover();
   const userColor = Consts.getColorByPercentage(travel?.usersCount!, travel?.maxCap!);
 
-  const { data: chatData } = useChatTravelQuery({
+  const { data: chatData } = useFindChatByTravelIdQuery({
     variables: {
       travelId: travel.id
     }
   });
-  const chatId = chatData?.chatTravel?.[0]?.id;
+  const chatId = chatData?.findChatByTravelId?.id;
 
   const daysPending = getDaysPending(new Date(travel.startDate));
 
@@ -66,11 +66,6 @@ export const TravelCard = ({ travel, imageSrc, setSelectedTravel, showOpenChatBu
         />
       </Card.Section>
 
-      {travel.country && (
-        <Box style={{ position: 'absolute', top: 310, left: 12 }}>
-          <CountryFlag country={travel.country} />
-        </Box>
-      )}
 
       <Group m={12} justify="space-between">
         <Text fw={BOLD}>{travel.travelTitle}</Text>

@@ -7,10 +7,9 @@ import { SEMI_BOLD } from "@/consts";
 import { VIAJERO_GREEN } from "@/consts/consts";
 import { Message, useSendMessageMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
-import { GET_TRAVEL_BY_ID } from "@/graphql/travels/travels.queries";
 import { useAuth } from "@/hooks/useAth";
 import { useQuery } from "@apollo/client";
-import { Box, Button, Container, Flex, Paper, Text, Textarea } from "@mantine/core";
+import { Box, Button, Flex, Paper, Textarea } from "@mantine/core";
 import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import React, { useEffect, useRef, useState } from "react";
@@ -55,7 +54,7 @@ function ChatPage() {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const orderedMessages = chat?.messages?.slice().sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+  const orderedMessages = chat?.messages?.slice().sort((a: Message, b: Message) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
   // Scroll to the bottom of the chat when the messages change
   useEffect(() => {
     if (messagesEndRef.current) {
@@ -101,7 +100,7 @@ function ChatPage() {
           maxRows={5}
           w="85%"
         />
-        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage}>Send</Button>
+        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage} disabled={newMessage.length === 0}>Send</Button>
       </Flex>
     </Box>
   );

@@ -141,7 +141,21 @@ const TravelUpdateForm = ({ travelId }: { travelId: string }) => {
       return;
     }
 
+    if (location === null) {
+      showNotification({
+        message: 'Please select a location for the travel.',
+        color: 'red',
+      });
+      return;
+    }
 
+    if (form.values.transport === null) {
+      showNotification({
+        message: 'Please select a transport for the travel.',
+        color: 'red',
+      });
+      return;
+    }
 
     try {
       //We call the mutation to create the travel
