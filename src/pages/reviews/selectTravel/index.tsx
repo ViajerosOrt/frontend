@@ -43,7 +43,7 @@ export default function SelectTravel() {
             style={{ cursor: 'pointer' }}
           >
             {/* TODO: Cambiar index por foto */}
-            <SmallTravelDetails travel={travel as Travel} index={index} />
+            <SmallTravelDetails travel={travel as Travel} index={index} showEdit={false} />
           </div>
         ))}
       </SimpleGrid>

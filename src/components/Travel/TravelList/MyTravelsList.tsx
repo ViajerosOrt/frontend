@@ -1,5 +1,5 @@
 import { TravelDto } from "../../../graphql/__generated__/gql";
-import { Grid, Text, Tabs, Box, Group, ActionIcon, Button } from '@mantine/core';
+import { Grid, Text, Tabs, Box, Group, ActionIcon, Button, Stack } from '@mantine/core';
 import { TravelCard } from "../TravelCard/TravelCard";
 import { useState } from 'react';
 import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from '../../../consts/consts';
@@ -12,6 +12,7 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 import { FaPlane } from "react-icons/fa";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { TravelDetailsModal } from "@/components/TravelDetailsModal/TravelDetailsModal";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"];
 
@@ -49,7 +50,8 @@ export const MyTravelsList = (
 
     const { upcoming, ongoing, finished } = travelsFiltered(travels);
     const [activeTab, setActiveTab] = useState<string | null>('upcoming');
-
+    const { isMobile } = useIsMobile();
+    
     if (loading) {
         return (
             <ViajeroLoader />
@@ -59,78 +61,151 @@ export const MyTravelsList = (
     return (
         <Box w="100%" mt={20}>
             <Tabs value={activeTab} onChange={setActiveTab} orientation="horizontal" variant="unstyled"  >
-                <Tabs.List
-                    style={{
-                        display: 'flex',
-                        justifyContent: 'space-between',
-                        alignItems: 'end',
-                        marginBottom: '10px',
-                        paddingBottom: '20px',
-                    }}>
-                    <Button
-                        onClick={() => setActiveTab('upcoming')}
-                        mt="md"
-                        size="md"
-                        radius="md"
-                        maw={250}
-                        color={VIAJERO_GREEN}
-                        style={{
-                            flex: 1,
-                            fontWeight: activeTab === 'upcoming' ? BOLD : SEMI_BOLD,
-                        }}
-                    >
-                        About to start
-                    </Button>
+                <Box>
+                    {isMobile ? (
+                        <Stack>
+                            <Group grow>
+                                <Tabs.List style={{
+                                    flex: 1,
+                                    gap: '8px',
+                                    display: 'flex',
+                                    flexDirection: 'column'
+                                }}>
+                                    <Button
+                                        onClick={() => setActiveTab('upcoming')}
+                                        size="md"
+                                        radius="md"
+                                        color={VIAJERO_GREEN}
+                                        fullWidth
+                                        variant={activeTab === 'upcoming' ? 'filled' : 'outline'}
+                                        style={{
+                                            fontWeight: activeTab === 'upcoming' ? BOLD : SEMI_BOLD,
+                                        }}
+                                    >
+                                        About to start
+                                    </Button>
+                                    <Button
+                                        onClick={() => setActiveTab('ongoing')}
+                                        size="md"
+                                        radius="md"
+                                        color={VIAJERO_GREEN}
+                                        fullWidth
+                                        variant={activeTab === 'ongoing' ? 'filled' : 'outline'}
+                                        style={{
+                                            fontWeight: activeTab === 'ongoing' ? BOLD : SEMI_BOLD,
+                                        }}
+                                    >
+                                        In Progress
+                                    </Button>
+                                    <Button
+                                        onClick={() => setActiveTab('finished')}
+                                        size="md"
+                                        radius="md"
+                                        color={VIAJERO_GREEN}
+                                        fullWidth
+                                        variant={activeTab === 'finished' ? 'filled' : 'outline'}
+                                        style={{
+                                            fontWeight: activeTab === 'finished' ? BOLD : SEMI_BOLD,
+                                        }}
+                                    >
+                                        Ended
+                                    </Button>
+                                </Tabs.List>
+                            </Group>
+                            <Button
+                                variant="outline"
+                                color={VIAJERO_GREEN}
+                                onClick={open}
+                                size="md"
+                                radius="md"
+                                fullWidth
+                                leftSection={<FontAwesomeIcon icon={faFilter} />}
+                            >
+                                Filters
+                            </Button>
+                        </Stack>
+                    ) : (
+                        <Tabs.List style={{
+                            display: 'flex',
+                            justifyContent: 'space-between',
+                            alignItems: 'end',
+                            marginBottom: '10px',
+                            paddingBottom: '20px',
+                        }}>
+                            <Button
+                                onClick={() => setActiveTab('upcoming')}
+                                mt="md"
+                                size="md"
+                                radius="md"
+                                maw={250}
+                                color={VIAJERO_GREEN}
+                                style={{
+                                    flex: 1,
+                                    fontWeight: activeTab === 'upcoming' ? BOLD : SEMI_BOLD,
+                                }}
+                            >
+                                About to start
+                            </Button>
 
-                    <Button
-                        onClick={() => setActiveTab('ongoing')}
-                        mt="md"
-                        size="md"
-                        radius="md"
-                        maw={250}
-                        color={VIAJERO_GREEN}
-                        rightSection={<FaPlane />}
-                        style={{
-                            flex: 1,
-                            fontWeight: activeTab === 'ongoing' ? BOLD : SEMI_BOLD,
-                        }}
-                    >
-                        In Progress
-                    </Button>
+                            <Button
+                                onClick={() => setActiveTab('ongoing')}
+                                mt="md"
+                                size="md"
+                                radius="md"
+                                maw={250}
+                                color={VIAJERO_GREEN}
+                                rightSection={<FaPlane />}
+                                style={{
+                                    flex: 1,
+                                    fontWeight: activeTab === 'ongoing' ? BOLD : SEMI_BOLD,
+                                }}
+                            >
+                                In Progress
+                            </Button>
 
-                    <Button
-                        onClick={() => setActiveTab('finished')}
-                        mt="md"
-                        size="md"
-                        radius="md"
-                        maw={250}
-                        color={VIAJERO_GREEN}
-                        rightSection={<FaPlane />}
-                        style={{
-                            flex: 1,
-                            fontWeight: activeTab === 'finished' ? BOLD : SEMI_BOLD,
-                        }}
-                    >
-                        Ended
-                    </Button>
-                    <TravelFiltersDrawer
-                        opened={opened}
-                        close={close}
-                        filters={filters}
-                        updateFilters={updateFilters}
-                        applyFilters={applyFilters}
-                        defaultFilters={defaultFilters}
-                        showMyTravelNames={true}
-                    />
+                            <Button
+                                onClick={() => setActiveTab('finished')}
+                                mt="md"
+                                size="md"
+                                radius="md"
+                                maw={250}
+                                color={VIAJERO_GREEN}
+                                rightSection={<FaPlane />}
+                                style={{
+                                    flex: 1,
+                                    fontWeight: activeTab === 'finished' ? BOLD : SEMI_BOLD,
+                                }}
+                            >
+                                Ended
+                            </Button>
 
-                    <Group wrap="nowrap" mt={8} mx={16}>
-                        <ActionIcon variant="filled" color={VIAJERO_GREEN} onClick={open} w={100} h={40}
-                            size="md"
-                            radius="md">
-                            <Text mr={14} fw={SEMI_BOLD}>Filters</Text><FontAwesomeIcon icon={faFilter} />
-                        </ActionIcon>
-                    </Group>
-                </Tabs.List>
+                            <Group wrap="nowrap" mt={8} mx={16}>
+                                <ActionIcon 
+                                    variant="filled" 
+                                    color={VIAJERO_GREEN} 
+                                    onClick={open} 
+                                    w={100} 
+                                    h={40}
+                                    size="md"
+                                    radius="md"
+                                >
+                                    <Text mr={14} fw={SEMI_BOLD}>Filters</Text>
+                                    <FontAwesomeIcon icon={faFilter} />
+                                </ActionIcon>
+                            </Group>
+                        </Tabs.List>
+                    )}
+                </Box>
+
+                <TravelFiltersDrawer
+                    opened={opened}
+                    close={close}
+                    filters={filters}
+                    updateFilters={updateFilters}
+                    applyFilters={applyFilters}
+                    defaultFilters={defaultFilters}
+                    showMyTravelNames={true}
+                />
 
 
                 {filters !== defaultFilters && travels.length == 0 ? (< Text > There are no travels matching your filters.</Text >)

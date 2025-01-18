@@ -11,10 +11,11 @@ import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { useUserByIdQuery } from "@/graphql/__generated__/gql";
 import { useRouter } from "next/router";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function Profile() {
   const { currentUser } = useAuth()
-
+  const { isMobile } = useIsMobile();
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: currentUser?.id || '' },
     skip: !!!currentUser?.id
@@ -40,6 +41,11 @@ export default function Profile() {
         radius="md"
         color={VIAJERO_GREEN}
         rightSection={<CgProfile />}
+        styles={{
+          root: {
+            width: isMobile ? '100%' : 'auto',
+          }
+        }}
       >
         Edit Profile
       </Button>

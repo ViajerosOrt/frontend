@@ -38,15 +38,26 @@ export const CREATE_TRAVEL_MUTATION = gql(`
 export const LEAVE_TRAVEL = gql`
   mutation LeaveTravel($travelId: String!) {
     leaveTravel(travelId: $travelId) {
-      id  
+      id
     }
   }
 `;
 
-
 export const UPDATE_TRAVEL_MUTATION = gql`
-  mutation UpdateTravel($updateTravelInput: UpdateTravelInput!, $activityId: [String!]!, $transportId: String, $items: [String!]!, $updateLocationInput: CreateLocationInput!) {
-    updateTravel(updateTravelInput: $updateTravelInput, activityId: $activityId, transportId: $transportId, items: $items, updateLocationInput: $updateLocationInput) {
+  mutation UpdateTravel(
+    $updateTravelInput: UpdateTravelInput!
+    $activityId: [String!]!
+    $transportId: String
+    $items: [String!]!
+    $updateLocationInput: CreateLocationInput!
+  ) {
+    updateTravel(
+      updateTravelInput: $updateTravelInput
+      activityId: $activityId
+      transportId: $transportId
+      items: $items
+      updateLocationInput: $updateLocationInput
+    ) {
       id
     }
   }

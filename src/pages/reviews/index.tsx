@@ -10,6 +10,7 @@ import { useDisclosure } from "@mantine/hooks";
 import Link from "next/link";
 import { IoBook } from "react-icons/io5";
 import { ReviewLeftCard } from "@/components/ReviewLeftCard/ReviewLeftCard";
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 export default function Reviews() {
   const { currentUser } = useAuth()
@@ -17,7 +18,7 @@ export default function Reviews() {
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
-
+  const { isMobile } = useIsMobile();
   const { data, loading } = useUserByIdQuery({
     variables: { userByIdId: currentUser?.id || '' },
     skip: !!!currentUser?.id
@@ -43,6 +44,11 @@ export default function Reviews() {
         radius="md"
         color={VIAJERO_GREEN}
         rightSection={<IoBook />}
+        styles={{
+          root: {
+            width: isMobile ? '100%' : 'auto',
+          }
+        }}
       >
         Add a review
       </Button>

@@ -60,7 +60,7 @@ function ChatPage() {
 
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const orderedMessages = chat?.messages?.slice().sort((a, b) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
+  const orderedMessages = chat?.messages?.slice().sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
   // Scroll to the bottom of the chat when the messages change
   useEffect(() => {
     if (messagesEndRef.current) {

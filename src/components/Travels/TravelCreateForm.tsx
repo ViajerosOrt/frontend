@@ -15,6 +15,7 @@ import { Countries } from '../MapComponents/Countries';
 import React from "react";
 import dynamic from "next/dynamic";
 import { AiOutlineCloudUpload } from 'react-icons/ai';
+import { useIsMobile } from "@/hooks/useIsMobile";
 
 
 const travelValuesSchema = z.object({
@@ -59,7 +60,7 @@ const TravelCreateForm = () => {
 
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
-
+  const { isMobile } = useIsMobile();
   const handleFileChange = (file: File | null) => {
     setFile(file);
     if (file) {
@@ -313,7 +314,7 @@ const TravelCreateForm = () => {
             <Box>
               <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Transport</Text>
               <Text size="sm" c="gray">An optional transport for the travel.</Text>
-              <Select data={parsedTransports} placeholder="Choose one transport" w="30%" onChange={setSelectedTransportId}
+              <Select data={parsedTransports} placeholder="Choose one transport" w={isMobile ? '250px':'30%'} onChange={setSelectedTransportId}
                 rightSection={
                   selectedTransportId
                     ? getTransportAvatar(transports.find((t: { id: string; }) => t.id === selectedTransportId)?.name || '', "sm")
@@ -341,7 +342,7 @@ const TravelCreateForm = () => {
             <Text size="sm" c="gray">(You can add multiple items separated by commas by clicking the + button)</Text>
             <Group>
               <TextInput
-                style={{ fontWeight: 700, fontSize: '1.5rem', width: '30%' }}
+                style={{ fontWeight: 700, fontSize: '1.5rem', width: isMobile ? '250px':'30%' }}
                 value={item}
                 onChange={(e) => setItem(e.currentTarget.value)}
                 placeholder="Add an item to your checklist"
