@@ -14,3 +14,23 @@ subscription ChatMessageAdded($chatId: String!) {
   }
 }
 `;
+
+export const USER_CHAT_UPDATED_WITH_MESSAGE = gql`
+subscription ChatUpdated($userId: String!) {
+  chatUpdated(userId: $userId) {
+    id
+    content
+    user {
+      name
+      userImage
+    }
+    chat {
+      id
+      travel {
+        travelTitle
+        imageUrl
+      }
+    }
+  }
+}
+`;

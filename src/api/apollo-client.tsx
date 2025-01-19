@@ -5,6 +5,7 @@ import { onError } from '@apollo/client/link/error'
 import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
 import { getMainDefinition } from "@apollo/client/utilities";
 import { createClient } from 'graphql-ws';
+import { uniqBy } from "lodash";
 
 const backendApi = process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? "http://localhost:4000/graphql"
 
@@ -60,7 +61,27 @@ export function useViajeroApolloClient() {
   })
 
   return new ApolloClient({
-    cache: new InMemoryCache(),
+    cache: new InMemoryCache({
+      possibleTypes: {
+        Message: ['Message'],
+      },
+      // TODO: Revisit
+      typePolicies: {
+        Query: {
+          fields: {
+            messages: {
+              keyArgs: false,
+              merge(existing = { data: [] }, incoming) {
+                return {
+                  ...incoming,
+                  data: uniqBy([...existing.data, ...incoming.data], 'id'),
+                };
+              },
+            },
+          },
+        },
+      },
+    }),
     link: ApolloLink.from([
       errorLink,
       authLink,

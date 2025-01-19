@@ -3,17 +3,16 @@ import ChatMessage from "@/components/Chats/ChatMessage";
 import { ChatLayout } from "@/components/Layout/ChatLayout";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { SEMI_BOLD } from "@/consts";
 import { VIAJERO_GREEN } from "@/consts/consts";
 import { Message, useChatMessageAddedSubscription, useSendMessageMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
 import { useAuth } from "@/hooks/useAth";
 import { useQuery } from "@apollo/client";
-import { Box, Button, Flex, Paper, Textarea, ActionIcon, Text } from "@mantine/core";
+import { Box, Button, Flex, Paper, Textarea, Text } from "@mantine/core";
 import { useInViewport } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import { IoArrowDown } from "react-icons/io5";
 
 function ChatPage() {
@@ -24,6 +23,7 @@ function ChatPage() {
   const [messages, setMessages] = useState<Message[]>([])
   const { ref, inViewport } = useInViewport();
   const [showNewMessageIndicator, setShowNewMessageIndicator] = useState(false);
+  const initialRenderRef = useRef(true);
 
   const { data, loading, error } = useQuery(GET_CHAT_BY_ID, {
     variables: {
@@ -61,15 +61,25 @@ function ChatPage() {
     }
   };
 
-  const scrollToBottom = () => {
+  const scrollToBottom = ({ withSmoothScroll = true }: { withSmoothScroll?: boolean }) => {
     const chatContainer = document.getElementById('chat-container');
     if (chatContainer) {
       chatContainer.scrollTo({
         top: chatContainer.scrollHeight,
-        behavior: 'smooth'
+        behavior: withSmoothScroll ? 'smooth' : 'auto'
       });
     }
   };
+
+  // We scroll to bottom only on initial render
+  useEffect(() => {
+    if (initialRenderRef.current && !loading && chat?.messages) {
+      setTimeout(() => {
+        scrollToBottom({ withSmoothScroll: false });
+      }, 100);
+      initialRenderRef.current = false;
+    }
+  }, [loading, chat?.messages]);
 
   // Update the messages when new data is received via subscription
   useEffect(() => {
@@ -83,7 +93,7 @@ function ChatPage() {
       // If the new message is from the current user, scroll to the bottom
       if (chatMessageAddedData.chatMessageAdded.user.id === currentUser?.id) {
         setTimeout(() => {
-          scrollToBottom();
+          scrollToBottom({ withSmoothScroll: true });
         }, 100);
         return
       }
@@ -110,6 +120,8 @@ function ChatPage() {
       ));
     }
   }, [chat?.messages]);
+
+
 
   const [sendMessage] = useSendMessageMutation({
     refetchQueries: ["Chat"],
@@ -159,7 +171,7 @@ function ChatPage() {
             <Button
               variant="filled"
               color={VIAJERO_GREEN}
-              onClick={scrollToBottom}
+              onClick={() => scrollToBottom({ withSmoothScroll: true })}
               style={{
                 borderRadius: "20px",
                 gap: "8px",

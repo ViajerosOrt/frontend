@@ -16,6 +16,7 @@ import '@mantine/dates/styles.css';
 import React from "react";
 import '../styles/styles.css';
 import { NextPage } from "next";
+import { ChatMessageListener } from "@/listeners/ChatMessageListener";
 
 const theme = createTheme({
   /** Put your mantine theme override here */
@@ -41,12 +42,12 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
 
   // If the page has a getLayout method, use it to wrap the page (ej: chats).
   const getLayout = Component.getLayout ?? ((page) => page);
-  const isChatsPage = router.pathname.startsWith("/chats");
+
   const client = useViajeroApolloClient()
 
   return (
     <MantineProvider theme={theme}>
-      <Notifications position="bottom-right" />
+      <Notifications position="bottom-right" limit={1} />
       {isPublicPage ? (
         <ApolloProvider client={client}>
           <UnauthenticatedRoutes>
@@ -58,6 +59,7 @@ export default function App({ Component, pageProps }: AppPropsWithLayout) {
           <AuthenticatedRoutes>
             <AppContainer>
               <ApolloProvider client={client}>
+                <ChatMessageListener />
                 {getLayout(<Component {...pageProps} />)}
               </ApolloProvider>
             </AppContainer>
