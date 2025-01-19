@@ -39,7 +39,7 @@ export default function ChatMessage({ message, isCurrentUser }: { message: Messa
             {message.user.name}
           </Text>
         )}
-        <Text>{message.content}</Text>
+        <Text lineClamp={30}>{message.content}</Text>
         <Text mt={2} size="xs" c="dimmed">{new Date(message.createdAt).toLocaleString()}</Text>
       </Box>
     </Box>

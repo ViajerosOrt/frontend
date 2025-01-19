@@ -38,6 +38,7 @@
     "formidable": "^3.5.2",
     "geocoder-ts": "^0.50.1",
     "graphql": "^16.9.0",
+    "graphql-ws": "^5.16.2",
     "leaflet": "^1.9.4",
     "leaflet-pip": "^1.1.0",
     "lodash": "^4.17.21",
