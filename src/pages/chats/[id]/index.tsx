@@ -5,20 +5,25 @@ import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmp
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
 import { SEMI_BOLD } from "@/consts";
 import { VIAJERO_GREEN } from "@/consts/consts";
-import { Message, useSendMessageMutation } from "@/graphql/__generated__/gql";
+import { Message, useChatMessageAddedSubscription, useSendMessageMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
 import { useAuth } from "@/hooks/useAth";
 import { useQuery } from "@apollo/client";
-import { Box, Button, Flex, Paper, Textarea } from "@mantine/core";
+import { Box, Button, Flex, Paper, Textarea, ActionIcon, Text } from "@mantine/core";
+import { useInViewport } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
-import React, { useEffect, useRef, useState } from "react";
+import React, { useEffect, useState } from "react";
+import { IoArrowDown } from "react-icons/io5";
 
 function ChatPage() {
   const router = useRouter();
   const { id } = router.query;
   const { currentUser } = useAuth()
   const [newMessage, setNewMessage] = useState("");
+  const [messages, setMessages] = useState<Message[]>([])
+  const { ref, inViewport } = useInViewport();
+  const [showNewMessageIndicator, setShowNewMessageIndicator] = useState(false);
 
   const { data, loading, error } = useQuery(GET_CHAT_BY_ID, {
     variables: {
@@ -26,8 +31,12 @@ function ChatPage() {
     },
   });
 
-  const [sendMessage] = useSendMessageMutation({
-    refetchQueries: ["Chat"],
+  const { data: chatMessageAddedData } = useChatMessageAddedSubscription({
+    variables: { chatId: id as string },
+    skip: !id,
+    onError: (error) => {
+      console.log(error)
+    },
   });
 
   const chat = data?.chat;
@@ -52,15 +61,59 @@ function ChatPage() {
     }
   };
 
-  const messagesEndRef = useRef<HTMLDivElement | null>(null);
+  const scrollToBottom = () => {
+    const chatContainer = document.getElementById('chat-container');
+    if (chatContainer) {
+      chatContainer.scrollTo({
+        top: chatContainer.scrollHeight,
+        behavior: 'smooth'
+      });
+    }
+  };
 
-  const orderedMessages = chat?.messages?.slice().sort((a: { createdAt: string | number | Date; }, b: { createdAt: string | number | Date; }) => new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime())
-  // Scroll to the bottom of the chat when the messages change
+  // Update the messages when new data is received via subscription
   useEffect(() => {
-    if (messagesEndRef.current) {
-      messagesEndRef.current.scrollIntoView({ behavior: "auto" });
+    if (chatMessageAddedData?.chatMessageAdded) {
+      setMessages((prevMessages: any) =>
+        [...prevMessages, chatMessageAddedData.chatMessageAdded].sort((a, b) =>
+          new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+        )
+      );
+
+      // If the new message is from the current user, scroll to the bottom
+      if (chatMessageAddedData.chatMessageAdded.user.id === currentUser?.id) {
+        setTimeout(() => {
+          scrollToBottom();
+        }, 100);
+        return
+      }
+
+      // If a new message is added and the user is not at the bottom of the chat, show an icon
+      if (!inViewport) {
+        setShowNewMessageIndicator(true);
+      }
+    }
+  }, [chatMessageAddedData]);
+
+  // Hide the new message indicator when the user scrolls to the bottom
+  useEffect(() => {
+    if (inViewport) {
+      setShowNewMessageIndicator(false);
+    }
+  }, [inViewport]);
+
+  // Update the messages when the chat messages from the query change
+  useEffect(() => {
+    if (chat?.messages) {
+      setMessages(chat.messages.slice().sort((a: Message, b: Message) =>
+        new Date(a.createdAt).getTime() - new Date(b.createdAt).getTime()
+      ));
     }
   }, [chat?.messages]);
+
+  const [sendMessage] = useSendMessageMutation({
+    refetchQueries: ["Chat"],
+  });
 
   if (loading) return <ViajeroLoader />;
 
@@ -78,18 +131,49 @@ function ChatPage() {
       <ChatHeaderSection chat={chat} />
       <Paper p="md" shadow="sm"
         bg="#e5ddd5"
+        id="chat-container"
         style={{
           flex: 1,
           overflowY: "auto",
         }}>
+
         {chat?.messages?.length === 0 && (
           <ViajeroEmptyMessage message="No messages in this chat yet." />
         )}
-        {orderedMessages?.map((message: Message) => (
+        {messages?.map((message: Message) => (
           <ChatMessage key={message?.id} message={message} isCurrentUser={message.user.id === currentUser?.id} />
         ))}
-        <Box ref={messagesEndRef} />
+        <Box ref={ref} />
+
+        {showNewMessageIndicator && (
+          <Box
+            style={{
+              position: "sticky",
+              bottom: "0",
+              padding: "1rem",
+              display: "flex",
+              justifyContent: "center",
+              zIndex: 1000,
+            }}
+          >
+            <Button
+              variant="filled"
+              color={VIAJERO_GREEN}
+              onClick={scrollToBottom}
+              style={{
+                borderRadius: "20px",
+                gap: "8px",
+                padding: "0.5rem 1rem",
+                minWidth: "150px",
+              }}
+            >
+              <Text size="sm">New message</Text>
+              <IoArrowDown size={16} />
+            </Button>
+          </Box>
+        )}
       </Paper>
+
       <Flex gap="md" w="100%" mt="md">
         <Textarea
           placeholder="Type your message..."

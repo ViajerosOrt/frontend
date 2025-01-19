@@ -1,7 +1,10 @@
 import { useAuth } from "../hooks/useAth";
-import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache } from "@apollo/client";
+import { ApolloClient, ApolloLink, createHttpLink, InMemoryCache, split } from "@apollo/client";
 import { setContext } from "@apollo/client/link/context";
 import { onError } from '@apollo/client/link/error'
+import { GraphQLWsLink } from '@apollo/client/link/subscriptions';
+import { getMainDefinition } from "@apollo/client/utilities";
+import { createClient } from 'graphql-ws';
 
 const backendApi = process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? "http://localhost:4000/graphql"
 
@@ -25,6 +28,21 @@ export function useViajeroApolloClient() {
     };
   });
 
+  const wsLink = new GraphQLWsLink(createClient({
+    url: process.env.NEXT_PUBLIC_GRAPHQL_API_URL ?? "http://localhost:4000/graphql",
+  }));
+
+  const splitLink = split(
+    ({ query }) => {
+      const definition = getMainDefinition(query);
+      return (
+        definition.kind === 'OperationDefinition' &&
+        definition.operation === 'subscription'
+      );
+    },
+    wsLink,
+    httpLink,
+  );
   const { currentUser, onLogout } = useAuth()
 
   const errorLink = onError(({ graphQLErrors }) => {
@@ -45,7 +63,8 @@ export function useViajeroApolloClient() {
     cache: new InMemoryCache(),
     link: ApolloLink.from([
       errorLink,
-      authLink.concat(httpLink),
+      authLink,
+      splitLink
     ]),
   });
 }
