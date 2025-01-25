@@ -25,7 +25,7 @@ export function DualPageLayout({
           span={{ base: 12, md: 5 }}
           hidden={isMobile && !!mobileToggle}
         >
-          <ScrollArea.Autosize offsetScrollbars h="100%" w="100%">
+          <ScrollArea.Autosize h="100%" w="100%">
             {leftColumn}
           </ScrollArea.Autosize>
         </Grid.Col>

@@ -37,12 +37,17 @@ export function ChatList() {
       w="100%"
       mt={6}
       h="calc(100vh - 6rem)"
+      px={6}
       style={{
         overflowY: 'auto',
-        paddingRight: '10px'
+        msOverflowStyle: "none",
+        scrollbarWidth: "none",
+        "&::-webkit-scrollbar": {
+          display: "none"
+        }
       }}
     >
-      {chats?.map((chat, index) => {
+      {chats?.map((chat) => {
         const lastMessage = chat.messages?.[chat.messages.length - 1];
 
         return (

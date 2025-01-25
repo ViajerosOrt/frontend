@@ -46,14 +46,14 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
     )
   }
   return (
-    <Stack gap="xl" p={isMobile ? 15 : 20}>
+    <Stack gap="xl" p={isMobile ? 15 : 20} style={{ overflowY: "auto" }}>
       <Center>
-        <Avatar src = {user.userImage} size={120} radius="xl" color="green">
+        <Avatar src={user.userImage} size={120} radius="xl" color="green">
         </Avatar>
       </Center>
 
       <Box>
-        <SimpleGrid cols={isMobile ? 1:3} spacing={isMobile ? "xs" : "lg"}>
+        <SimpleGrid cols={isMobile ? 1 : 3} spacing={isMobile ? "xs" : "lg"}>
           <Group align="end">
             <Text fw={BOLD}>Name:</Text>
             <Text>{user.name}</Text>
@@ -74,7 +74,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
           )}
           <Group mt="xs">
             <Text fw={BOLD} mb="xs" >Description:</Text>
-            <Text mb= "10px">{user.description || 'No description provided.'}</Text>
+            <Text mb="10px">{user.description || 'No description provided.'}</Text>
           </Group>
         </SimpleGrid>
       </Box>
@@ -84,7 +84,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
         <Text fw={BOLD} mb="xs" >Social Networks:</Text>
         {(user.whatsapp || user.instagram) ? (
           <>
-            <Group mr={isMobile ? 60:20} >
+            <Group mr={isMobile ? 60 : 20} >
               <FaWhatsapp color="#25D366" className="h-6 w-6" />
               <Text>{user.whatsapp}</Text>
             </Group>
@@ -119,7 +119,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
       <Box>
         <Text fw={BOLD} ta="center" mb="xs">Travels Created</Text>
         {user?.travelsCreated && user?.travelsCreated.length > 0 ? (
-          <SimpleGrid cols={isMobile ? 1:3} spacing="md">
+          <SimpleGrid cols={isMobile ? 1 : 3} spacing="md">
             {user.travelsCreated.map((travel, index) => {
               return (
                 <Box key={travel.id} style={{ cursor: currentUserIsProfile ? 'pointer' : 'default' }} onClick={() => {
@@ -138,7 +138,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
       </Box>
 
       <Divider />
-      
+
       <Box>
         {user?.reviewsReceived && user.reviewsReceived.length > 0 ? (
           <>
@@ -161,17 +161,23 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
           <Text ta="center">No reviews received yet.</Text>
         )}
       </Box>
-
       <Modal
         opened={opened}
         centered
         size={isMobile ? "100%" : "60%"}
+        styles={{
+          content: {
+            overflowY: 'scroll',
+            scrollbarWidth: 'none',
+          },
+        }}
         onClose={() => {
           closeUserModal();
           setTimeout(() => {
             setSelectedUserId(undefined);
           }, 300);
         }}
+
       >
         <ProfileDetails userId={selectedUserId || ''} showViewProfile={false} />
       </Modal>

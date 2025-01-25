@@ -119,6 +119,12 @@ export default function Reviews() {
       />
 
       <Modal
+        styles={{
+          content: {
+            overflowY: 'scroll',
+            scrollbarWidth: 'none',
+          },
+        }}
         opened={opened}
         centered
         size={isMobile ? "100%" : "60%"}

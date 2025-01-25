@@ -24,7 +24,6 @@ export const ChatHeaderSection = ({ chat, to, showAiButton = false }: { chat: Ch
   const handleSendMessage = async () => {
     try {
       const botMessage = newMessage.startsWith('@bot') ? newMessage : `@bot ${newMessage}`
-
       await sendMessage({
         variables: {
           chatId: chat?.id as string,
@@ -34,6 +33,7 @@ export const ChatHeaderSection = ({ chat, to, showAiButton = false }: { chat: Ch
         },
       });
       setNewMessage("");
+      closeAiModal();
     } catch (error) {
       showNotification({
         position: 'top-right',
@@ -69,6 +69,7 @@ export const ChatHeaderSection = ({ chat, to, showAiButton = false }: { chat: Ch
             </Text>
           </Group>
         </Link>
+
         {showAiButton && (
           <Box
             variant="transparent"
@@ -77,8 +78,6 @@ export const ChatHeaderSection = ({ chat, to, showAiButton = false }: { chat: Ch
             <FaRobot color="white" size={24} />
           </Box>
         )}
-
-
       </Flex>
 
       <Modal
