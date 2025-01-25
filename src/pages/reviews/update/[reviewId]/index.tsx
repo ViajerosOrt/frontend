@@ -99,64 +99,62 @@ export default function UpdateReview() {
         Update Review
       </Title>
 
-      <Paper shadow="md" radius="md" p="xl" withBorder>
-        <form onSubmit={form.onSubmit(handleSubmit)}>
-          <Stack gap="xl">
-            <Stack gap={4}>
-              <Text size="lg" fw={BOLD}>Rating</Text>
-              <Text size="sm" c="dimmed">How would you rate your experience?</Text>
-              <Rating
-                size="xl"
-                count={5}
-                {...form.getInputProps('stars')}
-              />
-            </Stack>
-
-            <Stack gap={4}>
-              <Switch
-                label="Review a participant"
-                disabled
-                color={VIAJERO_GREEN}
-                checked={isUserReview}
-                onChange={(event) => {
-                  setIsUserReview(event.currentTarget.checked);
-                  form.setFieldValue('receiverId', '');
-                }}
-              />
-
-              {isUserReview && (
-                <Select
-                  disabled
-                  mt={12}
-                  label="Select participant"
-                  placeholder="Choose a participant to review"
-                  data={participantOptions}
-                  {...form.getInputProps('receiverId')}
-                />
-              )}
-            </Stack>
-
-            <Stack gap={4}>
-              <Text size="lg" fw={BOLD}>Review</Text>
-              <Text size="sm" c="dimmed">Share your experience with other travelers</Text>
-              <Textarea
-                placeholder="Write your review here..."
-                rows={10}
-                {...form.getInputProps('content')}
-              />
-            </Stack>
-
-            <Button
-              type="submit"
-              color={VIAJERO_GREEN}
-              size="lg"
-              fullWidth
-            >
-              {isUserReview ? `Submit Review for participant` : 'Submit Review for the travel'}
-            </Button>
+      <form onSubmit={form.onSubmit(handleSubmit)}>
+        <Stack gap="xl">
+          <Stack gap={4}>
+            <Text size="lg" fw={BOLD}>Rating</Text>
+            <Text size="sm" c="dimmed">How would you rate your experience?</Text>
+            <Rating
+              size="xl"
+              count={5}
+              {...form.getInputProps('stars')}
+            />
           </Stack>
-        </form>
-      </Paper>
+
+          <Stack gap={4}>
+            <Switch
+              label="Review a participant"
+              disabled
+              color={VIAJERO_GREEN}
+              checked={isUserReview}
+              onChange={(event) => {
+                setIsUserReview(event.currentTarget.checked);
+                form.setFieldValue('receiverId', '');
+              }}
+            />
+
+            {isUserReview && (
+              <Select
+                disabled
+                mt={12}
+                label="Select participant"
+                placeholder="Choose a participant to review"
+                data={participantOptions}
+                {...form.getInputProps('receiverId')}
+              />
+            )}
+          </Stack>
+
+          <Stack gap={4}>
+            <Text size="lg" fw={BOLD}>Review</Text>
+            <Text size="sm" c="dimmed">Share your experience with other travelers</Text>
+            <Textarea
+              placeholder="Write your review here..."
+              rows={10}
+              {...form.getInputProps('content')}
+            />
+          </Stack>
+
+          <Button
+            type="submit"
+            color={VIAJERO_GREEN}
+            size="lg"
+            fullWidth
+          >
+            {isUserReview ? `Submit Review for participant` : 'Submit Review for the travel'}
+          </Button>
+        </Stack>
+      </form>
     </Container>
   );
 }

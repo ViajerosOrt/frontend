@@ -36,10 +36,18 @@ export default function Reviews() {
 
   return (
     <Container size="xl" mt="xl">
+      <Title order={2} size={32} mb={20} ta="center" fw={BOLD}>
+        Reviews
+      </Title>
+      <Text size="lg" ta="center" >
+        Manage your reviews for trips and participants, whether creating, editing, or adding new ones.
+      </Text>
+
       <Button
         component={Link}
         href="/reviews/selectTravel"
         mt="md"
+        mb={20}
         size="md"
         radius="md"
         color={VIAJERO_GREEN}
@@ -52,12 +60,6 @@ export default function Reviews() {
       >
         Add a review
       </Button>
-      <Title order={2} size={32} mb={20} ta="center" fw={BOLD}>
-        Reviews
-      </Title>
-      <Text size="lg" mb={60} ta="center" >
-        Manage your reviews for trips and participants, whether creating, editing, or adding new ones.
-      </Text>
 
       {reviews && reviews.length > 0 ? (
         <Stack gap="xl">
