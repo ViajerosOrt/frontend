@@ -138,7 +138,7 @@ function ChatPage() {
         flexDirection: "column",
       }}
     >
-      <ChatHeaderSection chat={chat} />
+      <ChatHeaderSection chat={chat} showAiButton />
       <Box style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
         <Paper p="md"
           shadow="sm"

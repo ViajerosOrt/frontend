@@ -22,7 +22,6 @@ import { useDisclosure } from "@mantine/hooks";
 import { useState } from "react";
 import { useAuth } from "@/hooks/useAth";
 import { useIsMobile } from "@/hooks/useIsMobile";
-import { Countries } from "../MapComponents/Countries";
 
 export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: string, showViewProfile?: boolean }) => {
   const currentUser = useAuth()
@@ -37,7 +36,7 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
 
   const user = data?.userById
 
-  const viewerIsCurrentUser = currentUser?.currentUser?.id === userId
+  const currentUserIsProfile = currentUser?.currentUser?.id === userId
 
   if (loading || !user) {
     return (
@@ -123,12 +122,12 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
           <SimpleGrid cols={isMobile ? 1 : 3} spacing="md">
             {user.travelsCreated.map((travel, index) => {
               return (
-                <Box key={travel.id} style={{ cursor: viewerIsCurrentUser ? 'pointer' : 'default' }} onClick={() => {
-                  if (viewerIsCurrentUser) {
+                <Box key={travel.id} style={{ cursor: currentUserIsProfile ? 'pointer' : 'default' }} onClick={() => {
+                  if (currentUserIsProfile) {
                     router.push(`/myTravels`)
                   }
                 }}>
-                  <SmallTravelDetails showEdit={viewerIsCurrentUser} travel={travel as Travel} index={index} />
+                  <SmallTravelDetails showEdit={currentUserIsProfile} travel={travel as Travel} index={index} />
                 </Box>
               )
             })}

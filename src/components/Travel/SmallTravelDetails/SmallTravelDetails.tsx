@@ -47,20 +47,22 @@ export const SmallTravelDetails = ({ travel, index, showEdit }: { travel: Travel
       <Text m={8} size="xs" truncate lineClamp={2} mih={10}>
         {travel.travelDescription || "No description available."}
       </Text>
-      <Box pos="absolute" top={8} right={8}>
-        <ThemeIcon
-          size="xl"
-          radius="xl"
-          variant="filled"
-          color={VIAJERO_GREEN}
-          onClick={(e) => {
-            e.stopPropagation();
-            router.push(`/myTravels/edit/${travel.id}`)
-          }}
-        >
-          <FaEdit />
-        </ThemeIcon>
-      </Box>
+      {showEdit && (
+        <Box pos="absolute" top={8} right={8}>
+          <ThemeIcon
+            size="xl"
+            radius="xl"
+            variant="filled"
+            color={VIAJERO_GREEN}
+            onClick={(e) => {
+              e.stopPropagation();
+              router.push(`/myTravels/edit/${travel.id}`)
+            }}
+          >
+            <FaEdit />
+          </ThemeIcon>
+        </Box>
+      )}
       <ActivitiesAvatarGroup activities={travel.travelActivities || []} />
     </Card>
   );

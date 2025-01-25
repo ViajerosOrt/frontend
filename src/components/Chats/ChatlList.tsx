@@ -35,6 +35,7 @@ export function ChatList() {
   return (
     <Box
       w="100%"
+      mt={6}
       h="calc(100vh - 6rem)"
       px={6}
       style={{

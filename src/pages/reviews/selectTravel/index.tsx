@@ -42,7 +42,6 @@ export default function SelectTravel() {
             onClick={() => router.push(`/reviews/${travel.id}`)}
             style={{ cursor: 'pointer' }}
           >
-            {/* TODO: Cambiar index por foto */}
             <SmallTravelDetails travel={travel as Travel} index={index} showEdit={false} />
           </div>
         ))}
