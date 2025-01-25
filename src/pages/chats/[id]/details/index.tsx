@@ -2,10 +2,10 @@ import { ChatLayout } from "@/components/Layout/ChatLayout";
 import { TravelCard } from "@/components/Travel/TravelCard/TravelCard";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { Item, TravelDto, useAssignItemToUserMutation, User, useRemoveItemToUserMutation } from "@/graphql/__generated__/gql";
+import { Item, TravelDto, useAssignItemToUserMutation, useLeaveTravelMutation, User, useRemoveItemToUserMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
 import { useQuery } from "@apollo/client";
-import { Box, Text, Title, Group, Stack, Paper, Avatar, Modal, Switch, Loader } from "@mantine/core";
+import { Box, Text, Title, Group, Stack, Paper, Avatar, Modal, Switch, Loader, Button } from "@mantine/core";
 import { useState } from "react";
 import { useRouter } from "next/router";
 import { travelImages } from "@/utils";
@@ -20,6 +20,7 @@ import { ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
 import { useDisclosure } from "@mantine/hooks";
 import { useAuth } from "@/hooks/useAth";
 import { debounce } from "lodash";
+import { showNotification } from "@mantine/notifications";
 
 function ChatDetails() {
   const router = useRouter();
@@ -29,6 +30,9 @@ function ChatDetails() {
   const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
+
+  const [leaveTravelOpened, { open: openLeaveTravel, close: closeLeaveTravel }] = useDisclosure(false);
+  const [leaveTravel] = useLeaveTravelMutation();
 
   const [loadingItems, setLoadingItems] = useState<string[]>([]);
 
@@ -96,6 +100,25 @@ function ChatDetails() {
     });
 
     handleDebouncedRefetch();
+  }
+
+  const handleLeaveTravel = async () => {
+    try {
+      await leaveTravel({ variables: { travelId: chat.travel?.id } });
+      showNotification({
+        title: 'Travel left',
+        message: 'You have left the travel',
+        color: 'green',
+      });
+      close();
+      router.push('/chats');
+    } catch (error: any) {
+      showNotification({
+        title: 'Error',
+        message: error.message ?? 'Error leaving travel',
+        color: 'red',
+      });
+    }
   }
 
   if (loading || travelLoading) return <ViajeroLoader />;
@@ -222,6 +245,8 @@ function ChatDetails() {
             )}
           </Stack>
         </Paper>
+
+        <Button variant="outline" color="red" onClick={openLeaveTravel} w="100%">Leave travel</Button>
       </Stack>
 
       {/* Selected Participant modal */}
@@ -229,6 +254,12 @@ function ChatDetails() {
         opened={opened}
         centered
         size={isMobile ? "100%" : "60%"}
+        styles={{
+          content: {
+            overflowY: 'scroll',
+            scrollbarWidth: 'none',
+          },
+        }}
         onClose={() => {
           closeUserModal();
           setTimeout(() => {
@@ -245,6 +276,15 @@ function ChatDetails() {
         selectedImageSrc={selectedImageSrc}
       />
 
+      <Modal opened={leaveTravelOpened} onClose={closeLeaveTravel} centered p={0}>
+        <Stack align="center">
+          <Text >Are you sure you want to leave this travel?</Text>
+          <Group>
+            <Button color="red" onClick={handleLeaveTravel}>Leave</Button>
+            <Button variant="outline" onClick={closeLeaveTravel}>Cancel</Button>
+          </Group>
+        </Stack>
+      </Modal>
     </Box >
   );
 }

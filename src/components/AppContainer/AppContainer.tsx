@@ -57,6 +57,8 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
     </Group>
   );
 
+  const isInChat = router.pathname.includes('/chats/')
+
   return (
     <>
       <AppShell
@@ -66,7 +68,6 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
           breakpoint: "md",
           collapsed: { mobile: !opened },
         }}
-        padding="md"
       >
         <AppShell.Header>
           <Group justify="space-between" px="md" py={8} align="center" h="100%">
@@ -116,7 +117,12 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
           </Box>
         </AppShell.Navbar>
 
-        <AppShell.Main px={isMobile ? 0 : undefined} >{children}</AppShell.Main>
+        {/* 
+* En web usamos el padding por defecto
+* En mobile solo usamos padding bottom.
+* Las paginas del chat no deben tener ningun tipo de padding, ni siquiera el bottom.
+*/}
+        <AppShell.Main px={isMobile ? 0 : undefined} pb={isInChat ? 0 : 16}>{children}</AppShell.Main>
       </AppShell>
     </>
   );

@@ -226,165 +226,163 @@ const TravelCreateForm = () => {
           <Title mb="lg">Create a Travel</Title>
         </Box>
       </Group>
-      <Paper p="xl" shadow="md" mt={20} withBorder >
-        <form onSubmit={form.onSubmit(handleCreateTravelSubmit)}>
-          <Stack w="100%" >
-            <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title <span style={{ color: 'red' }}>*</span> </Text>
-              <Text size="sm" c="gray">A unique and descriptive title for your travel.</Text>
-              <TextInput {...form.getInputProps('title')} required />
-              <Group justify="space-between">
-                <Text
-                  size="xs"
-                  c={
-                    (form.values.title?.length || 0) >
-                      TRAVEL_MAX_TITLE_LENGTH
-                      ? 'red'
-                      : 'gray'
-                  }
-                  ta="start"
-                  w="100%"
-                >
-                  {form.values.title?.length || 0} /{' '}
-                  {TRAVEL_MAX_TITLE_LENGTH}
-                </Text>
-              </Group>
-            </Stack>
-            <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Description <span style={{ color: 'red' }}>*</span> </Text>
-              <Text size="sm" c="gray">An overview of the travel plan.</Text>
-              <Textarea {...form.getInputProps('description')} required />
-              <Group justify="space-between">
-                <Text
-                  size="xs"
-                  c={
-                    (form.values.description?.length || 0) >
-                      TRAVEL_MAX_DESCRIPTION_LENGTH
-                      ? 'red'
-                      : 'gray'
-                  }
-                  ta="start"
-                  w="100%"
-                >
-                  {form.values.description?.length || 0} /{' '}
-                  {TRAVEL_MAX_DESCRIPTION_LENGTH}
-                </Text>
-              </Group>
-            </Stack>
-
-            <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Image</Text>
-              <Text size="sm" c="gray">Upload an image for your travel!</Text>
-              <FileInput
-                accept="image/*"
-                onChange={handleFileChange}
-                leftSection={<AiOutlineCloudUpload size={20} />}
-                placeholder="Upload image"
-                radius="md"
-                size="sm"
-                styles={{
-                  input: {
-                    cursor: 'pointer',
-                    '&:hover': {
-                      borderColor: 'var(--mantine-color-blue-filled)'
-                    }
-                  },
-                  section: {
-                    color: 'var(--mantine-color-dimmed)',
-                    '&:hover': {
-                      color: 'var(--mantine-color-blue-filled)'
-                    }
-                  }
-                }}
-              />
-
-            </Stack>
-
-
-            <Stack gap={4}>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country <span style={{ color: 'red' }}>*</span>  </Text>
-              <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
-
-              <Countries defaultCountry={null} value={selectedCountry} onChange={setSelectedCountry} disabled={!!location} />
-
-            </Stack>
-
-            <Map country={selectedCountry!} zoom={7} onLocationSelected={handleLocationSelected} />
-
-            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity <span style={{ color: 'red' }}>*</span> </Text>
-            <Text size="sm" c="gray">The total number of allowed participants.</Text>
-            <NumberInput {...form.getInputProps('maxCap')} min={1} required style={{ maxWidth: 80 }} />
-
-            <Text mt={12} style={{ fontWeight: 700, fontSize: '1.5rem' }}>Start and End Date <span style={{ color: 'red' }}>*</span> </Text>
-            <Text size="sm" c="gray">The start and end dates of the travel.</Text>
-            <Box>
-              <DatePicker
-                type="range"
-                value={selectedDates}
-                onChange={setSelectedDates}
-                allowSingleDateInRange
-              />
-            </Box>
-
-            <Box>
-              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Transport <span style={{ color: 'red' }}>*</span> </Text>
-              <Text size="sm" c="gray">An optional transport for the travel.</Text>
-              <Select data={parsedTransports} placeholder="Choose one transport" w={isMobile ? '250px':'30%'} onChange={setSelectedTransportId}
-                rightSection={
-                  selectedTransportId
-                    ? getTransportAvatar(transports.find((t: { id: string; }) => t.id === selectedTransportId)?.name || '', "sm")
-                    : null
-                } />
-            </Box>
-
-            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Activities</Text>
-            <Text size="sm" c="gray">A selection of activities included in the travel.</Text>
-            <MultiSelect
-              data={activities.map((
-                activity: { id: any; activityName: any; }) => ({
-                  value: activity.id,
-                  label: activity.activityName
-                }))}
-              placeholder="Select activites for your travel"
-              onChange={setSelectedActivities}
-              w="60%"
-              style={{ fontWeight: 700, fontSize: '1.5rem' }}
-              comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-            />
-
-            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>CheckList</Text>
-            <Text size="sm" c="gray">A list of essential items to bring in the travel. Each participant will be able to bring one of these.</Text>
-            <Text size="sm" c="gray">(You can add multiple items separated by commas by clicking the + button)</Text>
-            <Group>
-              <TextInput
-                style={{ fontWeight: 700, fontSize: '1.5rem', width: isMobile ? '250px':'30%' }}
-                value={item}
-                onChange={(e) => setItem(e.currentTarget.value)}
-                placeholder="Add an item to your checklist"
-              />
-              <Button variant="outline" color={VIAJERO_GREEN} onClick={handleAddItem}>
-                +
-              </Button>
+      <form onSubmit={form.onSubmit(handleCreateTravelSubmit)}>
+        <Stack w="100%" >
+          <Stack gap={4}>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Title <span style={{ color: 'red' }}>*</span> </Text>
+            <Text size="sm" c="gray">A unique and descriptive title for your travel.</Text>
+            <TextInput {...form.getInputProps('title')} required />
+            <Group justify="space-between">
+              <Text
+                size="xs"
+                c={
+                  (form.values.title?.length || 0) >
+                    TRAVEL_MAX_TITLE_LENGTH
+                    ? 'red'
+                    : 'gray'
+                }
+                ta="start"
+                w="100%"
+              >
+                {form.values.title?.length || 0} /{' '}
+                {TRAVEL_MAX_TITLE_LENGTH}
+              </Text>
             </Group>
-            <Text size="sm" c="gray">Your created items from for the checklis:</Text>
-            <MultiSelect
-              data={items.map((i) => ({ value: i, label: i }))}
-              value={items}
-              onChange={setItems}
-              placeholder="Selected Items"
-              clearable
-              searchable
-              comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
-            />
+          </Stack>
+          <Stack gap={4}>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Description <span style={{ color: 'red' }}>*</span> </Text>
+            <Text size="sm" c="gray">An overview of the travel plan.</Text>
+            <Textarea {...form.getInputProps('description')} required />
+            <Group justify="space-between">
+              <Text
+                size="xs"
+                c={
+                  (form.values.description?.length || 0) >
+                    TRAVEL_MAX_DESCRIPTION_LENGTH
+                    ? 'red'
+                    : 'gray'
+                }
+                ta="start"
+                w="100%"
+              >
+                {form.values.description?.length || 0} /{' '}
+                {TRAVEL_MAX_DESCRIPTION_LENGTH}
+              </Text>
+            </Group>
+          </Stack>
 
-            <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" disabled={isLoading} leftSection={isLoading ?
-              <Loader size="sm" color="black" /> : null}>
-              {isLoading ? 'Creating Travel...' : 'Create Travel'}
-            </Button>
+          <Stack gap={4}>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Image</Text>
+            <Text size="sm" c="gray">Upload an image for your travel!</Text>
+            <FileInput
+              accept="image/*"
+              onChange={handleFileChange}
+              leftSection={<AiOutlineCloudUpload size={20} />}
+              placeholder="Upload image"
+              radius="md"
+              size="sm"
+              styles={{
+                input: {
+                  cursor: 'pointer',
+                  '&:hover': {
+                    borderColor: 'var(--mantine-color-blue-filled)'
+                  }
+                },
+                section: {
+                  color: 'var(--mantine-color-dimmed)',
+                  '&:hover': {
+                    color: 'var(--mantine-color-blue-filled)'
+                  }
+                }
+              }}
+            />
 
           </Stack>
-        </form>
-      </Paper>
+
+
+          <Stack gap={4}>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country <span style={{ color: 'red' }}>*</span>  </Text>
+            <Text size="sm" c="gray">Select the country in which the travel will take place,</Text>
+
+            <Countries defaultCountry={null} value={selectedCountry} onChange={setSelectedCountry} disabled={!!location} />
+
+          </Stack>
+
+          <Map country={selectedCountry!} zoom={7} onLocationSelected={handleLocationSelected} />
+
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Max Capacity <span style={{ color: 'red' }}>*</span> </Text>
+          <Text size="sm" c="gray">The total number of allowed participants.</Text>
+          <NumberInput {...form.getInputProps('maxCap')} min={1} required style={{ maxWidth: 80 }} />
+
+          <Text mt={12} style={{ fontWeight: 700, fontSize: '1.5rem' }}>Start and End Date <span style={{ color: 'red' }}>*</span> </Text>
+          <Text size="sm" c="gray">The start and end dates of the travel.</Text>
+          <Box>
+            <DatePicker
+              type="range"
+              value={selectedDates}
+              onChange={setSelectedDates}
+              allowSingleDateInRange
+            />
+          </Box>
+
+          <Box>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Transport <span style={{ color: 'red' }}>*</span> </Text>
+            <Text size="sm" c="gray">An optional transport for the travel.</Text>
+            <Select data={parsedTransports} placeholder="Choose one transport" w={isMobile ? '250px' : '30%'} onChange={setSelectedTransportId}
+              rightSection={
+                selectedTransportId
+                  ? getTransportAvatar(transports.find((t: { id: string; }) => t.id === selectedTransportId)?.name || '', "sm")
+                  : null
+              } />
+          </Box>
+
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Activities</Text>
+          <Text size="sm" c="gray">A selection of activities included in the travel.</Text>
+          <MultiSelect
+            data={activities.map((
+              activity: { id: any; activityName: any; }) => ({
+                value: activity.id,
+                label: activity.activityName
+              }))}
+            placeholder="Select activites for your travel"
+            onChange={setSelectedActivities}
+            w="60%"
+            style={{ fontWeight: 700, fontSize: '1.5rem' }}
+            comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+          />
+
+          <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>CheckList</Text>
+          <Text size="sm" c="gray">A list of essential items to bring in the travel. Each participant will be able to bring one of these.</Text>
+          <Text size="sm" c="gray">(You can add multiple items separated by commas by clicking the + button)</Text>
+          <Group>
+            <TextInput
+              style={{ fontWeight: 700, fontSize: '1.5rem', width: isMobile ? '250px' : '30%' }}
+              value={item}
+              onChange={(e) => setItem(e.currentTarget.value)}
+              placeholder="Add an item to your checklist"
+            />
+            <Button variant="outline" color={VIAJERO_GREEN} onClick={handleAddItem}>
+              +
+            </Button>
+          </Group>
+          <Text size="sm" c="gray">Your created items from for the checklis:</Text>
+          <MultiSelect
+            data={items.map((i) => ({ value: i, label: i }))}
+            value={items}
+            onChange={setItems}
+            placeholder="Selected Items"
+            clearable
+            searchable
+            comboboxProps={{ transitionProps: { transition: 'pop', duration: 200 } }}
+          />
+
+          <Button variant="filled" type="submit" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" disabled={isLoading} leftSection={isLoading ?
+            <Loader size="sm" color="black" /> : null}>
+            {isLoading ? 'Creating Travel...' : 'Create Travel'}
+          </Button>
+
+        </Stack>
+      </form>
     </Container>
   );
 };
