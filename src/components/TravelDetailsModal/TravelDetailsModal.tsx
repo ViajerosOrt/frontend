@@ -1,4 +1,4 @@
-import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip } from "@mantine/core";
+import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip, ActionIcon } from "@mantine/core";
 import { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
@@ -9,6 +9,7 @@ import { Activity, TravelDto, useJoinToTravelMutation } from "@/graphql/__genera
 import { Consts } from "@/consts/consts";
 import { VIAJERO_GREEN } from "@/consts";
 import TravelImage from "../Travel/TravelImages/TravelImage";
+import { IoClose } from "react-icons/io5";
 
 type TravelDetailsModalProps = {
   selectedTravel: TravelDto | undefined,
@@ -81,10 +82,36 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
         backgroundOpacity: 0.55,
         blur: 3,
       }}
+      styles={{
+        content: {
+          overflowY: 'scroll',
+          scrollbarWidth: 'none',
+        },
+      }}
     >
+      <Box style={{ position: 'relative' }}>
+        <ActionIcon
+          variant="filled"
+          color="gray"
+          radius="xl"
+          style={{
+            position: 'absolute',
+            top: 10,
+            right: 10,
+            zIndex: 10
+          }}
+          onClick={() => {
+            close();
+            setTimeout(() => {
+              setSelectedTravel(undefined);
+            }, 200);
+          }}
+        >
+          <IoClose size={18} />
+        </ActionIcon>
 
-      <TravelImage src={selectedTravel?.imageUrl || "/default_travel.jpg"} alt={selectedTravel?.travelTitle || ''} />
-
+        <TravelImage src={selectedTravel?.imageUrl || "/default_travel.jpg"} alt={selectedTravel?.travelTitle || ''} />
+      </Box>
 
       <Box p={16}>
         <Group justify="space-between">

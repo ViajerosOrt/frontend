@@ -3,6 +3,7 @@ import {
   Autocomplete,
   Button,
   Drawer,
+  Group,
   MultiSelect,
   Select,
   Stack,
@@ -174,15 +175,18 @@ export const TravelFiltersDrawer = (
             </Text>
             {showEndDate && <DatePicker  {...form.getInputProps("endDate")} />}
           </Stack>
-          <Stack align="center">
-            <Button variant="filled" w="50%" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => {
+          <Group align="center" w="100%" wrap="nowrap">
+            <Button variant="filled" w="50%" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={handleApplyFilters}>
+              Apply filters
+            </Button>
+            <Button variant="outline" w="50%" color={VIAJERO_GREEN} fullWidth mt="md" radius="md" onClick={() => {
               form.setValues(defaultFilters);
               setShowStartDate(false);
               setShowEndDate(false);
             }}>
               Reset filters
             </Button>
-          </Stack>
+          </Group>
         </Stack>
       </form>
     </Drawer >

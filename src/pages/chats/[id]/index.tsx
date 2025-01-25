@@ -8,12 +8,12 @@ import { Message, useChatMessageAddedSubscription, useSendMessageMutation } from
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
 import { useAuth } from "@/hooks/useAth";
 import { useQuery } from "@apollo/client";
-import { Box, Button, Flex, Paper, Textarea, Text } from "@mantine/core";
+import { Box, Button, Flex, Paper, Textarea, Text, Group } from "@mantine/core";
 import { useInViewport } from "@mantine/hooks";
 import { showNotification } from "@mantine/notifications";
 import { useRouter } from "next/router";
 import React, { useEffect, useState, useRef } from "react";
-import { IoArrowDown } from "react-icons/io5";
+import { IoArrowDown, IoSend } from "react-icons/io5";
 
 function ChatPage() {
   const router = useRouter();
@@ -121,8 +121,6 @@ function ChatPage() {
     }
   }, [chat?.messages]);
 
-
-
   const [sendMessage] = useSendMessageMutation({
     refetchQueries: ["Chat"],
   });
@@ -134,59 +132,67 @@ function ChatPage() {
   return (
     <Box
       m={1}
-      h="calc(100vh - 6rem)"
+      h="calc(100vh - 4.2rem)"
       style={{
         display: "flex",
         flexDirection: "column",
       }}
     >
       <ChatHeaderSection chat={chat} />
-      <Paper p="md" shadow="sm"
-        bg="#e5ddd5"
-        id="chat-container"
-        style={{
-          flex: 1,
-          overflowY: "auto",
-        }}>
+      <Box style={{ flex: 1, minHeight: 0, display: "flex", flexDirection: "column" }}>
+        <Paper p="md"
+          shadow="sm"
+          bg="#e5ddd5"
+          id="chat-container"
+          style={{
+            flex: 1,
+            overflowY: "auto",
+            msOverflowStyle: "none",
+            scrollbarWidth: "none",
+            "&::-webkit-scrollbar": {
+              display: "none"
+            }
+          }}>
 
-        {chat?.messages?.length === 0 && (
-          <ViajeroEmptyMessage message="No messages in this chat yet." />
-        )}
-        {messages?.map((message: Message) => (
-          <ChatMessage key={message?.id} message={message} isCurrentUser={message.user.id === currentUser?.id} />
-        ))}
-        <Box ref={ref} />
+          {chat?.messages?.length === 0 && (
+            <ViajeroEmptyMessage message="No messages in this chat yet." />
+          )}
+          {messages?.map((message: Message) => (
+            <ChatMessage key={message?.id} message={message} isCurrentUser={message.user.id === currentUser?.id} />
+          ))}
+          <Box ref={ref} />
 
-        {showNewMessageIndicator && (
-          <Box
-            style={{
-              position: "sticky",
-              bottom: "0",
-              padding: "1rem",
-              display: "flex",
-              justifyContent: "center",
-              zIndex: 1000,
-            }}
-          >
-            <Button
-              variant="filled"
-              color={VIAJERO_GREEN}
-              onClick={() => scrollToBottom({ withSmoothScroll: true })}
+          {showNewMessageIndicator && (
+            <Box
               style={{
-                borderRadius: "20px",
-                gap: "8px",
-                padding: "0.5rem 1rem",
-                minWidth: "150px",
+                position: "sticky",
+                bottom: "0",
+                padding: "1rem",
+                display: "flex",
+                justifyContent: "center",
+                zIndex: 1000,
               }}
             >
-              <Text size="sm">New message</Text>
-              <IoArrowDown size={16} />
-            </Button>
-          </Box>
-        )}
-      </Paper>
+              <Button
+                variant="filled"
+                color={VIAJERO_GREEN}
+                onClick={() => scrollToBottom({ withSmoothScroll: true })}
+                style={{
+                  borderRadius: "20px",
+                  gap: "8px",
+                  padding: "0.5rem 1rem",
+                  minWidth: "150px",
+                }}
+              >
+                <Text size="sm">New message</Text>
+                <IoArrowDown size={16} />
+              </Button>
+            </Box>
+          )}
+        </Paper>
+      </Box>
 
-      <Flex gap="md" w="100%" mt="md">
+      <Group gap={6} w="100%" mt={6} wrap="nowrap" mx={4}>
         <Textarea
           placeholder="Type your message..."
           value={newMessage}
@@ -196,9 +202,11 @@ function ChatPage() {
           maxRows={5}
           w="85%"
         />
-        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage} disabled={newMessage.length === 0}>Send</Button>
-      </Flex>
-    </Box>
+        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage} disabled={newMessage.length === 0}>
+          <IoSend size={16} />
+        </Button>
+      </Group>
+    </Box >
   );
 }
 
