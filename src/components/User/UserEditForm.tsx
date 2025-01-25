@@ -9,6 +9,7 @@ import {
   Center,
   Container,
   FileButton,
+  FileInput,
   Group,
   Loader,
   MultiSelect,
@@ -31,6 +32,7 @@ import 'react-phone-number-input/style.css'
 import PhoneInput from 'react-phone-number-input'
 import { Countries } from "../MapComponents/Countries";
 import { useAuth } from "@/hooks/useAth";
+import { AiOutlineCloudUpload } from "react-icons/ai";
 
 type UserEditFormProps = {
   user: User
@@ -38,7 +40,7 @@ type UserEditFormProps = {
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required').max(50),
-  description: z.string().min(1, 'Description is required').max(200),
+  description: z.string().max(200).optional(),
   birthDate: z.date().refine(
     (date) => {
       const today = new Date();
@@ -105,7 +107,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
     const values = { ...form.values, activitiesIds: selectedActivitiesIds };
     setIsLoading(true);
     let uploadedImageUrl = null;
-    
+
     if (file) {
       try {
         const formData = new FormData();
@@ -170,13 +172,6 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
                 size={100}
                 radius="xl"
               />
-              <FileButton onChange={handleImageUpload} accept="image/*">
-                {(props) => (
-                  <Button size="xs" style={{ marginTop: 10 }} {...props}>
-                    {uploadedImage ? 'Change photo' : 'Upload photo'}
-                  </Button>
-                )}
-              </FileButton>
             </Center>
             <Box>
               <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}> Name </Text>
@@ -202,7 +197,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
             <Box>
               <Text fw={BOLD} style={{ fontSize: '1.5rem' }}> Description </Text>
               <Text size="sm" c="gray">Your description.</Text>
-              <TextInput mt={10}{...form.getInputProps('description')} required />
+              <TextInput mt={10}{...form.getInputProps('description')} />
               <Group justify="space-between" mt={10} ml={6}>
                 <Text
                   size="xs"
@@ -220,6 +215,33 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
                 </Text>
               </Group>
             </Box>
+            <Stack gap={4}>
+              <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Image</Text>
+              <Text size="sm" c="gray">Upload an image for your travel!</Text>
+              <FileInput
+                accept="image/*"
+                onChange={handleImageUpload}
+                leftSection={<AiOutlineCloudUpload size={20} />}
+                placeholder="Upload image"
+                radius="md"
+                size="sm"
+                styles={{
+                  input: {
+                    cursor: 'pointer',
+                    '&:hover': {
+                      borderColor: 'var(--mantine-color-blue-filled)'
+                    }
+                  },
+                  section: {
+                    color: 'var(--mantine-color-dimmed)',
+                    '&:hover': {
+                      color: 'var(--mantine-color-blue-filled)'
+                    }
+                  }
+                }}
+              />
+
+            </Stack>
             <Box>
               <Text fw={BOLD} style={{ fontSize: '1.5rem' }}> Birth date </Text>
               <Text size="sm" c="gray">Your birthdate.</Text>

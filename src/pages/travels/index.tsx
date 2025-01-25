@@ -59,7 +59,7 @@ export default function Travels() {
           leftSection={<FaPlane />}
           fullWidth
         >
-          Create Travel
+          {isMobile ? 'Create' : 'Create Travel'}
         </Button>
         <Button
           onClick={open}
@@ -104,16 +104,16 @@ export default function Travels() {
 
   return (
     <Container size="xl" mt="xl">
-        <TravelButtons />
+      <TravelButtons />
 
-        <TravelFiltersDrawer
-          opened={opened}
-          close={close}
-          filters={filters}
-          updateFilters={updateFilters}
-          applyFilters={applyFilters}
-          defaultFilters={defaultFilters}
-        />
+      <TravelFiltersDrawer
+        opened={opened}
+        close={close}
+        filters={filters}
+        updateFilters={updateFilters}
+        applyFilters={applyFilters}
+        defaultFilters={defaultFilters}
+      />
 
       <Title order={2} mb={20} size={24} ta="center">
         Choose your next travel

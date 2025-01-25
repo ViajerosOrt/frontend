@@ -17,7 +17,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
   const [opened, { toggle, close }] = useDisclosure();
   const { currentUser, onLogout } = useAuth()
   const router = useRouter();
-  const { isMobile, isLoading } = useIsMobile();
+  const { isMobile } = useIsMobile();
 
   const closeSidebar = useCallback(() => {
     close();
@@ -39,16 +39,16 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
   }
 
   const UserProfile = () => (
-    <Group align="center" gap="xs" onClick={isMobile ? navigateToProfile : undefined}  style={isMobile ? { cursor: 'pointer' } : undefined}>
+    <Group align="center" gap="xs" onClick={isMobile ? navigateToProfile : undefined} style={isMobile ? { cursor: 'pointer' } : undefined}>
       <Avatar
         size={isMobile ? 40 : 50}
         src={currentUser?.userImage}
         radius="xl"
       />
-      <Text 
-        size={isMobile ? "md" : "xl"} 
-        fw={900} 
-        style={{ 
+      <Text
+        size={isMobile ? "md" : "xl"}
+        fw={900}
+        style={{
           animation: ANIMATIONS.breathing,
         }}
       >
@@ -84,7 +84,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
               <PlaneAnimation />
               {isMobile ? (
                 <UserProfile />
-              ) : ( 
+              ) : (
                 <Group align="center" justify="center">
                   <UserProfile />
                 </Group>
@@ -116,7 +116,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
           </Box>
         </AppShell.Navbar>
 
-        <AppShell.Main>{children}</AppShell.Main>
+        <AppShell.Main px={isMobile ? 0 : undefined} >{children}</AppShell.Main>
       </AppShell>
     </>
   );

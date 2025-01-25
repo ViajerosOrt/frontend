@@ -121,8 +121,6 @@ function ChatPage() {
     }
   }, [chat?.messages]);
 
-
-
   const [sendMessage] = useSendMessageMutation({
     refetchQueries: ["Chat"],
   });
@@ -147,6 +145,11 @@ function ChatPage() {
         style={{
           flex: 1,
           overflowY: "auto",
+          msOverflowStyle: "none",
+          scrollbarWidth: "none",
+          "&::-webkit-scrollbar": {
+            display: "none"
+          }
         }}>
 
         {chat?.messages?.length === 0 && (
