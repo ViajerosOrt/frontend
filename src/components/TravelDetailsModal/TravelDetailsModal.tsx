@@ -1,5 +1,5 @@
 import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip, ActionIcon } from "@mantine/core";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -10,6 +10,9 @@ import { Consts } from "@/consts/consts";
 import { VIAJERO_GREEN } from "@/consts";
 import TravelImage from "../Travel/TravelImages/TravelImage";
 import { IoClose } from "react-icons/io5";
+import dynamic from "next/dynamic";
+
+
 
 type TravelDetailsModalProps = {
   selectedTravel: TravelDto | undefined,
@@ -18,6 +21,11 @@ type TravelDetailsModalProps = {
   showJoinButton?: boolean,
   showMaxCap?: boolean,
 }
+
+const LeafletMap = dynamic(() => import('../MapComponents/LeafletMap'), {
+  ssr: false,
+  loading: () => <div>Loading map...</div>,
+});
 
 export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selectedImageSrc, showJoinButton = true, showMaxCap = true }: TravelDetailsModalProps) => {
   const [opened, { open, close }] = useDisclosure(false);
@@ -28,6 +36,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
   const userColor = Consts.getColorByPercentage(selectedTravel?.usersCount!, selectedTravel?.maxCap!);
 
   const [joinToTravel] = useJoinToTravelMutation();
+  const [latitude, longitude] = selectedTravel?.travelLocation.longLatPoint.split(',').map(parseFloat) || [];
 
   const handleJoinTravel = () => {
     joinToTravel({
@@ -176,6 +185,20 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
         }
       </Box >
 
+      {latitude && longitude && (
+        <Box mt={20} p={16} h={300} w="100%"
+          style={{
+            backgroundColor: "white",
+            borderRadius: "12px",
+            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
+            overflow: "hidden"
+          }}>
+          <Text fw={600} mb={8} size="md">Travel location</Text>
+          <Box style={{ height: "300px", borderRadius: "8px", overflow: "hidden" }}>
+            <LeafletMap latitude={latitude} longitude={longitude} />
+          </Box>
+        </Box>
+      )}
     </Modal >
   );
 };
