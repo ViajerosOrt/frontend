@@ -62,3 +62,17 @@ export const UPDATE_TRAVEL_MUTATION = gql`
     }
   }
 `;
+
+export const REMOVE_TRAVEL = gql`
+mutation RemoveTravel($removeTravelId: String!) {
+  removeTravel(id: $removeTravelId)
+}
+`;
+
+export const EXPEL_USER_FROM_TRAVEL = gql`
+  mutation ExpelFromTravel($bannedUserId: String!, $travelId: String!) {
+    expelFromTravel(bannedUserId: $bannedUserId, travelId: $travelId) {
+      id
+    }
+  }
+`;

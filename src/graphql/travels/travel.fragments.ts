@@ -41,6 +41,7 @@ export const TRAVEL_FIELDS = gql`
       email
     }
     creatorUser {
+      id
       name
       email
     }
