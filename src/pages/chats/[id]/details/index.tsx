@@ -2,7 +2,7 @@ import { ChatLayout } from "@/components/Layout/ChatLayout";
 import { TravelCard } from "@/components/Travel/TravelCard/TravelCard";
 import { ViajeroEmptyMessage } from "@/components/ViajeroEmptyMessage/viajeroEmptyMessage";
 import { ViajeroLoader } from "@/components/ViajeroLoader/ViajeroLoader";
-import { Item, TravelDto, useAssignItemToUserMutation, useLeaveTravelMutation, User, useRemoveItemToUserMutation } from "@/graphql/__generated__/gql";
+import { Item, TravelDto, useAssignItemToUserMutation, useExpelFromTravelMutation, useLeaveTravelMutation, User, useRemoveItemToUserMutation, useRemoveTravelMutation } from "@/graphql/__generated__/gql";
 import { GET_CHAT_BY_ID } from "@/graphql/chats/chats.queries";
 import { useQuery } from "@apollo/client";
 import { Box, Text, Title, Group, Stack, Paper, Avatar, Modal, Switch, Loader, Button } from "@mantine/core";
@@ -14,6 +14,7 @@ import { GET_TRAVEL_BY_ID } from "@/graphql/travels/travels.queries";
 import { ChatHeaderSection } from "@/components/Chats/ChatHeaderSection";
 import { FaWhatsapp } from "react-icons/fa";
 import { FaInstagram } from "react-icons/fa";
+import { FaStar } from "react-icons/fa";
 import { BOLD, SEMI_BOLD, VIAJERO_GREEN } from "@/consts";
 import { useIsMobile } from "@/hooks/useIsMobile";
 import { ProfileDetails } from "@/components/ProfileDetails/ProfileDetails";
@@ -30,6 +31,7 @@ function ChatDetails() {
   const [selectedTravel, setSelectedTravel] = useState<TravelDto | undefined>(undefined);
   const [selectedImageSrc, setSelectedImageSrc] = useState<string>("");
   const [selectedUserId, setSelectedUserId] = useState<string | undefined>(undefined);
+  const [selectedRemoveUserId, setSelectedRemoveUserId] = useState<string | undefined>(undefined);
 
   const [leaveTravelOpened, { open: openLeaveTravel, close: closeLeaveTravel }] = useDisclosure(false);
   const [leaveTravel] = useLeaveTravelMutation();
@@ -37,6 +39,14 @@ function ChatDetails() {
   const [loadingItems, setLoadingItems] = useState<string[]>([]);
 
   const [opened, { open: openUserModal, close: closeUserModal }] = useDisclosure(false);
+  const [removeTravelOpened, { open: openRemoveTravel, close: closeRemoveTravel }] = useDisclosure(false);
+
+  const [removeUserOpened, { open: openRemoveUser, close: closeRemoveUser }] = useDisclosure(false);
+
+
+  const [removeTravel] = useRemoveTravelMutation();
+  const [expelUserFromTravel] = useExpelFromTravelMutation();
+
   const { isMobile } = useIsMobile();
 
   const [assignItemToUser] = useAssignItemToUserMutation({
@@ -47,7 +57,7 @@ function ChatDetails() {
     refetchQueries: ["ChatUser", "Travel"]
   });
 
-  const { data, loading, error } = useQuery(GET_CHAT_BY_ID, {
+  const { data, loading, error, refetch: refetchChat } = useQuery(GET_CHAT_BY_ID, {
     variables: {
       chatId: id as string,
     },
@@ -70,6 +80,8 @@ function ChatDetails() {
   const participants = chat?.users
     ? [...chat.users].sort((a: User, b: User) => a.name.localeCompare(b.name))
     : [];
+
+  const isCreator = (userId: string) => userId === travel?.creatorUser?.id;
 
   const handleDebouncedRefetch = debounce(() => {
     refetchTravel();
@@ -121,9 +133,40 @@ function ChatDetails() {
     }
   }
 
+  const handleRemoveTravel = async () => {
+    try {
+      await removeTravel({ variables: { removeTravelId: travel?.id } });
+      showNotification({
+        title: 'Travel removed',
+        message: 'The travel has been removed',
+        color: 'green',
+      });
+      closeRemoveTravel();
+      router.push('/travels');
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+
+  const handleRemoveUser = async () => {
+    try {
+      await expelUserFromTravel({ variables: { bannedUserId: selectedRemoveUserId || '', travelId: travel?.id } });
+      showNotification({
+        title: 'User removed',
+        message: 'The user has been removed from the travel',
+        color: 'green',
+      });
+      closeRemoveUser();
+      refetchChat();
+    } catch (error: any) {
+      console.log(error)
+    }
+  }
+
   if (loading || travelLoading) return <ViajeroLoader />;
 
   if (error || travelError) return <ViajeroEmptyMessage message="Error loading chat" />;
+
 
   return (
     <Box bg="#e5ddd5" h="100%" w="100%">
@@ -139,9 +182,9 @@ function ChatDetails() {
         </Box>
 
         <Title order={3} ta="center" my={15}>Participants</Title>
-        {participants.map((user: User) => (
+        {participants.map((participant: User) => (
           <Paper
-            key={user.id}
+            key={participant.id}
             shadow="sm"
             p="md"
             mb="md"
@@ -157,40 +200,69 @@ function ChatDetails() {
               }
             }}
             onClick={() => {
-              setSelectedUserId(user.id);
+              setSelectedUserId(participant.id);
               openUserModal();
             }}
           >
             <Group justify="space-between" w="100%" h="100%" wrap="nowrap">
               <Group wrap="nowrap">
                 <Avatar
-                  alt={user.name}
+                  alt={participant.name}
                   radius="xl"
                   size={40}
-                  src={user.userImage}
+                  src={participant.userImage}
                   color="green"
                 >
 
                 </Avatar>
                 <Stack>
-                  <Text fw={BOLD}>{user.name}</Text>
+                  <Text fw={BOLD}>{participant.name}</Text>
                   <Text size="sm" c="dimmed" truncate>
-                    {user.description || 'No description available'}
+                    {participant.description || 'No description available'}
                   </Text>
                 </Stack>
+
+                {/* Badge for creator */}
+                {isCreator(participant.id) && (
+                  <Box>
+                    <Box
+                      style={{
+                        backgroundColor: 'orange',
+                        padding: '4px 8px',
+                        borderRadius: '12px',
+                      }}
+                    >
+                      <Text size="xs" c="white" fw={SEMI_BOLD}>
+                        Creator
+                      </Text>
+                    </Box>
+                  </Box>
+                )}
+
+                {/* If the current user is the creator, show the remove button for the participant */}
+                {!isCreator(participant.id) && isCreator(currentUser?.id || '') && (
+                  <Button variant="outline" color="red" onClick={(e) => {
+                    e.stopPropagation();
+                    setSelectedRemoveUserId(participant.id);
+                    openRemoveUser();
+                  }}>Remove</Button>
+                )}
+
               </Group>
+
+
               {!isMobile && (
                 <Group gap="xs" wrap="nowrap">
-                  {user.instagram && (
+                  {participant.instagram && (
                     <Group>
                       <FaInstagram color="#E1306C" className="h-6 w-6" />
-                      <Text fw={SEMI_BOLD}>{user.instagram}</Text>
+                      <Text fw={SEMI_BOLD}>{participant.instagram}</Text>
                     </Group>
                   )}
-                  {user.whatsapp && (
+                  {participant.whatsapp && (
                     <Group ml={30}>
                       <FaWhatsapp color="#25D366" className="h-6 w-6" />
-                      <Text fw={SEMI_BOLD}>{user.whatsapp}</Text>
+                      <Text fw={SEMI_BOLD}>{participant.whatsapp}</Text>
                     </Group>
                   )}
                 </Group>
@@ -246,7 +318,13 @@ function ChatDetails() {
           </Stack>
         </Paper>
 
-        <Button variant="outline" color="red" onClick={openLeaveTravel} w="100%">Leave travel</Button>
+
+        {!isCreator(currentUser?.id || '') && (
+          <Button variant="outline" color="red" onClick={openLeaveTravel} w="100%">Leave travel</Button>
+        )}
+        {isCreator(currentUser?.id || '') && (
+          <Button variant="filled" color="red" onClick={openRemoveTravel} w="100%">Delete travel</Button>
+        )}
       </Stack>
 
       {/* Selected Participant modal */}
@@ -276,12 +354,35 @@ function ChatDetails() {
         selectedImageSrc={selectedImageSrc}
       />
 
+      {/* Leave Travel Modal */}
       <Modal opened={leaveTravelOpened} onClose={closeLeaveTravel} centered p={0}>
         <Stack align="center">
           <Text >Are you sure you want to leave this travel?</Text>
           <Group>
             <Button color="red" onClick={handleLeaveTravel}>Leave</Button>
             <Button variant="outline" onClick={closeLeaveTravel}>Cancel</Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Remove Travel Modal */}
+      <Modal opened={removeTravelOpened} onClose={closeRemoveTravel} centered p={0}>
+        <Stack align="center">
+          <Text>Are you sure you want to remove this travel?</Text>
+          <Group>
+            <Button color="red" onClick={handleRemoveTravel}>Remove</Button>
+            <Button variant="outline" onClick={closeRemoveTravel}>Cancel</Button>
+          </Group>
+        </Stack>
+      </Modal>
+
+      {/* Remove User Modal */}
+      <Modal opened={removeUserOpened} onClose={closeRemoveUser} centered p={0}>
+        <Stack align="center">
+          <Text>Are you sure you want to remove this user from the travel?</Text>
+          <Group>
+            <Button color="red" onClick={handleRemoveUser}>Remove</Button>
+            <Button variant="outline" onClick={closeRemoveUser}>Cancel</Button>
           </Group>
         </Stack>
       </Modal>
