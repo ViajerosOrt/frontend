@@ -149,7 +149,7 @@ function ChatPage() {
             overflowY: "auto",
             msOverflowStyle: "none",
             scrollbarWidth: "none",
-            "&::-webkit-scrollbar": {
+            "&::WebkitScrollbar": {
               display: "none"
             }
           }}>

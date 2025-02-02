@@ -68,7 +68,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
   const [uploadedImage, setUploadedImage] = useState<string | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const { currentUser } = useAuth()
+  const { currentUser, onLogin } = useAuth()
   const handleImageUpload = (selectedFile: File | null) => {
     if (!selectedFile) return;
 
@@ -127,6 +127,14 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
         uploadedImageUrl = uploadResult.url;
         values.userImage = uploadedImageUrl;
         currentUser!.userImage! = uploadedImageUrl!;
+
+        onLogin({
+          newUser: {
+            ...currentUser!,
+            userImage: uploadedImageUrl
+          }
+        });
+        console.log(currentUser)
       } catch (error) {
         console.log('Upload error details:', error);
         showNotification({
