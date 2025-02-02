@@ -1,4 +1,4 @@
-import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip, ActionIcon } from "@mantine/core";
+import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip, ActionIcon, Collapse } from "@mantine/core";
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
@@ -9,8 +9,10 @@ import { Activity, TravelDto, useJoinToTravelMutation } from "@/graphql/__genera
 import { Consts } from "@/consts/consts";
 import { VIAJERO_GREEN } from "@/consts";
 import TravelImage from "../Travel/TravelImages/TravelImage";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoEarthOutline } from "react-icons/io5";
+import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
+import { ChevronDown } from 'lucide-react';
 
 
 
@@ -29,6 +31,7 @@ const LeafletMap = dynamic(() => import('../MapComponents/LeafletMap'), {
 
 export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selectedImageSrc, showJoinButton = true, showMaxCap = true }: TravelDetailsModalProps) => {
   const [opened, { open, close }] = useDisclosure(false);
+  const [showMap, setShowMap] = useState(false);
 
   const formattedStartDate = new Date(selectedTravel?.startDate).toLocaleDateString('es-ES');
   const formattedEndDate = new Date(selectedTravel?.finishDate).toLocaleDateString('es-ES');
@@ -69,6 +72,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
       open();
     } else {
       close();
+      setShowMap(false);
     }
   }, [selectedTravel, open, close]);
 
@@ -169,6 +173,85 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
             )}
           </Stack>
         </Box>
+
+
+        <Group justify="center" mt="md">
+          <motion.div
+            whileHover={{ scale: 1.1 }}
+            whileTap={{ scale: 0.95 }}
+            className="flex items-center"
+          >
+            <ActionIcon
+              variant="filled"
+              color={VIAJERO_GREEN}
+              size="lg"
+              radius="xl"
+              onClick={() => setShowMap(!showMap)}
+              style={{
+                border: `2px solid ${VIAJERO_GREEN}`,
+                transition: 'all 0.2s ease'
+              }}
+            >
+              <IoEarthOutline size={20} />
+            </ActionIcon>
+            <motion.div
+              animate={{ rotate: showMap ? 0 : 180 }}
+              transition={{ duration: 0.2 }}
+            >
+              <ChevronDown size={24} color={VIAJERO_GREEN} />
+            </motion.div>
+          </motion.div>
+        </Group>
+
+        <AnimatePresence>
+          {showMap && latitude && longitude && (
+            <motion.div
+              initial={{ height: 0, opacity: 1 }}
+              animate={{ height: 'auto', opacity: 1 }}
+              exit={{ height: 0, opacity: 1 }}
+              transition={{
+                duration: 0.4,
+                ease: [0.4, 0, 0.2, 1]
+              }}
+              style={{ overflow: 'hidden' }}
+            >
+              <Box
+                mt={20}
+                style={{
+                  backgroundColor: "white",
+                  borderRadius: "16px",
+                  overflow: "hidden"
+                }}
+              >
+                <Box
+                  p={16}
+                  style={{
+                    borderBottom: '1px solid #eaeaea',
+                    backgroundColor: '#f8f9fa'
+                  }}
+                >
+                  <Group justify="space-between" align="center">
+                    <Text fw={600} size="md">Travel Location</Text>
+                    <Text size="sm"fw={600} c="dimmed">{selectedTravel?.travelLocation.name}</Text>
+                  </Group>
+                </Box>
+
+                <Box p={16}>
+                  <Box
+                    style={{
+                      height: "300px",
+                      borderRadius: "8px",
+                      overflow: "hidden"
+                    }}
+                  >
+                    <LeafletMap latitude={latitude} longitude={longitude} />
+                  </Box>
+                </Box>
+              </Box>
+            </motion.div>
+          )}
+        </AnimatePresence>
+
         {showJoinButton &&
           <Tooltip.Floating label="You already belong to this travel!" disabled={!selectedTravel?.isJoined} color={VIAJERO_GREEN}>
             <Box bg="var(--mantine-color-blue-light)" style={{ cursor: 'default' }}>
@@ -185,20 +268,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
         }
       </Box >
 
-      {latitude && longitude && (
-        <Box mt={20} p={16} h={300} w="100%"
-          style={{
-            backgroundColor: "white",
-            borderRadius: "12px",
-            boxShadow: "0 4px 8px rgba(0, 0, 0, 0.1)",
-            overflow: "hidden"
-          }}>
-          <Text fw={600} mb={8} size="md">Travel location</Text>
-          <Box style={{ height: "300px", borderRadius: "8px", overflow: "hidden" }}>
-            <LeafletMap latitude={latitude} longitude={longitude} />
-          </Box>
-        </Box>
-      )}
+
     </Modal >
   );
 };
