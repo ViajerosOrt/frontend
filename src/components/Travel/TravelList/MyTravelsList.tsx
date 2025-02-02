@@ -1,5 +1,5 @@
 import { TravelDto } from "../../../graphql/__generated__/gql";
-import { Grid, Text, Tabs, Box, Group, ActionIcon, Button, Stack } from '@mantine/core';
+import { Grid, Text, Tabs, Box, Group, ActionIcon, Button, Stack, Card } from '@mantine/core';
 import { TravelCard } from "../TravelCard/TravelCard";
 import { useState } from 'react';
 import { VIAJERO_GREEN, VIAJERO_GREEN_DARK } from '../../../consts/consts';
@@ -51,7 +51,7 @@ export const MyTravelsList = (
     const { upcoming, ongoing, finished } = travelsFiltered(travels);
     const [activeTab, setActiveTab] = useState<string | null>('upcoming');
     const { isMobile } = useIsMobile();
-    
+
     if (loading) {
         return (
             <ViajeroLoader />
@@ -180,11 +180,11 @@ export const MyTravelsList = (
                             </Button>
 
                             <Group wrap="nowrap" mt={8} mx={16}>
-                                <ActionIcon 
-                                    variant="filled" 
-                                    color={VIAJERO_GREEN} 
-                                    onClick={open} 
-                                    w={100} 
+                                <ActionIcon
+                                    variant="filled"
+                                    color={VIAJERO_GREEN}
+                                    onClick={open}
+                                    w={100}
                                     h={40}
                                     size="md"
                                     radius="md"
@@ -208,7 +208,14 @@ export const MyTravelsList = (
                 />
 
 
-                {filters !== defaultFilters && travels.length == 0 ? (< Text > There are no travels matching your filters.</Text >)
+                {filters !== defaultFilters && travels.length == 0 ? (
+                    <Box style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+                        <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
+                            <Text ta="center" c="dimmed">
+                                There are no travels matching your filter!
+                            </Text>
+                        </Card>
+                    </Box>)
                     : (
                         <>
                             <Tabs.Panel value="upcoming" pt="xs">
@@ -227,7 +234,13 @@ export const MyTravelsList = (
 
                                         ))
                                     ) : (
-                                        <Text>You dont have travels about to start.</Text>
+                                        <Grid.Col span={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
+                                                <Text ta="center" c="dimmed">
+                                                    You dont have travels about to start yet!
+                                                </Text>
+                                            </Card>
+                                        </Grid.Col>
                                     )}
                                 </Grid>
                             </Tabs.Panel>
@@ -238,7 +251,7 @@ export const MyTravelsList = (
                                         ongoing.map((travel, index) => (
                                             <Grid.Col span={{ base: 12, md: 4, lg: 4 }} key={travel.id}>
                                                 <TravelCard travel={travel}
-                                                    imageSrc={travel.imageUrl! ||travelImages[index % travelImages.length]}
+                                                    imageSrc={travel.imageUrl! || travelImages[index % travelImages.length]}
                                                     setSelectedTravel={(travel) => {
                                                         setSelectedTravel(travel);
                                                         setSelectedImageSrc(travelImages[index % travelImages.length]);
@@ -247,7 +260,13 @@ export const MyTravelsList = (
                                             </Grid.Col>
                                         ))
                                     ) : (
-                                        <Text>You dont have travels in progress.</Text>
+                                        <Grid.Col span={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
+                                                <Text ta="center" c="dimmed">
+                                                    You dont have travels in progress yet!
+                                                </Text>
+                                            </Card>
+                                        </Grid.Col>
                                     )}
                                 </Grid>
 
@@ -259,7 +278,7 @@ export const MyTravelsList = (
                                         finished.map((travel, index) => (
                                             <Grid.Col span={{ base: 12, md: 4, lg: 4 }} key={travel.id}>
                                                 <TravelCard travel={travel}
-                                                    imageSrc={travel.imageUrl! ||travelImages[index % travelImages.length]}
+                                                    imageSrc={travel.imageUrl! || travelImages[index % travelImages.length]}
                                                     setSelectedTravel={(travel) => {
                                                         setSelectedTravel(travel);
                                                         setSelectedImageSrc(travelImages[index % travelImages.length]);
@@ -268,7 +287,13 @@ export const MyTravelsList = (
                                             </Grid.Col>
                                         ))
                                     ) : (
-                                        <Text>You dont have travels that ended.</Text>
+                                        <Grid.Col span={12} style={{ display: 'flex', justifyContent: 'center' }}>
+                                            <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
+                                                <Text ta="center" c="dimmed">
+                                                    You dont have travels that ended yet!
+                                                </Text>
+                                            </Card>
+                                        </Grid.Col>
                                     )}
 
                                 </Grid>

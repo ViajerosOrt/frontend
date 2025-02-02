@@ -18,7 +18,7 @@ export const SignupForm = ({ switchToLogin }: SignupFormProps) => {
       userName: '',
       email: '',
       password: '',
-      birthDate: '',
+      birthDate: new Date(2002, 0, 1),
     },
     validate: { //isNotEmpty, isEmail, hasLength, todas funciones de mantine 
       userName: isNotEmpty('Name is required'),

@@ -42,7 +42,7 @@ export function ChatList() {
         overflowY: 'auto',
         msOverflowStyle: "none",
         scrollbarWidth: "none",
-        "&::-webkit-scrollbar": {
+        "&::WebkitScrollbar": {
           display: "none"
         }
       }}

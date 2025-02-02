@@ -47,7 +47,7 @@ const TravelCreateForm = () => {
     return { label: transport.name, value: transport.id };
   });
 
-  const [selectedDates, setSelectedDates] = useState<[Date | null, Date | null]>([null, null]);
+  const [selectedDates, setSelectedDates] = useState<[Date | null, Date | null]>([ new Date(), new Date()]);
   const [selectedActivities, setSelectedActivities] = useState<string[]>([]);
   const [selectedTransportId, setSelectedTransportId] = useState<string | null>(null)
 
