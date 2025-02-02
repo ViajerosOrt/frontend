@@ -4,6 +4,7 @@ import { BOLD } from "@/consts";
 import {
   Avatar,
   Box,
+  Card,
   Center,
   Divider,
   Group,
@@ -111,7 +112,11 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
             ))}
           </SimpleGrid>
         ) : (
-          <Text c="dimmed">No activities selected yet.</Text>
+          <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
+            <Text ta="center" c="dimmed">
+              No activities selected yet.
+            </Text>
+          </Card>
         )}
       </Box>
       <Divider />
@@ -133,16 +138,22 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
             })}
           </SimpleGrid>
         ) : (
-          <Text>No travels created yet.</Text>
+          <Box style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+                                  <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
+                                      <Text ta="center" c="dimmed">
+                                      No travels created yet.
+                                      </Text>
+                                  </Card>
+                              </Box>
         )}
       </Box>
 
       <Divider />
 
       <Box>
+      <Text fw={BOLD} ta="center" mb="xs">Reviews received</Text>
         {user?.reviewsReceived && user.reviewsReceived.length > 0 ? (
           <>
-            <Text fw={BOLD} ta="center" mb="xs">Reviews received</Text>
             <Stack gap="md">
               {user.reviewsReceived?.map((review, index) => (
                 <ReviewReceivedCard
@@ -158,7 +169,13 @@ export const ProfileDetails = ({ userId, showViewProfile = true }: { userId: str
             </Stack>
           </>
         ) : (
-          <Text ta="center">No reviews received yet.</Text>
+          <Box style={{ width: '100%', display: 'flex', justifyContent: 'center', alignItems: 'center', padding: '20px' }}>
+          <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
+              <Text ta="center" c="dimmed">
+              No reviews received yet.
+              </Text>
+          </Card>
+      </Box>
         )}
       </Box>
       <Modal

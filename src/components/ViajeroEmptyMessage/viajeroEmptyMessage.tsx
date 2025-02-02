@@ -15,10 +15,12 @@ export const ViajeroEmptyMessage = ({ message }: { message: string }) => {
           borderWidth: '2px',
         }}
       >
+          <Card p="xl" radius="md" withBorder style={{ maxWidth: '400px' }}>
         <Stack align="center">
           <IoMdEye className="h-10 w-10" />
-          <Title order={4}>{message}</Title>
+          <Title ta="center" c="dimmed" order={4}>{message}</Title>
         </Stack>
+        </Card>
       </Card>
     </Center>
   )

@@ -39,7 +39,7 @@ export const AppContainer = ({ children }: { children: React.ReactNode }) => {
   }
 
   const UserProfile = () => (
-    <Group align="center" gap="xs" onClick={isMobile ? navigateToProfile : undefined} style={isMobile ? { cursor: 'pointer' } : undefined}>
+    <Group align="center" gap="xs" onClick={navigateToProfile } style={{ cursor: 'pointer' } }>
       <Avatar
         size={isMobile ? 40 : 50}
         src={currentUser?.userImage}
