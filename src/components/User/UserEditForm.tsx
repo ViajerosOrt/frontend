@@ -134,7 +134,6 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
             userImage: uploadedImageUrl
           }
         });
-        console.log(currentUser)
       } catch (error) {
         console.log('Upload error details:', error);
         showNotification({
