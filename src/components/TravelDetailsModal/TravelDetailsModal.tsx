@@ -10,9 +10,8 @@ import { Consts } from "@/consts/consts";
 import { VIAJERO_GREEN } from "@/consts";
 import TravelImage from "../Travel/TravelImages/TravelImage";
 import { IoClose, IoEarthOutline } from "react-icons/io5";
-import { motion, AnimatePresence } from "framer-motion";
 import dynamic from "next/dynamic";
-import { ChevronDown } from 'lucide-react';
+import { FaArrowAltCircleDown } from "react-icons/fa";
 
 
 
@@ -183,7 +182,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
 
 
         <Group justify="center" mt="md">
-          <ActionIcon
+          <Button
             variant="filled"
             color={VIAJERO_GREEN}
             size="lg"
@@ -191,19 +190,19 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
             onClick={() => setShowMap(!showMap)}
             style={{
               border: `2px solid ${VIAJERO_GREEN}`,
-              transition: 'all 0.2s ease'
+              transition: 'all 0.2s ease',
             }}
           >
             <IoEarthOutline size={20} />
-          </ActionIcon>
-          <ChevronDown
-            size={24}
-            color={VIAJERO_GREEN}
-            style={{
-              transform: showMap ? 'rotate(0deg)' : 'rotate(180deg)',
-              transition: 'transform 0.2s ease'
-            }}
-          />
+            <FaArrowAltCircleDown
+              size={20}
+              style={{
+                marginLeft: 12,
+                transform: showMap ? 'rotate(0deg)' : 'rotate(180deg)',
+                transition: 'transform 0.2s ease'
+              }}
+            />
+          </Button>
         </Group>
 
         <Transition
