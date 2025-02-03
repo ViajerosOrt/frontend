@@ -58,6 +58,8 @@ const TravelCreateForm = () => {
   const [selectedCountry, setSelectedCountry] = useState<string | null>(null);
   const [location, setLocation] = useState<{ coordinates: [number, number]; streetName: string; city: string; state: string } | null>(null);
 
+  const [selectedCountryOrigin, setSelectedCountryOrigin] = useState<string | null>(null);
+
   const [file, setFile] = useState<File | null>(null);
   const [isLoading, setIsLoading] = useState(false);
   const { isMobile } = useIsMobile();
@@ -172,7 +174,7 @@ const TravelCreateForm = () => {
       maxCap: values.maxCap,
       country: selectedCountry || '',
       isEndable: false,
-      countryOfOrigin: 'Uruguay',
+      countryOfOrigin: selectedCountryOrigin || '',
       imageUrl: uploadedImageUrl
     };
 
@@ -296,6 +298,14 @@ const TravelCreateForm = () => {
                 }
               }}
             />
+
+          </Stack>
+
+          <Stack gap={4}>
+            <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Country Of Origin <span style={{ color: 'red' }}>*</span>  </Text>
+            <Text size="sm" c="gray">Select the country of origin!</Text>
+
+            <Countries defaultCountry={null} value={selectedCountryOrigin} onChange={setSelectedCountryOrigin} disabled={!!location} />
 
           </Stack>
 

@@ -11,4 +11,3 @@ export const SEND_MESSAGE = gql`
     }
   }
 `;
-

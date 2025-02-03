@@ -1,5 +1,5 @@
-import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip, ActionIcon } from "@mantine/core";
-import { Dispatch, SetStateAction, useEffect, useState } from "react";
+import { Box, Button, Group, Image, Modal, Stack, Text, ThemeIcon, Tooltip, ActionIcon, Collapse, Transition } from "@mantine/core";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { CgProfile } from "react-icons/cg";
 import { useDisclosure } from "@mantine/hooks";
 import { notifications } from "@mantine/notifications";
@@ -9,7 +9,11 @@ import { Activity, TravelDto, useJoinToTravelMutation } from "@/graphql/__genera
 import { Consts } from "@/consts/consts";
 import { VIAJERO_GREEN } from "@/consts";
 import TravelImage from "../Travel/TravelImages/TravelImage";
-import { IoClose } from "react-icons/io5";
+import { IoClose, IoEarthOutline } from "react-icons/io5";
+import dynamic from "next/dynamic";
+import { FaArrowAltCircleDown } from "react-icons/fa";
+
+
 
 type TravelDetailsModalProps = {
   selectedTravel: TravelDto | undefined,
@@ -19,8 +23,14 @@ type TravelDetailsModalProps = {
   showMaxCap?: boolean,
 }
 
+const LeafletMap = dynamic(() => import('../MapComponents/LeafletMap'), {
+  ssr: false,
+  loading: () => <div>Loading map...</div>,
+});
+
 export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selectedImageSrc, showJoinButton = true, showMaxCap = true }: TravelDetailsModalProps) => {
   const [opened, { open, close }] = useDisclosure(false);
+  const [showMap, setShowMap] = useState(false);
 
   const formattedStartDate = new Date(selectedTravel?.startDate).toLocaleDateString('es-ES');
   const formattedEndDate = new Date(selectedTravel?.finishDate).toLocaleDateString('es-ES');
@@ -28,6 +38,14 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
   const userColor = Consts.getColorByPercentage(selectedTravel?.usersCount!, selectedTravel?.maxCap!);
 
   const [joinToTravel] = useJoinToTravelMutation();
+  const [latitude, longitude] = selectedTravel?.travelLocation.longLatPoint.split(',').map(parseFloat) || [];
+
+  const scaleY = {
+    in: { opacity: 1, transform: 'scaleY(1)' },
+    out: { opacity: 0, transform: 'scaleY(0)' },
+    common: { transformOrigin: 'top' },
+    transitionProperty: 'transform, opacity',
+  };
 
   const handleJoinTravel = () => {
     joinToTravel({
@@ -60,6 +78,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
       open();
     } else {
       close();
+      setShowMap(false);
     }
   }, [selectedTravel, open, close]);
 
@@ -160,6 +179,70 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
             )}
           </Stack>
         </Box>
+
+
+        <Group justify="center" mt="md">
+          <Button
+            variant="filled"
+            color={VIAJERO_GREEN}
+            size="lg"
+            radius="xl"
+            onClick={() => setShowMap(!showMap)}
+            style={{
+              border: `2px solid ${VIAJERO_GREEN}`,
+              transition: 'all 0.2s ease',
+            }}
+          >
+            <IoEarthOutline size={20} />
+            <FaArrowAltCircleDown
+              size={20}
+              style={{
+                marginLeft: 12,
+                transform: showMap ? 'rotate(0deg)' : 'rotate(180deg)',
+                transition: 'transform 0.2s ease'
+              }}
+            />
+          </Button>
+        </Group>
+
+        <Transition
+          mounted={!!(showMap && latitude && longitude)}
+          transition={scaleY}
+          duration={200}
+          timingFunction="ease"
+        >
+          {(transitionStyle) => (
+            <Box
+              mt={20}
+              style={{
+                ...transitionStyle,
+                borderRadius: "16px",
+                overflow: "hidden"
+              }}
+            >
+              <Box
+                p={16}
+                bg="#f8f9fa"
+                style={{
+                  borderBottom: '1px solid #eaeaea'
+                }}>
+                <Group justify="space-between" align="center">
+                  <Text fw={600} size="md">Travel Location</Text>
+                  <Text size="sm" fw={600} c="dimmed">{selectedTravel?.travelLocation.name}</Text>
+                </Group>
+              </Box>
+
+              <Box p={16}>
+                <Box style={{ height: "300px", overflow: "hidden", borderRadius: "4px", }}>
+                  {showMap && latitude && longitude && (
+                    <LeafletMap key={`${latitude}-${longitude}-${showMap}`} latitude={latitude} longitude={longitude} />
+                  )}
+                </Box>
+              </Box>
+            </Box>
+          )}
+        </Transition>
+
         {showJoinButton &&
           <Tooltip.Floating label="You already belong to this travel!" disabled={!selectedTravel?.isJoined} color={VIAJERO_GREEN}>
             <Box bg="var(--mantine-color-blue-light)" style={{ cursor: 'default' }}>
@@ -175,6 +258,7 @@ export const TravelDetailsModal = ({ selectedTravel, setSelectedTravel, selected
           </Tooltip.Floating>
         }
       </Box >
+
 
     </Modal >
   );
