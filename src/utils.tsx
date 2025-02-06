@@ -31,21 +31,21 @@ const getActivityIcon = (activityName: string) => {
 
 const getActivityColor = (activityName: string) => {
   const activityColors: { [key: string]: string } = {
-    Caminar: 'blue',
-    Bailar: 'pink',
-    Correr: 'red',
-    Nadar: 'cyan',
-    Entrenar: 'green',
-    Senderismo: 'orange',
-    Atletismo: 'teal',
+    Walking: 'blue',
+    Dancing: 'pink',
+    Running: 'red',
+    Swimming: 'cyan',
+    Training: 'green',
+    Hiking: 'orange',
+    Athletics: 'teal',
     Pilates: 'purple',
-    Escalar: 'gray',
-    Patinar: 'yellow',
-    Ciclismo: 'lime',
-    Boxeo: 'indigo',
-    Esgrima: 'violet',
-    Gimnasia: 'grape',
-    'Remo en canoa': 'brown',
+    Climbing: 'gray',
+    Skating: 'yellow',
+    Cycling: 'lime',
+    Boxing: 'indigo',
+    Fencing: 'violet',
+    Gymnastics: 'grape',
+    'Canoeing': 'brown',
   };
 
   return activityColors[activityName] || 'gray';

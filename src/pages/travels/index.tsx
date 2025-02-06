@@ -36,6 +36,13 @@ export default function Travels() {
     const hasStarted = new Date(travel.startDate) <= new Date();
     const isFull = travel.maxCap && travel.usersCount && travel.usersCount == travel.maxCap;
 
+    const hasEnded = new Date(travel.finishDate) <= new Date();
+
+    // If the travel has ended, we don't show it
+    if (hasEnded) {
+      return false;
+    }
+
     return !hasStarted && !isFull || travel.isJoined;
   });
 
