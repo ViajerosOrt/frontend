@@ -121,7 +121,7 @@ function ChatPage() {
     }
   }, [chat?.messages]);
 
-  const [sendMessage] = useSendMessageMutation({
+  const [sendMessage, { loading: loadingSendMessage }] = useSendMessageMutation({
     refetchQueries: ["Chat"],
   });
 
@@ -202,7 +202,7 @@ function ChatPage() {
           maxRows={5}
           w="85%"
         />
-        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage} disabled={newMessage.length === 0}>
+        <Button w="15%" variant="filled" color={VIAJERO_GREEN} onClick={handleSendMessage} disabled={newMessage.length === 0 || loadingSendMessage}>
           <IoSend size={16} />
         </Button>
       </Group>
