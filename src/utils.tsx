@@ -9,21 +9,21 @@ export const travelImages = ["/travel_1.jpg", "/travel_2.jpg", "/travel_3.jpg"]
 
 const getActivityIcon = (activityName: string) => {
   const activityIcons: { [key: string]: React.ReactNode } = {
-    Caminar: <FaWalking />,
-    Bailar: <FaMusic />,
-    Correr: <FaRunning />,
-    Nadar: <FaSwimmer />,
-    Entrenar: <FaDumbbell />,
-    Senderismo: <FaHiking />,
-    Atletismo: <FaRunning />,
+    Walking: <FaWalking />,
+    Dancing: <FaMusic />,
+    Running: <FaRunning />,
+    Swimming: <FaSwimmer />,
+    Training: <FaDumbbell />,
+    Hiking: <FaHiking />,
+    Athletics: <FaRunning />,
     Pilates: <MdOutlineFitnessCenter />,
-    Escalar: <FaMountain />,
-    Patinar: <FaSkating />,
-    Ciclismo: <FaBicycle />,
-    Boxeo: <FaHandHolding />,
-    Esgrima: <FaPersonBooth />,
-    Gimnasia: <MdSportsGymnastics />,
-    'Remo en canoa': <FaWater />
+    Climbing: <FaMountain />,
+    Skating: <FaSkating />,
+    Cycling: <FaBicycle />,
+    Boxing: <FaHandHolding />,
+    Fencing: <FaPersonBooth />,
+    Gymnastics: <MdSportsGymnastics />,
+    'Canoeing': <FaWater />
   };
 
   return activityIcons[activityName] || <FaBalanceScale />;
