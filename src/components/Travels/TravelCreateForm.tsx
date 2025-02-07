@@ -20,7 +20,7 @@ import { useIsMobile } from "@/hooks/useIsMobile";
 
 const travelValuesSchema = z.object({
   title: z.string().min(1, 'Title is required').max(50),
-  description: z.string().min(1, 'Description is required').max(200),
+  description: z.string().min(1, 'Description is required').max(300),
   maxCap: z.number().min(1, 'Max Capacity must be more than 1'),
   items: z.array(z.string()).optional(),
   activities: z.array(z.string()).optional()
