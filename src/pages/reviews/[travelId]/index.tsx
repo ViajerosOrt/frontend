@@ -16,7 +16,7 @@ export default function Review() {
 
   const [isUserReview, setIsUserReview] = useState(false);
 
-  const [createReview] = useCreateReviewMutation({
+  const [createReview, { loading: loadingCreateReview }] = useCreateReviewMutation({
     refetchQueries: ["userById"]
   });
 
@@ -138,6 +138,8 @@ export default function Review() {
             color={VIAJERO_GREEN}
             size="lg"
             fullWidth
+            disabled={loadingCreateReview}
+            loading={loadingCreateReview}
           >
             {isUserReview ? `Submit Review for participant` : 'Submit Review for the travel'}
           </Button>

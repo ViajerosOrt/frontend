@@ -44,8 +44,8 @@ function ChatDetails() {
   const [removeUserOpened, { open: openRemoveUser, close: closeRemoveUser }] = useDisclosure(false);
 
 
-  const [removeTravel] = useRemoveTravelMutation();
-  const [expelUserFromTravel] = useExpelFromTravelMutation();
+  const [removeTravel, { loading: loadingRemoveTravel }] = useRemoveTravelMutation();
+  const [expelUserFromTravel, { loading: loadingRemoveUser }] = useExpelFromTravelMutation();
 
   const { isMobile } = useIsMobile();
 
@@ -367,7 +367,7 @@ function ChatDetails() {
         <Stack align="center">
           <Text>Are you sure you want to remove this travel?</Text>
           <Group>
-            <Button color="red" onClick={handleRemoveTravel}>Remove</Button>
+            <Button color="red" onClick={handleRemoveTravel} disabled={loadingRemoveTravel} loading={loadingRemoveTravel}>Remove</Button>
             <Button variant="outline" onClick={closeRemoveTravel}>Cancel</Button>
           </Group>
         </Stack>
@@ -378,7 +378,7 @@ function ChatDetails() {
         <Stack align="center">
           <Text>Are you sure you want to remove this user from the travel?</Text>
           <Group>
-            <Button color="red" onClick={handleRemoveUser}>Remove</Button>
+            <Button color="red" onClick={handleRemoveUser} disabled={loadingRemoveUser} loading={loadingRemoveUser}>Remove</Button>
             <Button variant="outline" onClick={closeRemoveUser}>Cancel</Button>
           </Group>
         </Stack>
