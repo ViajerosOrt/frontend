@@ -40,7 +40,7 @@ type UserEditFormProps = {
 
 const userSchema = z.object({
   name: z.string().min(1, 'Name is required').max(50),
-  description: z.string().max(200).optional(),
+  description: z.string().max(300).optional(),
   birthDate: z.date().refine(
     (date) => {
       const today = new Date();
@@ -223,7 +223,7 @@ export const UserEditForm = ({ user }: UserEditFormProps) => {
           </Box>
           <Stack gap={4}>
             <Text style={{ fontWeight: 700, fontSize: '1.5rem' }}>Image</Text>
-            <Text size="sm" c="gray">Upload an image for your travel!</Text>
+            <Text size="sm" c="gray">Upload an image for your profile!</Text>
             <FileInput
               accept="image/*"
               onChange={handleImageUpload}

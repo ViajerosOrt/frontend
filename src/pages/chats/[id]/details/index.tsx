@@ -215,11 +215,8 @@ function ChatDetails() {
                 >
 
                 </Avatar>
-                <Stack>
+                <Stack >
                   <Text fw={BOLD}>{participant.name}</Text>
-                  <Text size="sm" c="dimmed" truncate>
-                    {participant.description || 'No description available'}
-                  </Text>
                 </Stack>
 
                 {/* Badge for creator */}
