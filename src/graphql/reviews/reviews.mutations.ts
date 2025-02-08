@@ -18,9 +18,7 @@ export const CREATE_REVIEW = gql`
 
 export const REMOVE_REVIEW = gql`
   mutation RemoveReview($removeReviewId: String!) {
-    removeReview(id: $removeReviewId) {
-      id
-    }
+    removeReview(id: $removeReviewId) 
   }
 `;
 
